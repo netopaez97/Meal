@@ -1,7 +1,6 @@
 import 'package:carousel_pro/carousel_pro.dart';
 import 'package:flutter/material.dart';
-import 'package:meal/routes/routes.dart';
-import 'package:meal/utils/utils.dart' as utils;
+import 'package:meal/utils/drawer.dart';
 
 class HomePage extends StatefulWidget {
 
@@ -22,6 +21,7 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      drawer: MainDrawer(),
       key: _scaffolKey,
       appBar: _superiorNavBar(),
       body:   _pageBody(),
