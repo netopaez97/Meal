@@ -32,7 +32,7 @@ class MainDrawer extends StatelessWidget {
         color: Colors.white
       ),
       currentAccountPicture: CircleAvatar(
-        child: Text(_userEmail[0].toUpperCase(), style: TextStyle(color: utils.orangeColor,))
+        child: Text(_userEmail[0].toUpperCase(), style: TextStyle(color: utils.blackColor,))
       ),
       accountName: Text(_userName, style: TextStyle(color: Colors.black),),
       accountEmail: Text(_userEmail, style: TextStyle(color: Colors.black),),
@@ -86,8 +86,8 @@ class MainDrawer extends StatelessWidget {
             child: ListTile(
               leading: Icon(Icons.exit_to_app),
               title: Text("Sign out"),
-              onTap: () async {
-                
+              onTap: () {
+                Navigator.pushNamedAndRemoveUntil(context, Routes.phone ,(Route<dynamic> route) => false);
               },
             ),
           ),

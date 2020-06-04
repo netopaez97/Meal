@@ -1,4 +1,6 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:meal/utils/utils.dart';
 
 class Meal extends StatelessWidget {
   @override
@@ -32,7 +34,7 @@ class Input extends StatelessWidget {
         color: Colors.white,
         borderRadius: BorderRadius.circular(10),
       ),
-      width: 210,
+      width: pageWidthPresentation,
       child: TextField(
         textAlign: TextAlign.center,
         keyboardType: typeInput,
@@ -79,8 +81,9 @@ class IconAdd extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onTap,
+    return CupertinoButton(
+      padding: EdgeInsets.zero,
+      onPressed: onTap,
       child: Icon(
         Icons.add,
         color: primaryColor,

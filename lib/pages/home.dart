@@ -1,6 +1,6 @@
 import 'package:carousel_pro/carousel_pro.dart';
 import 'package:flutter/material.dart';
-import 'package:meal/utils/drawer.dart';
+import 'package:meal/widgets/drawer.dart';
 
 class HomePage extends StatefulWidget {
 
@@ -58,9 +58,9 @@ class _HomePageState extends State<HomePage> {
           child: Carousel(
             borderRadius: true,
             images: [
-              NetworkImage('https://popmenucloud.com/cdn-cgi/image/width=1920,height=1920,fit=scale-down,format=auto/coqsgvki/5cc4e080-5243-47c0-a9f5-ed4f7d6dfdc2.jpg'),
-              NetworkImage('https://popmenucloud.com/cdn-cgi/image/width=1920,height=1920,fit=scale-down,format=auto/coqsgvki/b4f5aba0-4546-46ee-b7f8-4d7e34a4e582.jpg'),
-              NetworkImage('https://popmenucloud.com/cdn-cgi/image/width=1920,height=1920,fit=scale-down,format=auto/coqsgvki/047ac5fc-52aa-4ab3-aa90-40d611d66101.jpg'),
+              Image.asset("assets/theBarKc.jpg"),
+              Image.asset("assets/hamburguer.jpg"),
+              Image.asset("assets/meeting.jpg"),
             ],
           ),
         ),
@@ -75,9 +75,9 @@ class _HomePageState extends State<HomePage> {
         padding: EdgeInsets.only(left: 4,right: 4),
         scrollDirection: Axis.horizontal,
         children: <Widget>[
-          _categoryLogo("Drinks","https://popmenucloud.com/cdn-cgi/image/width=1920,height=1920,fit=scale-down,format=auto/coqsgvki/4e2d6631-d316-45a8-b75c-cd51340c65bb.jpg"),
-          _categoryLogo("Dinner","https://popmenucloud.com/cdn-cgi/image/width=1920,height=1920,fit=scale-down,format=auto/coqsgvki/b4f5aba0-4546-46ee-b7f8-4d7e34a4e582.jpg"),
-          _categoryLogo("COVID-19", "https://popmenucloud.com/cdn-cgi/image/width=960,height=960,fit=scale-down,format=auto/coqsgvki/5cc4e080-5243-47c0-a9f5-ed4f7d6dfdc2.jpg")
+          _categoryLogo("Drinks","assets/drink.jpg"),
+          _categoryLogo("Dinner","assets/hamburguer.jpg"),
+          _categoryLogo("COVID-19", "assets/theBarKc.jpg")
         ],
       ),
     );
@@ -99,7 +99,7 @@ class _HomePageState extends State<HomePage> {
           child: Center(
             child: Column(
               children: <Widget>[
-                Expanded(child: Image.network(_imageNetwork),),
+                Expanded(child: Image.asset(_imageNetwork),),
                 Text(_category)
               ],
             )
@@ -134,7 +134,7 @@ class _HomePageState extends State<HomePage> {
           elevation: 2,
           child: ListTile(
             onTap: () => _scaffolKey.currentState.showSnackBar(snackBarErrorCreacion),
-            leading: Image.network("https://popmenucloud.com/cdn-cgi/image/width=1920,height=1920,fit=scale-down,format=auto/coqsgvki/b4f5aba0-4546-46ee-b7f8-4d7e34a4e582.jpg"),
+            leading: Image.asset("assets/hamburguer.jpg"),
             title: Text("Special hamburguer"),
             subtitle: Text("Price: \$12"),
             trailing: IconButton(icon: Icon(Icons.navigate_next), onPressed: ()=>_scaffolKey.currentState.showSnackBar(snackBarErrorCreacion)),

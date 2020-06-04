@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:meal/pages/home.dart';
+import 'package:meal/utils/utils.dart';
 
 import 'package:meal/widgets/widgets.dart';
 
@@ -18,49 +19,55 @@ class _DatePageState extends State<DatePage> {
     DateTime _dateTime = DateTime.now();
 
     return Scaffold(
+      appBar: AppBar(elevation:0),
       backgroundColor: backgroundColor,
-      body: Container(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Meal(),
-            SizedBox(height: 10),
-            SizedBox(height: 10),
-            Container(
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: <Widget>[
-                  Container(
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                    height: 200,
-                    width: 300,
-                    child: CupertinoDatePicker(
-                      initialDateTime: _dateTime,
-                      onDateTimeChanged: (dateTime) {
-                        setState(() {
-                          _dateTime = dateTime;
-                        });
-                      },
-                    ),
+      body: Stack(
+        children: <Widget>[
+          Container(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(10)
+            ),
+            width: MediaQuery.of(context).size.width,
+            alignment: Alignment.center,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Meal(),
+                SizedBox(height: 20),
+                Container(
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(20),
                   ),
-                  SizedBox(width: 10),
-                  IconAdd(
-                    primaryColor: primaryColor,
-                    onTap: () {
-                      Navigator.pushNamed(context, HomePage.routeName);
+                  height: 200,
+                  width: pageWidthPresentation,
+                  child: CupertinoDatePicker(
+                    initialDateTime: _dateTime,
+                    onDateTimeChanged: (dateTime) {
+                      setState(() {
+                        _dateTime = dateTime;
+                      });
                     },
                   ),
-                  SizedBox(width: 10),
-                ],
-              ),
+                ),
+                SizedBox(height: 20),
+                InputText(text: 'What time is your meal?'),
+              ],
             ),
-            SizedBox(height: 10),
-            InputText(text: 'What time is your meal?'),
-          ],
-        ),
+          ),
+          Positioned(
+            top: 0,
+            bottom: 0,
+            right: 0,
+            left: pageWidthPresentation+50,
+            child: IconAdd(
+              primaryColor: primaryColor,
+              onTap: () {
+                Navigator.pushNamedAndRemoveUntil(context, HomePage.routeName, (Route routes) => false);
+              },
+            ),
+          ),
+        ] 
       ),
     );
   }

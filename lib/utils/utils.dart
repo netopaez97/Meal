@@ -15,7 +15,7 @@ const MaterialColor blackColor = MaterialColor(
     900: Color(0xFF000000),
   },
 );
-const int _blackColorValue = 0xFF000000;
+const int _blackColorValue =  0xff241C24;
 
 const MaterialColor orangeColor = MaterialColor(
   _orangeColorValue,
@@ -26,4 +26,6 @@ const MaterialColor orangeColor = MaterialColor(
     600: Color(0xFFE65100),
   },
 );
-const int _orangeColorValue = 0xFFEF6C00;
+const int _orangeColorValue = 0xffF26722;
+
+const double pageWidthPresentation = 221;

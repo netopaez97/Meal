@@ -12,8 +12,8 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'MEAL',
       theme: ThemeData(
-        primarySwatch: utils.blackColor,
-        primaryColor: utils.orangeColor
+        primaryColor: utils.blackColor,
+        primarySwatch: Colors.orange
       ),
       initialRoute: Routes.phone,
       routes: getApplicationRoutes(),
