@@ -41,13 +41,22 @@ class _DatePageState extends State<DatePage> {
                   ),
                   height: 200,
                   width: pageWidthPresentation,
-                  child: CupertinoDatePicker(
-                    initialDateTime: _dateTime,
-                    onDateTimeChanged: (dateTime) {
-                      setState(() {
-                        _dateTime = dateTime;
-                      });
-                    },
+                  child: CupertinoTheme(
+                    data: CupertinoThemeData(
+                        textTheme: CupertinoTextThemeData(
+                            dateTimePickerTextStyle: TextStyle(
+                                fontSize: 50,
+                            ),
+                        ),
+                    ),
+                    child: CupertinoDatePicker(
+                      initialDateTime: _dateTime,
+                      onDateTimeChanged: (dateTime) {
+                        setState(() {
+                          _dateTime = dateTime;
+                        });
+                      },
+                    ),
                   ),
                 ),
                 SizedBox(height: 20),
@@ -55,7 +64,7 @@ class _DatePageState extends State<DatePage> {
               ],
             ),
           ),
-          Positioned(
+          Positioned( 
             top: 0,
             bottom: 0,
             right: 0,

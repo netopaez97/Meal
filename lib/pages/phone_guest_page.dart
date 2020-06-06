@@ -66,18 +66,24 @@ class GuestPage extends StatelessWidget {
               ),
             ),
           ),
-          Column(
-            children: <Widget>[
-              SizedBox(height: media.height * 0.24),
-              Icon(Icons.add, size: media.width * 0.12, color: orangeColor),
-              Text(
-                "Add guest",
-                style: TextStyle(color: Colors.white),
-                textScaleFactor: media.width * 0.002,
-              )
-            ],
-            mainAxisAlignment: MainAxisAlignment.center,
-          )
+          CupertinoButton(
+            padding: EdgeInsets.zero,
+            child: Column(
+              children: <Widget>[
+                SizedBox(height: media.height * 0.24),
+                Icon(Icons.add, size: media.width * 0.12, color: orangeColor),
+                Text(
+                  "Add guest",
+                  style: TextStyle(color: Colors.white),
+                  textScaleFactor: media.width * 0.002,
+                )
+              ],
+              mainAxisAlignment: MainAxisAlignment.center,
+            ),
+            onPressed: (){
+              Navigator.pushNamed(context, Routes.guestEmail);
+            },
+          ),
         ],
       ),
     );
