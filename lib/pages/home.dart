@@ -1,5 +1,6 @@
 import 'package:carousel_pro/carousel_pro.dart';
 import 'package:flutter/material.dart';
+import 'package:meal/routes/routes.dart';
 import 'package:meal/widgets/drawer.dart';
 
 class HomePage extends StatefulWidget {
@@ -133,7 +134,8 @@ class _HomePageState extends State<HomePage> {
           borderRadius: BorderRadius.all(Radius.circular(4)),
           elevation: 2,
           child: ListTile(
-            onTap: () => _scaffolKey.currentState.showSnackBar(snackBarErrorCreacion),
+            // onTap: () => _scaffolKey.currentState.showSnackBar(snackBarErrorCreacion),
+            onTap: () => Navigator.pushNamed(context, Routes.conference),
             leading: Image.asset("assets/hamburguer.jpg"),
             title: Text("Special hamburguer"),
             subtitle: Text("Price: \$12"),
