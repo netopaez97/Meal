@@ -10,7 +10,7 @@ class EmailPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final media = MediaQuery.of(context).size;
     return Scaffold(
-      appBar: AppBar(elevation: 0),
+      appBar: AppBar(elevation: 0, title: Text("Neto"),),
       backgroundColor: blackColors,
       body: Padding(
         padding: EdgeInsets.only(
@@ -39,7 +39,7 @@ class EmailPage extends StatelessWidget {
                   ),
                   SizedBox(width: media.width * 0.01),
                   IconAdd(onPressed: () {
-                    Navigator.pushNamed(context, Routes.date);
+                    Navigator.pushNamed(context, Routes.selection);
                   }),
                 ],
               )

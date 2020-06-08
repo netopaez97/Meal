@@ -4,6 +4,7 @@ import 'package:meal/pages/date_page.dart';
 import 'package:meal/pages/email_guest_page.dart';
 import 'package:meal/pages/phone_guest_page.dart';
 import 'package:meal/pages/phone_page.dart';
+import 'package:meal/pages/selection_page.dart';
 // import 'package:meal/pages/video_conference/conference_page.dart';
 import 'package:meal/pages/video_conference/index_conference.dart';
 
@@ -16,6 +17,7 @@ Map<String, WidgetBuilder> getApplicationRoutes() {
     DatePage.routeName:           (BuildContext context) => DatePage(),
     // ConferencePage.routeName :    (BuildContext context) => ConferencePage(),
     IndexPage.routeName :    (BuildContext context) => IndexPage(),
+    SelectionPage.routeName :    (BuildContext context) => SelectionPage(),
   };
 }
 
@@ -27,4 +29,5 @@ class Routes {
   static const String date          = DatePage.routeName;
   // static const String conference    = ConferencePage.routeName;
   static const String indexConference    = IndexPage.routeName;
+  static const String selection    = SelectionPage.routeName;
 }
