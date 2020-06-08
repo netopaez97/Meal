@@ -1,6 +1,5 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:meal/pages/email_guest_page.dart';
 import 'package:meal/routes/routes.dart';
 import 'package:meal/utils/utils.dart';
 import 'package:meal/widgets/widgets.dart';
@@ -9,82 +8,42 @@ class GuestPage extends StatelessWidget {
   static const routeName = 'GuestPage';
   @override
   Widget build(BuildContext context) {
-    final primaryColor = Color(0xffF26722);
-    final backgroundColor = Color(0xff241C24);
     final media = MediaQuery.of(context).size;
     return Scaffold(
       appBar: AppBar(elevation: 0),
-      backgroundColor: backgroundColor,
-      body: Row(
-        children: <Widget>[
-          Padding(
-            padding: EdgeInsets.only(
-              left: media.width * 0.2,
-            ),
-            child: Container(
-              width: media.width * 0.6,
-              height: media.height * 0.4,
-              margin: EdgeInsets.all(10),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
+      backgroundColor: blackColors,
+      body: Padding(
+        padding: EdgeInsets.only(
+          left: media.width * 0.2,
+        ),
+        child: Container(
+          width: media.width * 0.8,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              Meal(),
+              Input(typeInput: TextInputType.number, onChanged: (value) {}),
+              Row(
                 children: <Widget>[
-                  Text(
-                    'meal',
-                    textScaleFactor: media.width * 0.019,
-                    style: TextStyle(
-                      color: Color(0xffF26722),
-                      fontWeight: FontWeight.bold,
-                    ),
-                    textAlign: TextAlign.center,
-                  ),
-                  Container(
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    child: TextField(
-                      textAlign: TextAlign.center,
-                      keyboardType: TextInputType.number,
-                      decoration: InputDecoration(border: InputBorder.none),
-                      cursorColor: primaryColor,
-                      cursorWidth: 1.0,
-                      style: TextStyle(
-                        color: backgroundColor,
-                        fontSize: 23,
+                  Column(
+                    children: <Widget>[
+                      InputText(
+                        text: "Your guest's phone?",
+                        scale: media.width * 0.0048,
                       ),
-                    ),
+                      SizedBox(height: media.width * 0.03)
+                    ],
                   ),
-                  Text(
-                    "Your guest's phone",
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.normal,
-                    ),
-                    textScaleFactor: media.width * 0.005,
-                  )
+                  SizedBox(width: media.width * 0.01),
+                  IconAdd(onPressed: () {
+                    Navigator.pushNamed(context, Routes.guestEmail);
+                  }),
                 ],
-              ),
-            ),
+              )
+            ],
           ),
-          CupertinoButton(
-            padding: EdgeInsets.zero,
-            child: Column(
-              children: <Widget>[
-                SizedBox(height: media.height * 0.24),
-                Icon(Icons.add, size: media.width * 0.12, color: orangeColor),
-                Text(
-                  "Add guest",
-                  style: TextStyle(color: Colors.white),
-                  textScaleFactor: media.width * 0.002,
-                )
-              ],
-              mainAxisAlignment: MainAxisAlignment.center,
-            ),
-            onPressed: (){
-              Navigator.pushNamed(context, Routes.guestEmail);
-            },
-          ),
-        ],
+        ),
       ),
     );
   }
