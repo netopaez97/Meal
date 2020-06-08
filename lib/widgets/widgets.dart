@@ -5,45 +5,56 @@ import 'package:meal/utils/utils.dart';
 class Meal extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Text(
-      'meal',
-      style: TextStyle(
-          color: Color(0xffF26722),
-          fontWeight: FontWeight.bold,
-          fontSize: 100.0,
-          height: 0.5),
+    final media = MediaQuery.of(context).size;
+    return Container(
+      height:  media.width * 0.16,
+      width: media.width * 0.6,
+      child: FittedBox(
+        fit: BoxFit.fill,
+        child: Text(
+          'meal',
+          style: TextStyle(
+            color: orangeColors,
+            fontWeight: FontWeight.bold,
+          ),
+          textAlign: TextAlign.center,
+        ),
+      ),
     );
   }
 }
 
 class Input extends StatelessWidget {
+  final TextInputType typeInput;
+  final onChanged;
+
   const Input({
     @required this.typeInput,
-    @required this.primaryColor,
-    @required this.backgroundColor,
+    @required this.onChanged,
   });
-
-  final TextInputType typeInput;
-  final Color primaryColor;
-  final Color backgroundColor;
 
   @override
   Widget build(BuildContext context) {
+    final media = MediaQuery.of(context).size;
     return Container(
+      width: media.width * 0.6,
+      height: media.width * 0.14,
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(10),
       ),
-      width: pageWidthPresentation,
-      child: TextField(
-        textAlign: TextAlign.center,
-        keyboardType: typeInput,
-        decoration: InputDecoration(border: InputBorder.none),
-        cursorColor: primaryColor,
-        cursorWidth: 1.0,
-        style: TextStyle(
-          color: backgroundColor,
-          fontSize: 23,
+      child: Center(
+        child: TextField(
+          textAlign: TextAlign.center,
+          keyboardType: typeInput,
+          decoration: InputDecoration(border: InputBorder.none),
+          cursorColor: orangeColors,
+          cursorWidth: 1.0,
+          style: TextStyle(
+            color: blackColors,
+            fontSize: media.width * 0.07,
+          ),
+          onChanged: onChanged,
         ),
       ),
     );
@@ -51,58 +62,50 @@ class Input extends StatelessWidget {
 }
 
 class InputText extends StatelessWidget {
+  final String text;
+  final double scale;
   const InputText({
     @required this.text,
+    this.scale = 1,
   });
-
-  final String text;
 
   @override
   Widget build(BuildContext context) {
-    return Text(
-      text,
-      style: TextStyle(
-        color: Colors.white,
-        fontWeight: FontWeight.normal,
-        fontSize: 23,
+    return Container(
+      child: Text(
+        text,
+        style: TextStyle(
+          color: Colors.white,
+          fontWeight: FontWeight.normal,
+        ),
+        textScaleFactor: scale,
       ),
     );
   }
 }
 
 class IconAdd extends StatelessWidget {
+  final onPressed;
   const IconAdd({
-    @required this.onTap,
-    @required this.primaryColor,
+    @required this.onPressed,
   });
 
-  final Null Function() onTap;
-  final Color primaryColor;
-
   @override
   Widget build(BuildContext context) {
+    final media = MediaQuery.of(context).size;
     return CupertinoButton(
       padding: EdgeInsets.zero,
-      onPressed: onTap,
-      child: Icon(
-        Icons.add,
-        color: primaryColor,
-        size: 50,
+      child: Column(
+        children: <Widget>[
+          Icon(Icons.add, size: media.width * 0.14, color: orangeColor),
+          Text(
+            "Add guest",
+            style: TextStyle(color: Colors.white),
+            textScaleFactor: media.width * 0.002,
+          )
+        ],
       ),
-    );
-  }
-}
-
-class TextAdd extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Text(
-      'add guest',
-      style: TextStyle(
-        color: Colors.white,
-        fontWeight: FontWeight.normal,
-        fontSize: 15,
-      ),
+      onPressed: onPressed,
     );
   }
 }
