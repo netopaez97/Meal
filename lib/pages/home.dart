@@ -135,7 +135,7 @@ class _HomePageState extends State<HomePage> {
           elevation: 2,
           child: ListTile(
             // onTap: () => _scaffolKey.currentState.showSnackBar(snackBarErrorCreacion),
-            onTap: () => Navigator.pushNamed(context, Routes.conference),
+            onTap: () => Navigator.pushNamed(context, Routes.indexConference),
             leading: Image.asset("assets/hamburguer.jpg"),
             title: Text("Special hamburguer"),
             subtitle: Text("Price: \$12"),

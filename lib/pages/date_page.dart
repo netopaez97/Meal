@@ -73,7 +73,7 @@ class _DatePageState extends State<DatePage> {
               data: CupertinoThemeData(
                 textTheme: CupertinoTextThemeData(
                   dateTimePickerTextStyle: TextStyle(
-                    fontSize: media.width * 0.07,
+                    fontSize: media.width * 0.04,
                   ),
                 ),
               ),
