@@ -8,6 +8,8 @@ import 'package:meal/pages/selection_page.dart';
 // import 'package:meal/pages/video_conference/conference_page.dart';
 import 'package:meal/pages/video_conference/index_conference.dart';
 
+import '../pages/login_page.dart';
+
 Map<String, WidgetBuilder> getApplicationRoutes() {
   return <String, WidgetBuilder>{
     HomePage.routeName:           (BuildContext context) => HomePage(),
@@ -18,6 +20,7 @@ Map<String, WidgetBuilder> getApplicationRoutes() {
     // ConferencePage.routeName :    (BuildContext context) => ConferencePage(),
     IndexPage.routeName :    (BuildContext context) => IndexPage(),
     SelectionPage.routeName :    (BuildContext context) => SelectionPage(),
+    LoginPage.routeName :    (BuildContext context) => LoginPage(),
   };
 }
 
@@ -30,4 +33,5 @@ class Routes {
   // static const String conference    = ConferencePage.routeName;
   static const String indexConference    = IndexPage.routeName;
   static const String selection    = SelectionPage.routeName;
+  static const String login    = LoginPage.routeName;
 }
