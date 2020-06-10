@@ -1,4 +1,4 @@
-package com.example.meal
+package com.netopaez.meal
 
 import androidx.annotation.NonNull;
 import io.flutter.embedding.android.FlutterActivity
