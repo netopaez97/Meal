@@ -33,7 +33,7 @@ class LoginPage extends StatelessWidget {
                 child: Center(
                   child: TextField(
                     textAlign: TextAlign.center,
-                    keyboardType: TextInputType.text,
+                    keyboardType: TextInputType.emailAddress,
                     decoration: InputDecoration(
                       border: InputBorder.none,
                       hintText: 'Email',

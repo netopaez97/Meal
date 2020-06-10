@@ -28,10 +28,10 @@ class Routes {
   static const String home          = HomePage.routeName;
   static const String phone         = PhonePage.routeName;
   static const String guestPhone    = GuestPage.routeName;
-  static const String guestEmail    = EmailPage.routeName;
-  static const String date          = DatePage.routeName;
+  static const String guestEmail          = EmailPage.routeName;
+  static const String date                = DatePage.routeName;
   // static const String conference    = ConferencePage.routeName;
-  static const String indexConference    = IndexPage.routeName;
-  static const String selection    = SelectionPage.routeName;
-  static const String login    = LoginPage.routeName;
+  static const String indexConference     = IndexPage.routeName;
+  static const String selection           = SelectionPage.routeName;
+  static const String login               = LoginPage.routeName;
 }
