@@ -15,7 +15,7 @@ class MyApp extends StatelessWidget {
         primaryColor: utils.blackColor,
         primarySwatch: Colors.orange
       ),
-      initialRoute: Routes.login,
+      initialRoute: Routes.home,
       routes: getApplicationRoutes(),
     );
   }

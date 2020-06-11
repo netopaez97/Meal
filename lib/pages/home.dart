@@ -1,5 +1,8 @@
 import 'package:carousel_pro/carousel_pro.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:meal/models/product_model.dart';
+import 'package:meal/providers/products_provider.dart';
 import 'package:meal/routes/routes.dart';
 import 'package:meal/widgets/drawer.dart';
 
@@ -110,24 +113,43 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
+  ///This widget will use ProductoProvider.dart to get the elements in the Database with
+  ///an amount greater than 0.
   Widget _suggestedOptions(){
-    return SizedBox(
-      height: MediaQuery.of(context).size.height*0.4,
-      child: ListView(
-        padding: EdgeInsets.all(8),
-        children: <Widget>[
-          _option(),
-          _option(),
-          _option(),
-          _option(),
-          _option(),
-          _option(),
-        ],
-      ),
+
+    final ProductsProvider _productProvider = ProductsProvider();
+
+    return StreamBuilder<QuerySnapshot>(
+      stream: _productProvider.getAllProductosAvaliable(),
+      builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot){
+        
+        if(!snapshot.hasData)
+          return Center(child: LinearProgressIndicator());
+
+        if(snapshot.data == null || snapshot.data.documents.length == 0)
+          return Center(child: Text("There is no products avaliable in our store."));
+        
+        
+        return  SizedBox(
+          height: MediaQuery.of(context).size.height*0.4,
+          child: ListView.builder(
+            itemCount: snapshot.data.documents.length,
+            padding: EdgeInsets.all(8),
+            itemBuilder: (context, productItem){
+
+              final temp = Map<String,dynamic>.from(snapshot.data.documents[productItem].data);
+              ProductModel _producto = ProductModel.fromJson(temp);
+              _producto.idProduct = snapshot.data.documents[productItem].documentID;
+
+              return _option(_producto);
+            },
+          ),
+        );
+      }
     );
   }
 
-  Widget _option(){
+  Widget _option(ProductModel _producto){
     return Column(
       children: <Widget>[
         Material(
@@ -136,9 +158,23 @@ class _HomePageState extends State<HomePage> {
           child: ListTile(
             // onTap: () => _scaffolKey.currentState.showSnackBar(snackBarErrorCreacion),
             onTap: () => Navigator.pushNamed(context, Routes.indexConference),
-            leading: Image.asset("assets/hamburguer.jpg"),
-            title: Text("Special hamburguer"),
-            subtitle: Text("Price: \$12"),
+            leading: CircleAvatar(
+              backgroundColor: Colors.transparent,
+              radius: MediaQuery.of(context).size.width*0.1,
+              child:Image.network(_producto.image, )
+            ),
+            title: Text(_producto.name),
+            subtitle: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                SizedBox(height:10),
+                Text("Price: \$${_producto.currentPrice}"),
+                _producto.description.length > 40 
+                  ?Text(_producto.description.substring(0,40)+"...")
+                  :Text(_producto.description),
+                SizedBox(height:10),
+              ],
+            ),
             trailing: IconButton(icon: Icon(Icons.navigate_next), onPressed: ()=>_scaffolKey.currentState.showSnackBar(snackBarErrorCreacion)),
           ),
         ),
