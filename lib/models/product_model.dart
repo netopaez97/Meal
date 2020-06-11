@@ -9,50 +9,50 @@ class ProductModel {
   ProductModel({
     this.idProduct,
     this.name,
-    this.durrentPrice,
-    this.dategory,
-    this.disccount,
+    this.currentPrice,
+    this.category,
+    this.discount,
     this.description,
     this.amount,
     this.image,
-    this.qualification,
+    this.rating,
     this.numberRatings,
   });
 
   String idProduct;
   String name;
-  int durrentPrice;
-  String dategory;
-  double disccount;
+  double currentPrice;
+  String category;
+  double discount;
   String description;
   int amount;
   String image;
-  int qualification;
+  double rating;
   int numberRatings;
 
   factory ProductModel.fromJson(Map<String, dynamic> json) => ProductModel(
         idProduct: json["idProduct"],
         name: json["name"],
-        durrentPrice: json["durrentPrice"],
-        dategory: json["dategory"],
-        disccount: json["disccount"].toDouble(),
+        currentPrice: json["currentPrice"],
+        category: json["category"],
+        discount: json["discount"].toDouble(),
         description: json["description"],
         amount: json["amount"],
         image: json["image"],
-        qualification: json["qualification"],
+        rating: json["rating"],
         numberRatings: json["numberRatings"],
       );
 
   Map<String, dynamic> toJson() => {
         "idProduct": idProduct,
         "name": name,
-        "durrentPrice": durrentPrice,
-        "dategory": dategory,
-        "disccount": disccount,
+        "currentPrice": currentPrice,
+        "category": category,
+        "discount": discount,
         "description": description,
         "amount": amount,
         "image": image,
-        "qualification": qualification,
+        "rating": rating,
         "numberRatings": numberRatings,
       };
 }
