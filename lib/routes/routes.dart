@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:meal/pages/home.dart';
 import 'package:meal/pages/date_page.dart';
 import 'package:meal/pages/email_guest_page.dart';
+import 'package:meal/pages/initial_page.dart';
 import 'package:meal/pages/phone_guest_page.dart';
 import 'package:meal/pages/phone_page.dart';
 import 'package:meal/pages/selection_page.dart';
@@ -21,6 +22,8 @@ Map<String, WidgetBuilder> getApplicationRoutes() {
     IndexPage.routeName :    (BuildContext context) => IndexPage(),
     SelectionPage.routeName :    (BuildContext context) => SelectionPage(),
     LoginPage.routeName :    (BuildContext context) => LoginPage(),
+    
+    InitialPage.routeName :    (BuildContext context) => InitialPage(),
   };
 }
 
@@ -34,4 +37,5 @@ class Routes {
   static const String indexConference     = IndexPage.routeName;
   static const String selection           = SelectionPage.routeName;
   static const String login               = LoginPage.routeName;
+  static const String initial               = InitialPage.routeName;
 }
