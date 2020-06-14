@@ -87,7 +87,7 @@ class MainDrawer extends StatelessWidget {
               leading: Icon(Icons.exit_to_app),
               title: Text("Sign out"),
               onTap: () {
-                Navigator.pushNamedAndRemoveUntil(context, Routes.phone ,(Route<dynamic> route) => false);
+                Navigator.pushNamedAndRemoveUntil(context, Routes.initial ,(Route<dynamic> route) => false);
               },
             ),
           ),

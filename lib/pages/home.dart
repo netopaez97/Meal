@@ -2,8 +2,8 @@ import 'package:carousel_pro/carousel_pro.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:meal/models/product_model.dart';
+import 'package:meal/pages/detail_page.dart';
 import 'package:meal/providers/products_provider.dart';
-import 'package:meal/routes/routes.dart';
 import 'package:meal/widgets/drawer.dart';
 
 class HomePage extends StatefulWidget {
@@ -35,7 +35,10 @@ class _HomePageState extends State<HomePage> {
   Widget _superiorNavBar() => AppBar(
     title: Text("The Bars KC",),
     actions: <Widget>[
-      
+      IconButton(
+        icon: Icon(Icons.shopping_cart),
+        onPressed: (){},
+      )
     ],
   );
 
@@ -157,7 +160,7 @@ class _HomePageState extends State<HomePage> {
           elevation: 2,
           child: ListTile(
             // onTap: () => _scaffolKey.currentState.showSnackBar(snackBarErrorCreacion),
-            onTap: () => Navigator.pushNamed(context, Routes.indexConference),
+            onTap: () => showDialog(context: context, builder: (BuildContext context) => ProductDetailPage(_producto)),
             leading: CircleAvatar(
               backgroundColor: Colors.transparent,
               radius: MediaQuery.of(context).size.width*0.1,

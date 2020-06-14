@@ -80,23 +80,18 @@ class InitialPage extends StatelessWidget {
                 SizedBox(
                   width: 5,
                 ),
-                GestureDetector(
-                  onTap: () {
-                    showDetail(context, product);
-                  },
-                  child: Container(
-                    height: media.width * 0.1,
-                    width: media.width * 0.6,
-                    child: FittedBox(
-                      fit: BoxFit.fill,
-                      child: Text(
-                        "Go to meal",
-                        style: TextStyle(
-                          color: orangeColor,
-                          fontWeight: FontWeight.normal,
-                        ),
-                        textScaleFactor: media.width * 0.0055,
+                Container(
+                  height: media.width * 0.1,
+                  width: media.width * 0.6,
+                  child: FittedBox(
+                    fit: BoxFit.fill,
+                    child: Text(
+                      "Go to meal",
+                      style: TextStyle(
+                        color: orangeColor,
+                        fontWeight: FontWeight.normal,
                       ),
+                      textScaleFactor: media.width * 0.0055,
                     ),
                   ),
                 ),

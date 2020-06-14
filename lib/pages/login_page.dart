@@ -11,6 +11,7 @@ class LoginPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final media = MediaQuery.of(context).size;
     return Scaffold(
+      appBar: AppBar(elevation:0),
       backgroundColor: blackColors,
       body: Padding(
         padding: EdgeInsets.only(
