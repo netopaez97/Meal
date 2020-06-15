@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:meal/models/product_model.dart';
-import 'package:meal/pages/order_page.dart';
+import 'package:meal/pages/payment/order_page.dart';
 import 'package:meal/providers/products_provider.dart';
 import 'package:meal/providers/shopping_cart_provider.dart';
 import 'package:meal/providers/variables_providers.dart';

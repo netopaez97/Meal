@@ -2,8 +2,8 @@ import 'package:carousel_pro/carousel_pro.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:meal/models/product_model.dart';
-import 'package:meal/pages/buy_page.dart';
-import 'package:meal/pages/detail_page.dart';
+import 'package:meal/pages/payment/buy_page.dart';
+import 'package:meal/pages/payment/detail_page.dart';
 import 'package:meal/providers/products_provider.dart';
 import 'package:meal/widgets/drawer.dart';
 

@@ -25,12 +25,6 @@ class _OrderState extends State<OrderPage> {
         title: Text(
           "Order",
         ),
-        // actions: <Widget>[
-        //   IconButton(
-        //     icon: Icon(Icons.delete_forever),
-        //     onPressed: () {},
-        //   )
-        // ],
       ),
       body: Padding(
         padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
@@ -42,7 +36,7 @@ class _OrderState extends State<OrderPage> {
               keyboardType: TextInputType.text,
               decoration: InputDecoration(
                 border: OutlineInputBorder(),
-                hintText: 'Contact Number',
+                hintText: 'Phone number',
                 hintStyle: TextStyle(
                   color: blackColors.withOpacity(0.5),
                   fontSize: media.width * 0.05,
@@ -98,7 +92,7 @@ class _OrderState extends State<OrderPage> {
                     keyboardType: TextInputType.text,
                     decoration: InputDecoration(
                       border: OutlineInputBorder(),
-                      hintText: 'Direction',
+                      hintText: 'Address',
                       hintStyle: TextStyle(
                         color: blackColors.withOpacity(0.5),
                         fontSize: media.width * 0.05,

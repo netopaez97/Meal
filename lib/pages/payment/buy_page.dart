@@ -22,32 +22,30 @@ class _BuyPageState extends State<BuyPage> {
     final variablesProvider =
         Provider.of<VariablesProvider>(context, listen: false);
     final media = MediaQuery.of(context).size;
-    return Padding(
-      padding: EdgeInsets.symmetric(vertical: media.width * 0.4),
-      child: AlertDialog(
-        contentPadding: EdgeInsets.symmetric(
-          vertical: media.width * 0.1,
-          horizontal: media.width * 0.05,
+    return AlertDialog(
+      title: Center(
+        child: Text(
+          widget.product.name,
+          style: TextStyle(
+            color: orangeColors,
+            fontSize: media.width * 0.08,
+          ),
+          textAlign: TextAlign.center,
         ),
-        elevation: 20,
-        backgroundColor: blackColors,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(20.0),
-        ),
-        content: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
+      ),
+      elevation: 20,
+      backgroundColor: blackColors,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(20.0),
+      ),
+      content: SizedBox(
+        height: MediaQuery.of(context).size.height*0.3,
+        width: MediaQuery.of(context).size.width*0.9,
+        child: ListView(
+          // mainAxisAlignment: MainAxisAlignment.start,
+          // crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            Center(
-              child: Text(
-                widget.product.name,
-                style: TextStyle(
-                  color: orangeColors,
-                  fontSize: media.width * 0.08,
-                ),
-                textAlign: TextAlign.center,
-              ),
-            ),
+            
             SizedBox(height: 5),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -96,7 +94,6 @@ class _BuyPageState extends State<BuyPage> {
                 child: Padding(
                   padding: EdgeInsets.all(5),
                   child: TextField(
-                    enabled: false,
                     textAlign: TextAlign.center,
                     keyboardType: TextInputType.text,
                     maxLines: 4,
@@ -114,40 +111,40 @@ class _BuyPageState extends State<BuyPage> {
                 ))
           ],
         ),
-        actions: <Widget>[
-          FlatButton(
-            child: Text(
-              "Cancel",
-              style: TextStyle(
-                color: orangeColors,
-                fontSize: 12,
-              ),
-            ),
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
-          ),
-          FlatButton(
-            child: Text(
-              "Buy",
-              style: TextStyle(
-                color: orangeColors,
-                fontSize: 12,
-              ),
-            ),
-            onPressed: () async {
-              variablesProvider.total = variablesProvider.total+(cantidad * widget.product.currentPrice);
-              final _shoppingCart = ShoppingCartModel(
-                  idProduct: widget.product.idProduct,
-                  quantityProducts: cantidad,
-                  productComment: descripcion);
-              await _shoppingCartProvider.newShoppingCart(_shoppingCart);
-              Navigator.pop(context);
-              Navigator.of(context).pushNamed(Routes.car);
-            },
-          ),
-        ],
       ),
+      actions: <Widget>[
+        FlatButton(
+          child: Text(
+            "Cancel",
+            style: TextStyle(
+              color: orangeColors,
+              fontSize: 12,
+            ),
+          ),
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+        ),
+        FlatButton(
+          child: Text(
+            "Buy",
+            style: TextStyle(
+              color: orangeColors,
+              fontSize: 12,
+            ),
+          ),
+          onPressed: () async {
+            variablesProvider.total = variablesProvider.total+(cantidad * widget.product.currentPrice);
+            final _shoppingCart = ShoppingCartModel(
+                idProduct: widget.product.idProduct,
+                quantityProducts: cantidad,
+                productComment: descripcion);
+            await _shoppingCartProvider.newShoppingCart(_shoppingCart);
+            Navigator.pop(context);
+            Navigator.of(context).pushNamed(Routes.car);
+          },
+        ),
+      ],
     );
   }
 }

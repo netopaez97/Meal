@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:meal/models/product_model.dart';
-import 'package:meal/pages/buy_page.dart';
+import 'package:meal/pages/payment/buy_page.dart';
 import 'package:meal/utils/utils.dart';
 
 class ProductDetailPage extends StatefulWidget {
@@ -16,6 +16,16 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
   Widget build(BuildContext context) {
     final media = MediaQuery.of(context).size;
     return AlertDialog(
+      title: Center(
+        child: Text(
+          widget.product.name,
+          style: TextStyle(
+            color: orangeColors,
+            fontSize: media.width * 0.08,
+          ),
+          textAlign: TextAlign.center,
+        ),
+      ),
       // scrollable: true,
       elevation: 20,
       backgroundColor: blackColors,
@@ -27,16 +37,6 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
         height: MediaQuery.of(context).size.height * 0.5,
         child: ListView(
           children: <Widget>[
-            Center(
-              child: Text(
-                widget.product.name,
-                style: TextStyle(
-                  color: orangeColors,
-                  fontSize: media.width * 0.08,
-                ),
-                textAlign: TextAlign.center,
-              ),
-            ),
             SizedBox(height: 20),
             Container(
               width: double.infinity,

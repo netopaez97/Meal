@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:meal/pages/home.dart';
 import 'package:meal/pages/date_page.dart';
 import 'package:meal/pages/email_guest_page.dart';
-import 'package:meal/pages/initial_page.dart';
+import 'package:meal/pages/landing_page.dart';
 import 'package:meal/pages/phone_guest_page.dart';
 import 'package:meal/pages/phone_page.dart';
 import 'package:meal/pages/selection_page.dart';
