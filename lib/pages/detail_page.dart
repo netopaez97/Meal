@@ -103,7 +103,7 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
         ),
         FlatButton(
           child: Text(
-            "Buy",
+            "Next",
             style: TextStyle(
               color: orangeColors,
               fontSize: 12,

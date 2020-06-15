@@ -100,21 +100,26 @@ class _HomePageState extends State<HomePage> {
       child: Material(
         color: Colors.transparent,
         elevation: 4,
-        child: Container(
-          height: MediaQuery.of(context).size.height*0.1,
-          width: MediaQuery.of(context).size.height*0.1,
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.all(Radius.circular(5)),
-          ),
-          child: Center(
-            child: Column(
-              children: <Widget>[
-                Expanded(child: Image.asset(_imageNetwork),),
-                Text(_category)
-              ],
+        child: InkWell(
+          onTap: (){
+            _scaffolKey.currentState.showSnackBar(snackBarErrorCreacion);
+          },
+          child: Container(
+            height: MediaQuery.of(context).size.height*0.1,
+            width: MediaQuery.of(context).size.height*0.1,
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.all(Radius.circular(5)),
+            ),
+            child: Center(
+              child: Column(
+                children: <Widget>[
+                  Expanded(child: Image.asset(_imageNetwork),),
+                  Text(_category)
+                ],
+              )
             )
-          )
+          ),
         ),
       ),
     );

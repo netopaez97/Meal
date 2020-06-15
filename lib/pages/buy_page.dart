@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:meal/models/product_model.dart';
 import 'package:meal/providers/shopping_cart_provider.dart';
+import 'package:meal/routes/routes.dart';
 import 'package:meal/utils/utils.dart';
 
 class BuyPage extends StatefulWidget {
@@ -125,19 +126,20 @@ class _BuyPageState extends State<BuyPage> {
           ),
           FlatButton(
             child: Text(
-              "Ok",
+              "Buy",
               style: TextStyle(
                 color: orangeColors,
                 fontSize: 12,
               ),
             ),
-            onPressed: () {
+            onPressed: () async {
               final _shoppingCart = ShoppingCartModel(
                   idProduct: widget.product.idProduct,
                   quantityProducts: cantidad,
                   productComment: descripcion);
-              _shoppingCartProvider.newShoppingCart(_shoppingCart);
-              Navigator.of(context).pop();
+              await _shoppingCartProvider.newShoppingCart(_shoppingCart);
+              Navigator.pop(context);
+              Navigator.of(context).pushNamed(Routes.car);
             },
           ),
         ],

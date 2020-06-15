@@ -7,10 +7,10 @@ class ProductsProvider /* with ChangeNotifier*/ {
     return _db.where('availability', isEqualTo: true).snapshots();
   }
 
-   Stream getProduct(String id) {
+   Future getProduct(String id) {
     
-    final res = _db.document(id).snapshots();
-    print(res);
+    final res = _db.document(id).get();
+    print("Respuesta desde provider producto: $res");
 
     return res;
   }

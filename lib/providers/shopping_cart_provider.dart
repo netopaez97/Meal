@@ -9,6 +9,7 @@ import 'package:path_provider/path_provider.dart';
 class ShoppingCartProvider {
   static Database _database;
   static final ShoppingCartProvider db = ShoppingCartProvider();
+  final String _table = 'ShoppingCart';
 
   ShoppingCartProvider();
 
@@ -39,20 +40,28 @@ class ShoppingCartProvider {
   //AGREGAR REGISTROS
 
   newShoppingCart(ShoppingCartModel shoppingCart) async {
+
+    
     final db = await database;
-    final res = await db.insert('ShoppingCart', shoppingCart.toJson());
-    return res;
-    // final resId = await db.query(
-    //   'ShoppingCart',
-    //   where: 'idProduct = ?',
-    //   whereArgs: [shoppingCart.idProduct],
-    // );
-    // if (resId.isEmpty) {
-    //   final res = await db.insert('ShoppingCart', shoppingCart.toJson());
-    //   return res;
-    // } else {
-    //   return null;
-    // }
+    // final res = await db.insert('ShoppingCart', shoppingCart.toJson());
+    // return res;
+    final resId = await db.query(
+      _table,
+      where: 'idProduct = ?',
+      whereArgs: [shoppingCart.idProduct],
+    );
+    if (resId.isEmpty) {
+      final res = await db.insert(_table, shoppingCart.toJson());
+      return res;
+    } else {
+
+      shoppingCart.quantityProducts = resId[0]["quantityProducts"] + shoppingCart.quantityProducts;
+      shoppingCart.idCar = resId[0]["idCar"];
+      
+      print("RES ID: $resId");
+
+      return await db.update(_table, shoppingCart.toJson(), where: 'idCar = ?', whereArgs: [shoppingCart.idCar]);
+    }
   }
 
   //OBTENER REGISTROS

@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:meal/models/product_model.dart';
-import 'package:meal/pages/order_page.dart';
+import 'package:meal/pages/purchase/order_page.dart';
 import 'package:meal/providers/products_provider.dart';
 import 'package:meal/providers/shopping_cart_provider.dart';
 import 'package:meal/utils/utils.dart';
@@ -14,7 +14,7 @@ class ShoppingCartPage extends StatefulWidget {
 }
 
 class _ShoppingCartPageState extends State<ShoppingCartPage> {
-  int total = 0;
+  double total = 0;
   @override
   Widget build(BuildContext context) {
     final ShoppingCartProvider _shoppingCartProvider = ShoppingCartProvider();
@@ -23,7 +23,7 @@ class _ShoppingCartPageState extends State<ShoppingCartPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          "Shoopping Cart",
+          "Shopping Cart",
         ),
         actions: <Widget>[
           IconButton(
@@ -102,19 +102,21 @@ class _ShoppingCartPageState extends State<ShoppingCartPage> {
     return FutureBuilder(
       future: _shoppingCartProvider.getShoppingCart(),
       builder: (BuildContext context, AsyncSnapshot snapshot) {
-        if (snapshot.hasData) {
-          final shoppingCart = snapshot.data;
-          return SizedBox(
-            height: MediaQuery.of(context).size.height * 0.4,
-            child: ListView.builder(
-              itemCount: shoppingCart.length,
-              padding: EdgeInsets.all(8),
-              itemBuilder: (context, i) => _option(shoppingCart[i]),
-            ),
-          );
-        } else {
+        
+        if(!snapshot.hasData)
           return Center(child: LinearProgressIndicator());
-        }
+        if(snapshot.data == null || snapshot.data.length == 0)
+          return Center(child: Text("You don't have a Meal in your Cart :'(."));
+
+        final shoppingCart = snapshot.data;
+        return SizedBox(
+          height: MediaQuery.of(context).size.height * 0.4,
+          child: ListView.builder(
+            itemCount: shoppingCart.length,
+            padding: EdgeInsets.all(8),
+            itemBuilder: (context, i) => _option(shoppingCart[i]),
+          ),
+        );
       },
     );
   }
@@ -124,18 +126,20 @@ class _ShoppingCartPageState extends State<ShoppingCartPage> {
     final ShoppingCartProvider _shoppingCartProvider = ShoppingCartProvider();
 
     print(_shoppingCart.idProduct);
-    return StreamBuilder<QuerySnapshot>(
-        stream: _productProvider.getProduct(_shoppingCart.idProduct),
-        builder:(BuildContext context, AsyncSnapshot<QuerySnapshot> snapProduct) {
+    return FutureBuilder(
+        future: _productProvider.getProduct(_shoppingCart.idProduct),
+        builder:(BuildContext context, AsyncSnapshot snapProduct) {
 
-          print(snapProduct.data.documents);
           if (!snapProduct.hasData)
             return Center(child: LinearProgressIndicator());
 
-          if (snapProduct.data == null ||
-              snapProduct.data.documents.length == 0)
+          if (snapProduct.data == null || snapProduct.data.data == null)
             return Center(
                 child: Text("You don't have a Meal in your Cart :'(."));
+          
+          total = total + snapProduct.data.data["currentPrice"]*_shoppingCart.quantityProducts;
+
+          ProductModel _product = ProductModel.fromJson(snapProduct.data.data);
 
 
 
@@ -146,20 +150,20 @@ class _ShoppingCartPageState extends State<ShoppingCartPage> {
                 elevation: 2,
                 child: ListTile(
                   onTap: () {},
-                  // leading: CircleAvatar(
-                  //     backgroundColor: Colors.transparent,
-                  //     radius: MediaQuery.of(context).size.width * 0.1,
-                  //     child: Image.network(
-                  //       _product.image,
-                  //     )),
-                  // title: Text(_product.name),
+                  leading: CircleAvatar(
+                      backgroundColor: Colors.transparent,
+                      radius: MediaQuery.of(context).size.width * 0.1,
+                      child: Image.network(
+                        _product.image,
+                      )),
+                  title: Text(_product.name),
                   subtitle: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
                       SizedBox(height: 10),
-                      // Text(
-                      //   "Price: \$${_product.currentPrice * _shoppingCart.quantityProducts}",
-                      // ),
+                      Text(
+                        "Price: \$${_product.currentPrice * _shoppingCart.quantityProducts}",
+                      ),
                       Text("Quantity: ${_shoppingCart.quantityProducts}"),
                       _shoppingCart.productComment.length > 40
                           ? Text(_shoppingCart.productComment.substring(0, 40) +
