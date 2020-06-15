@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:meal/models/product_model.dart';
 import 'package:meal/providers/shopping_cart_provider.dart';
+import 'package:meal/providers/variables_providers.dart';
 import 'package:meal/routes/routes.dart';
 import 'package:meal/utils/utils.dart';
+import 'package:provider/provider.dart';
 
 class BuyPage extends StatefulWidget {
   final ProductModel product;
@@ -13,11 +15,12 @@ class BuyPage extends StatefulWidget {
 
 class _BuyPageState extends State<BuyPage> {
   ShoppingCartProvider _shoppingCartProvider = ShoppingCartProvider();
-
   int cantidad = 0;
   String descripcion = '';
   @override
   Widget build(BuildContext context) {
+    final variablesProvider =
+        Provider.of<VariablesProvider>(context, listen: false);
     final media = MediaQuery.of(context).size;
     return Padding(
       padding: EdgeInsets.symmetric(vertical: media.width * 0.4),
@@ -133,6 +136,7 @@ class _BuyPageState extends State<BuyPage> {
               ),
             ),
             onPressed: () async {
+              variablesProvider.total = variablesProvider.total+(cantidad * widget.product.currentPrice);
               final _shoppingCart = ShoppingCartModel(
                   idProduct: widget.product.idProduct,
                   quantityProducts: cantidad,

@@ -1,10 +1,11 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:meal/models/product_model.dart';
-import 'package:meal/pages/purchase/order_page.dart';
+import 'package:meal/pages/order_page.dart';
 import 'package:meal/providers/products_provider.dart';
 import 'package:meal/providers/shopping_cart_provider.dart';
+import 'package:meal/providers/variables_providers.dart';
 import 'package:meal/utils/utils.dart';
+import 'package:provider/provider.dart';
 
 class ShoppingCartPage extends StatefulWidget {
   static const routeName = 'ShoppingCartPage';
@@ -14,10 +15,10 @@ class ShoppingCartPage extends StatefulWidget {
 }
 
 class _ShoppingCartPageState extends State<ShoppingCartPage> {
-  double total = 0;
   @override
   Widget build(BuildContext context) {
     final ShoppingCartProvider _shoppingCartProvider = ShoppingCartProvider();
+    final variablesProvider = Provider.of<VariablesProvider>(context);
 
     final media = MediaQuery.of(context).size;
     return Scaffold(
@@ -31,6 +32,7 @@ class _ShoppingCartPageState extends State<ShoppingCartPage> {
             onPressed: () {
               setState(() {
                 _shoppingCartProvider.deleteAll();
+                variablesProvider.total = 0;
               });
             },
           )
@@ -46,16 +48,16 @@ class _ShoppingCartPageState extends State<ShoppingCartPage> {
             ),
             Expanded(
                 child: Text(
-              'Total price = \$$total',
+              'Total price = \$${variablesProvider.total}',
               style: TextStyle(color: blackColors),
               textScaleFactor: media.width * 0.004,
             )),
             InkWell(
               onTap: () {
-                setState(() {
-                  total = 0;
-                  _shoppingCartProvider.deleteAll();
-                });
+                // setState(() {
+                //   variablesProvider.total = 0;
+                //   _shoppingCartProvider.deleteAll();
+                // });
                 showDialog(
                   context: context,
                   builder: (BuildContext context) => OrderPage(),
@@ -98,17 +100,15 @@ class _ShoppingCartPageState extends State<ShoppingCartPage> {
 
   Widget _suggestedOptions() {
     final ShoppingCartProvider _shoppingCartProvider = ShoppingCartProvider();
-
     return FutureBuilder(
       future: _shoppingCartProvider.getShoppingCart(),
       builder: (BuildContext context, AsyncSnapshot snapshot) {
-        
-        if(!snapshot.hasData)
-          return Center(child: LinearProgressIndicator());
-        if(snapshot.data == null || snapshot.data.length == 0)
+        if (!snapshot.hasData) return Center(child: LinearProgressIndicator());
+        if (snapshot.data == null || snapshot.data.length == 0)
           return Center(child: Text("You don't have a Meal in your Cart :'(."));
 
         final shoppingCart = snapshot.data;
+
         return SizedBox(
           height: MediaQuery.of(context).size.height * 0.4,
           child: ListView.builder(
@@ -124,32 +124,34 @@ class _ShoppingCartPageState extends State<ShoppingCartPage> {
   Widget _option(ShoppingCartModel _shoppingCart) {
     final ProductsProvider _productProvider = ProductsProvider();
     final ShoppingCartProvider _shoppingCartProvider = ShoppingCartProvider();
-
+    final variablesProvider = Provider.of<VariablesProvider>(context);
     print(_shoppingCart.idProduct);
     return FutureBuilder(
         future: _productProvider.getProduct(_shoppingCart.idProduct),
-        builder:(BuildContext context, AsyncSnapshot snapProduct) {
-
+        builder: (BuildContext context, AsyncSnapshot snapProduct) {
           if (!snapProduct.hasData)
             return Center(child: LinearProgressIndicator());
 
           if (snapProduct.data == null || snapProduct.data.data == null)
             return Center(
                 child: Text("You don't have a Meal in your Cart :'(."));
-          
-          total = total + snapProduct.data.data["currentPrice"]*_shoppingCart.quantityProducts;
 
           ProductModel _product = ProductModel.fromJson(snapProduct.data.data);
-
-
-
+          if (_product.availability == false)
+            return Center(
+                child: Text("You don't have a Meal in your Cart :'(."));
           return Column(
             children: <Widget>[
               Material(
                 borderRadius: BorderRadius.all(Radius.circular(4)),
                 elevation: 2,
                 child: ListTile(
-                  onTap: () {},
+                  // onTap: () {
+                  //   showDialog(
+                  //     context: context,
+                  //     builder: (BuildContext context) => BuyPage(_product),
+                  //   );
+                  // },
                   leading: CircleAvatar(
                       backgroundColor: Colors.transparent,
                       radius: MediaQuery.of(context).size.width * 0.1,
@@ -176,6 +178,9 @@ class _ShoppingCartPageState extends State<ShoppingCartPage> {
                     icon: Icon(Icons.remove_shopping_cart),
                     onPressed: () {
                       setState(() {
+                        variablesProvider.total = variablesProvider.total -
+                            _product.currentPrice *
+                                _shoppingCart.quantityProducts;
                         _shoppingCartProvider
                             .deleteShoppingCart(_shoppingCart.idCar);
                       });
