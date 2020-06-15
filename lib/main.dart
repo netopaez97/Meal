@@ -12,7 +12,7 @@ class MyApp extends StatelessWidget {
       title: 'MEAL',
       theme: ThemeData(
           primaryColor: utils.blackColor, primarySwatch: Colors.orange),
-      initialRoute: Routes.initial,
+      initialRoute: Routes.home,
       routes: getApplicationRoutes(),
     );
   }

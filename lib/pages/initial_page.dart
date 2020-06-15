@@ -1,7 +1,5 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:meal/models/product_model.dart';
-import 'package:meal/pages/detail_page.dart';
 import 'package:meal/routes/routes.dart';
 import 'package:meal/utils/utils.dart';
 
@@ -9,19 +7,7 @@ class InitialPage extends StatelessWidget {
   static const routeName = 'InitialPage';
   @override
   Widget build(BuildContext context) {
-    final product = new ProductModel();
-    product.name = 'Burger';
 
-    product.currentPrice = 10000;
-    product.category = 'fast food';
-    product.discount = 0.3;
-    product.description =
-        'Una hamburguesa es un tipo de sándwich hecho a base de carne molida aglutinada en forma de filete cocinado a la parrilla o a la plancha, aunque también puede freírse u hornearse. Fuera del ámbito de habla hispana, es más común encontrar la denominación inglesa burger, acortamiento de hamburger.';
-    product.amount = 10;
-    product.image =
-        'https://cocina-casera.com/wp-content/uploads/2016/11/hamburguesa-queso-receta.jpg';
-    product.rating = 4.8;
-    product.numberRatings = 143;
     final media = MediaQuery.of(context).size;
     return Scaffold(
       appBar: AppBar(elevation: 0),

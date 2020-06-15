@@ -8,27 +8,27 @@ String shoppingCartModelToJson(ShoppingCartModel data) =>
 
 class ShoppingCartModel {
   ShoppingCartModel({
-    this.idCarrito,
+    this.idCar,
     this.idProduct,
     this.quantityProducts,
     this.productComment,
   });
 
-  String idCarrito;
+  int idCar;
   String idProduct;
   int quantityProducts;
   String productComment;
 
   factory ShoppingCartModel.fromJson(Map<String, dynamic> json) =>
       ShoppingCartModel(
-        idCarrito: json["idCarrito"],
+        idCar: json["idCar"],
         idProduct: json["idProduct"],
         quantityProducts: json["quantityProducts"],
         productComment: json["productComment"],
       );
 
   Map<String, dynamic> toJson() => {
-        "idCarrito": idCarrito,
+        "idCar": idCar,
         "idProduct": idProduct,
         "quantityProducts": quantityProducts,
         "productComment": productComment,

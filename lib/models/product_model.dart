@@ -13,7 +13,7 @@ class ProductModel {
     this.category,
     this.discount,
     this.description,
-    this.amount,
+    this.availability,
     this.image,
     this.rating,
     this.numberRatings,
@@ -25,7 +25,7 @@ class ProductModel {
   String category;
   double discount;
   String description;
-  int amount;
+  bool availability;
   String image;
   double rating;
   int numberRatings;
@@ -37,7 +37,7 @@ class ProductModel {
         category: json["category"],
         discount: json["discount"].toDouble(),
         description: json["description"],
-        amount: json["amount"],
+        availability: json["availability"],
         image: json["image"],
         rating: json["rating"],
         numberRatings: json["numberRatings"],
@@ -50,7 +50,7 @@ class ProductModel {
         "category": category,
         "discount": discount,
         "description": description,
-        "amount": amount,
+        "availability": availability,
         "image": image,
         "rating": rating,
         "numberRatings": numberRatings,

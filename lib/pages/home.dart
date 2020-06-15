@@ -6,6 +6,8 @@ import 'package:meal/pages/detail_page.dart';
 import 'package:meal/providers/products_provider.dart';
 import 'package:meal/widgets/drawer.dart';
 
+import '../routes/routes.dart';
+
 class HomePage extends StatefulWidget {
 
   static const routeName = '/home';
@@ -37,7 +39,9 @@ class _HomePageState extends State<HomePage> {
     actions: <Widget>[
       IconButton(
         icon: Icon(Icons.shopping_cart),
-        onPressed: (){},
+        onPressed: (){
+          Navigator.pushNamed(context, Routes.car);
+        },
       )
     ],
   );
@@ -117,7 +121,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   ///This widget will use ProductoProvider.dart to get the elements in the Database with
-  ///an amount greater than 0.
+
   Widget _suggestedOptions(){
 
     final ProductsProvider _productProvider = ProductsProvider();
