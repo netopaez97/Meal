@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:meal/models/product_model.dart';
 import 'package:meal/models/shopping_cart_model.dart';
 export 'package:meal/models/shopping_cart_model.dart';
 import 'package:path/path.dart';
@@ -32,6 +33,7 @@ class ShoppingCartProvider {
           'idCar INTEGER PRIMARY KEY,'
           'idProduct TEXT,'
           'quantityProducts INTEGER,'
+          'totalPrice DOUBLE,'
           'productComment TEXT'
           ')');
     });
@@ -40,11 +42,7 @@ class ShoppingCartProvider {
   //AGREGAR REGISTROS
 
   newShoppingCart(ShoppingCartModel shoppingCart) async {
-
-    
     final db = await database;
-    // final res = await db.insert('ShoppingCart', shoppingCart.toJson());
-    // return res;
     final resId = await db.query(
       _table,
       where: 'idProduct = ?',
@@ -54,13 +52,11 @@ class ShoppingCartProvider {
       final res = await db.insert(_table, shoppingCart.toJson());
       return res;
     } else {
-
-      shoppingCart.quantityProducts = resId[0]["quantityProducts"] + shoppingCart.quantityProducts;
+      shoppingCart.quantityProducts = shoppingCart.quantityProducts;
       shoppingCart.idCar = resId[0]["idCar"];
-      
-      print("RES ID: $resId");
 
-      return await db.update(_table, shoppingCart.toJson(), where: 'idCar = ?', whereArgs: [shoppingCart.idCar]);
+      return await db.update(_table, shoppingCart.toJson(),
+          where: 'idCar = ?', whereArgs: [shoppingCart.idCar]);
     }
   }
 
@@ -73,6 +69,19 @@ class ShoppingCartProvider {
         ? res.map((c) => ShoppingCartModel.fromJson(c)).toList()
         : [];
     return list;
+  }
+
+  getProductShoppingCart(ProductModel product) async {
+    final db = await database;
+    final res = await db.query(
+      _table,
+      where: 'idProduct = ?',
+      whereArgs: [product.idProduct],
+    );
+    List<ShoppingCartModel> shoppingCart = res.isNotEmpty
+        ? res.map((c) => ShoppingCartModel.fromJson(c)).toList()
+        : [];
+    return shoppingCart;
   }
   // BORRAR REGISTROS
 

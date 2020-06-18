@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'dart:math';
 
 const MaterialColor blackColor = MaterialColor(
   _blackColorValue,
@@ -34,3 +35,8 @@ Color orangeColors = Color(0xffF26721);
 Color blackColors = Color(0xff241C24);
 
 const APP_ID = 'ac01209f46b941609433beebc11b1929';
+
+double roundDouble(double value) {
+  double mod = pow(10.0, 2);
+  return ((value * mod).round().toDouble() / mod);
+}

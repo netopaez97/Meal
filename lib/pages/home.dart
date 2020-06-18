@@ -1,10 +1,12 @@
 import 'package:carousel_pro/carousel_pro.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+
 import 'package:meal/models/product_model.dart';
 import 'package:meal/pages/payment/buy_page.dart';
 import 'package:meal/pages/payment/detail_page.dart';
 import 'package:meal/providers/products_provider.dart';
+import 'package:meal/utils/utils.dart';
 import 'package:meal/widgets/drawer.dart';
 
 import '../routes/routes.dart';
@@ -43,7 +45,7 @@ class _HomePageState extends State<HomePage> {
             onPressed: () {
               Navigator.pushNamed(context, Routes.car);
             },
-          )
+          ),
         ],
       );
 
@@ -183,7 +185,7 @@ class _HomePageState extends State<HomePage> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 SizedBox(height: 10),
-                Text("Price: \$${_producto.currentPrice}"),
+                Text("Price: \$${roundDouble(_producto.currentPrice)}"),
                 _producto.description.length > 40
                     ? Text(_producto.description.substring(0, 40) + "...")
                     : Text(_producto.description),
@@ -193,7 +195,6 @@ class _HomePageState extends State<HomePage> {
             trailing: IconButton(
               icon: Icon(Icons.add_shopping_cart),
               onPressed: () {
-                
                 showDialog(
                   context: context,
                   builder: (BuildContext context) => BuyPage(_producto),

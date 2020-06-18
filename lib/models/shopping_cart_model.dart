@@ -11,12 +11,14 @@ class ShoppingCartModel {
     this.idCar,
     this.idProduct,
     this.quantityProducts,
+    this.totalPrice,
     this.productComment,
   });
 
   int idCar;
   String idProduct;
   int quantityProducts;
+  double totalPrice;
   String productComment;
 
   factory ShoppingCartModel.fromJson(Map<String, dynamic> json) =>
@@ -24,6 +26,7 @@ class ShoppingCartModel {
         idCar: json["idCar"],
         idProduct: json["idProduct"],
         quantityProducts: json["quantityProducts"],
+        totalPrice: json["totalPrice"],
         productComment: json["productComment"],
       );
 
@@ -31,6 +34,7 @@ class ShoppingCartModel {
         "idCar": idCar,
         "idProduct": idProduct,
         "quantityProducts": quantityProducts,
+        "totalPrice": totalPrice,
         "productComment": productComment,
       };
 }

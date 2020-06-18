@@ -1,12 +1,14 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:meal/preferences/userpreferences.dart';
 import 'package:meal/routes/routes.dart';
 import 'package:meal/utils/utils.dart';
 import 'package:meal/widgets/widgets.dart';
 
 class PhonePage extends StatelessWidget {
   static const routeName = 'PhonePage';
+  final prefs = new UserPreferences();
   @override
   Widget build(BuildContext context) {
     final media = MediaQuery.of(context).size;
@@ -27,7 +29,11 @@ class PhonePage extends StatelessWidget {
               // Container(
               //   child: Image(image: AssetImage('assets/test.jpg')),
               // ),
-              Input(typeInput: TextInputType.number, onChanged: (value) {}),
+              Input(
+                  typeInput: TextInputType.number,
+                  onChanged: (value) {
+                    prefs.phone = value;
+                  }),
               Row(
                 children: <Widget>[
                   Column(

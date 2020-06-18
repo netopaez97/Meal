@@ -10,7 +10,6 @@ class ProductsProvider /* with ChangeNotifier*/ {
    Future getProduct(String id) {
     
     final res = _db.document(id).get();
-    print("Respuesta desde provider producto: $res");
 
     return res;
   }

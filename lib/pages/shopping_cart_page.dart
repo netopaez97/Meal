@@ -18,9 +18,7 @@ class _ShoppingCartPageState extends State<ShoppingCartPage> {
   @override
   Widget build(BuildContext context) {
     final ShoppingCartProvider _shoppingCartProvider = ShoppingCartProvider();
-    final variablesProvider = Provider.of<VariablesProvider>(context);
 
-    final media = MediaQuery.of(context).size;
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -32,69 +30,13 @@ class _ShoppingCartPageState extends State<ShoppingCartPage> {
             onPressed: () {
               setState(() {
                 _shoppingCartProvider.deleteAll();
-                variablesProvider.total = 0;
               });
             },
           )
         ],
       ),
       body: _suggestedOptions(),
-      bottomNavigationBar: Card(
-        child: Row(
-          children: <Widget>[
-            SizedBox(
-              width: media.width * 0.03,
-              height: media.width * 0.1,
-            ),
-            Expanded(
-                child: Text(
-              'Total price = \$${variablesProvider.total}',
-              style: TextStyle(color: blackColors),
-              textScaleFactor: media.width * 0.004,
-            )),
-            InkWell(
-              onTap: () {
-                // setState(() {
-                //   variablesProvider.total = 0;
-                //   _shoppingCartProvider.deleteAll();
-                // });
-                showDialog(
-                  context: context,
-                  builder: (BuildContext context) => OrderPage(),
-                );
-              },
-              child: Card(
-                elevation: 5,
-                color: orangeColors,
-                child: Row(
-                  children: <Widget>[
-                    SizedBox(
-                      width: 10,
-                      height: media.width * 0.1,
-                    ),
-                    Text(
-                      "Buy",
-                      style: TextStyle(color: Colors.white),
-                      textScaleFactor: media.width * 0.005,
-                    ),
-                    SizedBox(width: 5),
-                    Icon(
-                      Icons.shopping_cart,
-                      size: media.width * 0.07,
-                      color: Colors.white,
-                    ),
-                    SizedBox(width: 10),
-                  ],
-                ),
-              ),
-            ),
-            SizedBox(
-              width: media.width * 0.03,
-              height: media.width * 0.1,
-            ),
-          ],
-        ),
-      ),
+      bottomNavigationBar: _totalBuy(),
     );
   }
 
@@ -124,75 +66,154 @@ class _ShoppingCartPageState extends State<ShoppingCartPage> {
   Widget _option(ShoppingCartModel _shoppingCart) {
     final ProductsProvider _productProvider = ProductsProvider();
     final ShoppingCartProvider _shoppingCartProvider = ShoppingCartProvider();
-    final variablesProvider = Provider.of<VariablesProvider>(context);
-    print(_shoppingCart.idProduct);
+
     return FutureBuilder(
-        future: _productProvider.getProduct(_shoppingCart.idProduct),
-        builder: (BuildContext context, AsyncSnapshot snapProduct) {
-          if (!snapProduct.hasData)
-            return Center(child: LinearProgressIndicator());
+      future: _productProvider.getProduct(_shoppingCart.idProduct),
+      builder: (BuildContext context, AsyncSnapshot snapProduct) {
+        if (!snapProduct.hasData)
+          return Center(child: LinearProgressIndicator());
 
-          if (snapProduct.data == null || snapProduct.data.data == null)
-            return Center(
-                child: Text("You don't have a Meal in your Cart :'(."));
+        if (snapProduct.data == null || snapProduct.data.data == null)
+          return Center(child: Text("You don't have a Meal in your Cart :'(."));
 
-          ProductModel _product = ProductModel.fromJson(snapProduct.data.data);
-          if (_product.availability == false)
-            return Center(
-                child: Text("You don't have a Meal in your Cart :'(."));
-          return Column(
-            children: <Widget>[
-              Material(
-                borderRadius: BorderRadius.all(Radius.circular(4)),
-                elevation: 2,
-                child: ListTile(
-                  // onTap: () {
-                  //   showDialog(
-                  //     context: context,
-                  //     builder: (BuildContext context) => BuyPage(_product),
-                  //   );
-                  // },
-                  leading: CircleAvatar(
-                      backgroundColor: Colors.transparent,
-                      radius: MediaQuery.of(context).size.width * 0.1,
-                      child: Image.network(
-                        _product.image,
-                      )),
-                  title: Text(_product.name),
-                  subtitle: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      SizedBox(height: 10),
-                      Text(
-                        "Price: \$${_product.currentPrice * _shoppingCart.quantityProducts}",
-                      ),
-                      Text("Quantity: ${_shoppingCart.quantityProducts}"),
-                      _shoppingCart.productComment.length > 40
-                          ? Text(_shoppingCart.productComment.substring(0, 40) +
-                              "...")
-                          : Text(_shoppingCart.productComment),
-                      SizedBox(height: 10),
-                    ],
-                  ),
-                  trailing: IconButton(
-                    icon: Icon(Icons.remove_shopping_cart),
-                    onPressed: () {
-                      setState(() {
-                        variablesProvider.total = variablesProvider.total -
-                            _product.currentPrice *
-                                _shoppingCart.quantityProducts;
-                        _shoppingCartProvider
-                            .deleteShoppingCart(_shoppingCart.idCar);
-                      });
-                    },
+        ProductModel _product = ProductModel.fromJson(snapProduct.data.data);
+        _product.idProduct = snapProduct.data.documentID;
+
+        if (_product.availability == false)
+          return Center(child: Text("You don't have a Meal in your Cart :'(."));
+
+        return Column(
+          children: <Widget>[
+            Material(
+              borderRadius: BorderRadius.all(Radius.circular(4)),
+              elevation: 2,
+              child: ListTile(
+                // onTap: () {
+                //   showDialog(
+                //     context: context,
+                //     builder: (BuildContext context) => BuyPage(_product),
+                //   );
+                // },
+                leading: CircleAvatar(
+                  backgroundColor: Colors.transparent,
+                  radius: MediaQuery.of(context).size.width * 0.1,
+                  child: Image.network(
+                    _product.image,
                   ),
                 ),
+                title: Text(_product.name),
+                subtitle: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    SizedBox(height: 10),
+                    Text(
+                      "Price: \$${roundDouble(_shoppingCart.totalPrice)}",
+                    ),
+                    Text("Quantity: ${_shoppingCart.quantityProducts}"),
+                    _shoppingCart.productComment.length > 40
+                        ? Text(_shoppingCart.productComment.substring(0, 40) +
+                            "...")
+                        : Text(_shoppingCart.productComment),
+                    SizedBox(height: 10),
+                  ],
+                ),
+                trailing: IconButton(
+                  icon: Icon(Icons.remove_shopping_cart),
+                  onPressed: () {
+                    setState(() {
+                      _shoppingCartProvider
+                          .deleteShoppingCart(_shoppingCart.idCar);
+                    });
+                  },
+                ),
               ),
-              Divider(
-                color: Colors.transparent,
-              ),
-            ],
-          );
-        });
+            ),
+            Divider(
+              color: Colors.transparent,
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Widget _totalBuy() {
+    final variablesProvider = Provider.of<VariablesProvider>(context);
+    final ShoppingCartProvider _shoppingCartProvider = ShoppingCartProvider();
+    final media = MediaQuery.of(context).size;
+
+    return Card(
+      child: Row(
+        children: <Widget>[
+          SizedBox(
+            width: media.width * 0.03,
+            height: media.width * 0.1,
+          ),
+          FutureBuilder(
+            future: variablesProvider.getTotal(),
+            builder: (BuildContext context, AsyncSnapshot snapshot) {
+              if (!snapshot.hasData)
+                return Center(child: CircularProgressIndicator());
+
+              final total = snapshot.data;
+
+              return Expanded(
+                  child: Text(
+                'Total price = \$${roundDouble(total)}',
+                style: TextStyle(color: blackColors),
+                textScaleFactor: media.width * 0.004,
+              ));
+            },
+          ),
+          FutureBuilder(
+            future: _shoppingCartProvider.getShoppingCart(),
+            builder: (BuildContext context, AsyncSnapshot snapshot) {
+              if (!snapshot.hasData)
+                return Center(child: CircularProgressIndicator());
+              if (snapshot.data == null || snapshot.data.length == 0) {
+                return SizedBox();
+              }
+
+              return InkWell(
+                onTap: () {
+                  showDialog(
+                    context: context,
+                    builder: (BuildContext context) => OrderPage(),
+                  );
+                },
+                child: Card(
+                  elevation: 5,
+                  color: orangeColors,
+                  child: Row(
+                    children: <Widget>[
+                      SizedBox(
+                        width: 10,
+                        height: media.width * 0.1,
+                      ),
+                      Text(
+                        "Buy",
+                        style: TextStyle(color: Colors.white),
+                        textScaleFactor: media.width * 0.005,
+                      ),
+                      SizedBox(width: 5),
+                      Icon(
+                        Icons.shopping_cart,
+                        size: media.width * 0.07,
+                        color: Colors.white,
+                      ),
+                      SizedBox(width: 10),
+                    ],
+                  ),
+                ),
+              );
+            },
+          ),
+          SizedBox(
+            width: media.width * 0.03,
+            height: media.width * 0.1,
+          ),
+        ],
+      ),
+    );
   }
 }
