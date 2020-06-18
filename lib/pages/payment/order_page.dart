@@ -273,9 +273,9 @@ email() async {
     ..recipients.add('netopaez97@hotmail.com') //recipent email
     // ..ccRecipients.addAll(['destCc1@example.com', 'destCc2@example.com']) //cc Recipents emails
     // ..bccRecipients.add(Address('bccAddress@example.com')) //bcc Recipents emails
-    ..subject = 'Enviando desde flutter ' //subject of the email
+    ..subject = 'Welcome to your MEAL dream.' //subject of the email
     ..text =
-        'Este es un correo de prueba enviado desde flutter'; //body of the email
+        'This email tests the functionality of Meal 3.0. This is a test email and will be changed with te right email. By the moment, enjoy te progress of this app.'; //body of the email
 
   try {
     final sendReport = await send(message, smtpServer);
