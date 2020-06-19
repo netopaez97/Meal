@@ -60,7 +60,7 @@ class InitialPage extends StatelessWidget {
                   child: Icon(Icons.add,
                       size: media.width * 0.15, color: orangeColor),
                   onPressed: () {
-                    Navigator.pushNamed(context, Routes.login);
+                    Navigator.pushNamed(context, Routes.hostPhone);
                   },
                 ),
                 SizedBox(

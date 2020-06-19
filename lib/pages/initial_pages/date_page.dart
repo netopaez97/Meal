@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:meal/preferences/userpreferences.dart';
 import 'package:meal/routes/routes.dart';
 import 'package:meal/utils/utils.dart';
 
@@ -13,6 +14,9 @@ class DatePage extends StatefulWidget {
 }
 
 class _DatePageState extends State<DatePage> {
+
+  final _prefs = UserPreferences();
+
   @override
   Widget build(BuildContext context) {
     final media = MediaQuery.of(context).size;
@@ -83,6 +87,7 @@ class _DatePageState extends State<DatePage> {
                 onDateTimeChanged: (dateTime) {
                   setState(() {
                     _dateTime = dateTime;
+                    _prefs.date = _dateTime.toString();
                   });
                 },
               ),

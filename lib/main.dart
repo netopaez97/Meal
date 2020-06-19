@@ -32,7 +32,7 @@ class MyApp extends StatelessWidget {
       title: 'MEAL',
       theme: ThemeData(
           primaryColor: utils.blackColor, primarySwatch: Colors.orange),
-      initialRoute: Routes.home,
+      initialRoute: Routes.splash,
       routes: getApplicationRoutes(),
     );
   }

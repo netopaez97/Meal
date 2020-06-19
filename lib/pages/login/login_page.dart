@@ -101,7 +101,7 @@ class LoginPage extends StatelessWidget {
                       ],
                     ),
                     onPressed: () {
-                      Navigator.pushNamed(context, Routes.phone);
+                      Navigator.pushNamed(context, Routes.hostPhone);
                     },
                   )
                 ],

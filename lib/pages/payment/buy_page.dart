@@ -148,7 +148,7 @@ print(cantidad);
             if (widget.product.discount != null) {
               price = roundDouble(cantidad *
                   (widget.product.currentPrice -
-                      (widget.product.currentPrice * widget.product.discount)));
+                      (widget.product.currentPrice * widget.product.discount/100)));
             } else {
               price = roundDouble(widget.product.currentPrice * cantidad);
             }

@@ -16,8 +16,21 @@ class UserPreferences {
   get phone {
     return _prefs.getInt('phone') ?? '';
   }
-
   set phone(int value) {
     _prefs.setInt('phone', value);
+  }
+
+  get email {
+    return _prefs.getString('email') ?? '';
+  }
+  set email(String value) {
+    _prefs.setString('email', value);
+  }
+
+  get date {
+    return _prefs.getString('date') ?? '';
+  }
+  set date(String value) {
+    _prefs.setString('date', value);
   }
 }

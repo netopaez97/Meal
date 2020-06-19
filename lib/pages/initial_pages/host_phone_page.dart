@@ -55,7 +55,7 @@ class PhonePage extends StatelessWidget {
                       ],
                     ),
                     onPressed: () {
-                      Navigator.pushNamed(context, Routes.guestPhone);
+                      Navigator.pushNamed(context, Routes.hostEmail);
                     },
                   )
                 ],

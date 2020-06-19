@@ -265,17 +265,19 @@ email() async {
   String password = 'up872094up872094';
 
   final smtpServer = gmail(username, password);
+
+  final prefs = new UserPreferences();
   // Creating the Gmail server
 
   // Create our email message.
   final message = Message()
     ..from = Address(username)
-    ..recipients.add('netopaez97@hotmail.com') //recipent email
+    ..recipients.add(prefs.email) //recipent email
     // ..ccRecipients.addAll(['destCc1@example.com', 'destCc2@example.com']) //cc Recipents emails
     // ..bccRecipients.add(Address('bccAddress@example.com')) //bcc Recipents emails
     ..subject = 'Welcome to your MEAL dream.' //subject of the email
     ..text =
-        'This email tests the functionality of Meal 3.0. This is a test email and will be changed with te right email. By the moment, enjoy te progress of this app.'; //body of the email
+        'This email tests the functionality of Meal 3.0. This is a test email and will be changed with te right email. By the moment, enjoy te progress of this app. This email was sent by ${prefs.email} to invite you to take a diner at ${prefs.date}'; //body of the email
 
   try {
     final sendReport = await send(message, smtpServer);
