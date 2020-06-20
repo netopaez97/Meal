@@ -53,35 +53,35 @@ class InitialPage extends StatelessWidget {
                 textScaleFactor: media.width * 0.004,
               ),
             ),
-            Row(
-              children: <Widget>[
-                CupertinoButton(
-                  padding: EdgeInsets.zero,
-                  child: Icon(Icons.add,
+            CupertinoButton(
+              padding: EdgeInsets.zero,
+              child: Row(
+                children: <Widget>[
+                  Icon(Icons.add,
                       size: media.width * 0.15, color: orangeColor),
-                  onPressed: () {
-                    Navigator.pushNamed(context, Routes.hostPhone);
-                  },
-                ),
-                SizedBox(
-                  width: 5,
-                ),
-                Container(
-                  height: media.width * 0.1,
-                  width: media.width * 0.6,
-                  child: FittedBox(
-                    fit: BoxFit.fill,
-                    child: Text(
-                      "Go to meal",
-                      style: TextStyle(
-                        color: orangeColor,
-                        fontWeight: FontWeight.normal,
+                  SizedBox(
+                    width: 5,
+                  ),
+                  Container(
+                    height: media.width * 0.1,
+                    width: media.width * 0.6,
+                    child: FittedBox(
+                      fit: BoxFit.fill,
+                      child: Text(
+                        "Go to meal",
+                        style: TextStyle(
+                          color: orangeColor,
+                          fontWeight: FontWeight.normal,
+                        ),
+                        textScaleFactor: media.width * 0.0055,
                       ),
-                      textScaleFactor: media.width * 0.0055,
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
+              onPressed: (){
+                Navigator.pushNamed(context, Routes.hostPhone);
+              },
             ),
           ],
         ),

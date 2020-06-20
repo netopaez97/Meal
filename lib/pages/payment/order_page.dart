@@ -4,10 +4,8 @@ import 'package:meal/models/shopping_cart_model.dart';
 import 'package:meal/preferences/userpreferences.dart';
 import 'package:meal/providers/products_provider.dart';
 import 'package:meal/providers/shopping_cart_provider.dart';
-import 'package:meal/providers/variables_providers.dart';
 import 'package:meal/routes/routes.dart';
 import 'package:meal/utils/utils.dart';
-import 'package:provider/provider.dart';
 import 'package:mailer/mailer.dart';
 import 'package:mailer/smtp_server.dart';
 
@@ -17,14 +15,13 @@ class OrderPage extends StatefulWidget {
 }
 
 class _OrderState extends State<OrderPage> {
-  String dropdownValue = 'Carry on';
+  String dropdownValue = 'Carry out';
   String phone;
   String address;
   String comment;
   bool valida = true;
   @override
   Widget build(BuildContext context) {
-    final prefs = new UserPreferences();
     final media = MediaQuery.of(context).size;
     return Scaffold(
       appBar: AppBar(
@@ -36,27 +33,6 @@ class _OrderState extends State<OrderPage> {
         padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
         child: ListView(
           children: <Widget>[
-            SizedBox(height: 5),
-            TextFormField(
-              initialValue: prefs.phone,
-              textAlign: TextAlign.left,
-              keyboardType: TextInputType.number,
-              decoration: InputDecoration(
-                border: OutlineInputBorder(),
-                hintText: 'Phone number',
-                hintStyle: TextStyle(
-                  color: blackColors.withOpacity(0.5),
-                  fontSize: media.width * 0.05,
-                ),
-              ),
-              cursorColor: blackColors,
-              cursorWidth: 1.0,
-              style: TextStyle(
-                color: blackColors,
-                fontSize: media.width * 0.05,
-              ),
-              onChanged: (value) => {phone = value},
-            ),
             SizedBox(height: 10),
             Row(
               children: <Widget>[
@@ -81,7 +57,7 @@ class _OrderState extends State<OrderPage> {
                       });
                     },
                     items: <String>[
-                      'Carry on',
+                      'Carry out',
                       'Delivery',
                     ].map<DropdownMenuItem<String>>((String value) {
                       return DropdownMenuItem<String>(

@@ -12,58 +12,34 @@ class PhonePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final media = MediaQuery.of(context).size;
+    var container = Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: <Widget>[
+        Meal(),
+        // Container(
+        //   child: Image(image: AssetImage('assets/test.jpg')),
+        // ),
+        Input(
+            typeInput: TextInputType.number,
+            onChanged: (value) {
+              prefs.phone = value;
+            }),
+        CupertinoButton(
+          padding: EdgeInsets.zero,
+          child: InputText(
+            text: "Your phone number?",
+            scale: media.width * 0.004,
+          ),
+          onPressed: (){
+            Navigator.pushNamed(context, Routes.hostEmail);
+          },
+        ),
+      ],
+    );
     return Scaffold(
       appBar: AppBar(elevation: 0),
       backgroundColor: blackColors,
-      body: Padding(
-        padding: EdgeInsets.only(
-          left: media.width * 0.2,
-        ),
-        child: Container(
-          width: media.width * 0.8,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              Meal(),
-              // Container(
-              //   child: Image(image: AssetImage('assets/test.jpg')),
-              // ),
-              Input(
-                  typeInput: TextInputType.number,
-                  onChanged: (value) {
-                    prefs.phone = value;
-                  }),
-              Row(
-                children: <Widget>[
-                  Column(
-                    children: <Widget>[
-                      InputText(
-                        text: "Your phone number?",
-                        scale: media.width * 0.0046,
-                      ),
-                      SizedBox(height: media.width * 0.01)
-                    ],
-                  ),
-                  SizedBox(width: media.width * 0.015),
-                  CupertinoButton(
-                    padding: EdgeInsets.zero,
-                    child: Column(
-                      children: <Widget>[
-                        Icon(Icons.add,
-                            size: media.width * 0.15, color: orangeColor),
-                      ],
-                    ),
-                    onPressed: () {
-                      Navigator.pushNamed(context, Routes.hostEmail);
-                    },
-                  )
-                ],
-              ),
-            ],
-          ),
-        ),
-      ),
+      body: container,
     );
   }
 }

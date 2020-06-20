@@ -38,51 +38,43 @@ class SelectionPage extends StatelessWidget {
                   ),
                 ),
               ),
-              Row(
-                children: <Widget>[
-                  CupertinoButton(
-                    padding: EdgeInsets.zero,
-                    child: Column(
-                      children: <Widget>[
-                        Icon(Icons.add,
-                            size: media.width * 0.15, color: orangeColor),
-                      ],
+              CupertinoButton(
+                padding: EdgeInsets.zero,
+                child: Row(
+                  children: <Widget>[
+                    Icon(Icons.add,
+                        size: media.width * 0.15, color: orangeColor),
+                    SizedBox(
+                      width: 10,
                     ),
-                    onPressed: () {
-                      Navigator.pushNamed(context, Routes.guestPhone);
-                    },
-                  ),
-                  SizedBox(
-                    width: 10,
-                  ),
-                  InputText(
-                    text: "Add more guests",
-                    scale: media.width * 0.0055,
-                  ),
-                ],
+                    InputText(
+                      text: "Add more guests",
+                      scale: media.width * 0.0043,
+                    ),
+                  ],
+                ),
+                onPressed: () => Navigator.pushNamed(context, Routes.guestPhone),
               ),
-              Row(
-                children: <Widget>[
-                  CupertinoButton(
-                    padding: EdgeInsets.zero,
-                    child: Column(
+              CupertinoButton(
+                padding: EdgeInsets.zero,
+                child: Row(
+                  children: <Widget>[
+                    Column(
                       children: <Widget>[
                         Icon(Icons.add,
                             size: media.width * 0.15, color: orangeColor),
                       ],
                     ),
-                    onPressed: () {
-                      Navigator.pushNamed(context, Routes.date);
-                    },
-                  ),
-                  SizedBox(
-                    width: 10,
-                  ),
-                  InputText(
-                    text: "Go to menu",
-                    scale: media.width * 0.0055,
-                  ),
-                ],
+                    SizedBox(
+                      width: 10,
+                    ),
+                    InputText(
+                      text: "Go to menu",
+                      scale: media.width * 0.0043,
+                    ),
+                  ],
+                ),
+                onPressed: () => Navigator.pushNamed(context, Routes.date),
               ),
             ],
           ),

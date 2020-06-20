@@ -12,40 +12,24 @@ class EmailPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(elevation: 0,),
       backgroundColor: blackColors,
-      body: Padding(
-        padding: EdgeInsets.only(
-          left: media.width * 0.2,
-        ),
-        child: Container(
-          width: media.width * 0.8,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              Meal(),
-              Input(
-                  typeInput: TextInputType.emailAddress,
-                  onChanged: (value) {}),
-              Row(
-                children: <Widget>[
-                  Column(
-                    children: <Widget>[
-                      InputText(
-                        text: "Your guest's email?",
-                        scale: media.width * 0.005,
-                      ),
-                      SizedBox(height: media.width * 0.03)
-                    ],
-                  ),
-                  SizedBox(width: media.width * 0.01),
-                  IconAdd(onPressed: () {
-                    Navigator.pushNamed(context, Routes.selection);
-                  }),
-                ],
-              )
-            ],
-          ),
-        ),
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          Meal(),
+          Input(
+              typeInput: TextInputType.emailAddress,
+              onChanged: (value) {}),
+          CupertinoButton(
+            padding: EdgeInsets.zero,
+            child: InputText(
+              text: "Your guest's email?",
+              scale: media.width * 0.004,
+            ),
+            onPressed: (){
+              Navigator.pushNamed(context, Routes.selection);
+            },
+          )
+        ],
       ),
     );
   }

@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:meal/pages/home.dart';
 import 'package:meal/pages/initial_pages/date_page.dart';
-import 'package:meal/pages/initial_pages/email_guest_page.dart';
+import 'package:meal/pages/initial_pages/guest_email_page.dart';
+import 'package:meal/pages/initial_pages/guest_phone_page.dart';
 import 'package:meal/pages/initial_pages/host_email_page.dart';
 import 'package:meal/pages/initial_pages/host_phone_page.dart';
 import 'package:meal/pages/initial_pages/landing_page.dart';
-import 'package:meal/pages/initial_pages/phone_guest_page.dart';
 import 'package:meal/pages/initial_pages/selection_page.dart';
 import 'package:meal/pages/initial_pages/splashscreen_page.dart';
 import 'package:meal/pages/login/login_page.dart';

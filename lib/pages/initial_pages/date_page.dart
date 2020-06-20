@@ -27,46 +27,19 @@ class _DatePageState extends State<DatePage> {
       body: Column(
         mainAxisAlignment: MainAxisAlignment.end,
         children: <Widget>[
-          Padding(
-            padding: EdgeInsets.only(
-              left: media.width * 0.2,
-            ),
-            child: Container(
-              width: media.width * 0.8,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  Meal(),
-                  Row(
-                    children: <Widget>[
-                      Column(
-                        children: <Widget>[
-                          InputText(
-                            text: "What is your meal?",
-                            scale: media.width * 0.005,
-                          ),
-                          SizedBox(height: media.width * 0.01)
-                        ],
-                      ),
-                      SizedBox(width: media.width * 0.015),
-                      CupertinoButton(
-                        padding: EdgeInsets.zero,
-                        child: Column(
-                          children: <Widget>[
-                            Icon(Icons.add,
-                                size: media.width * 0.15, color: orangeColor),
-                          ],
-                        ),
-                        onPressed: () {
-                          Navigator.pushNamedAndRemoveUntil(context, Routes.home, (Route routes) => false);
-                        },
-                      )
-                    ],
-                  ),
-                ],
+          Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              Meal(),
+              CupertinoButton(
+                padding: EdgeInsets.zero,
+                onPressed: () => Navigator.pushNamedAndRemoveUntil(context, Routes.home, (Route routes) => false),
+                child: InputText(
+                  text: "What is your meal?",
+                  scale: media.width * 0.004,
+                ),
               ),
-            ),
+            ],
           ),
           SizedBox(height: media.width * 0.2),
           Container(
