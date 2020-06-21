@@ -6,7 +6,6 @@ import 'package:meal/utils/utils.dart';
 import 'package:meal/widgets/widgets.dart';
 
 class HostEmailPage extends StatefulWidget {
-  
   static const routeName = 'HostEmailPage';
 
   @override
@@ -43,7 +42,7 @@ class _HostEmailPageState extends State<HostEmailPage> {
               text: "Your email address?",
               scale: media.width * 0.004,
             ),
-            onPressed: (){
+            onPressed: () {
               Navigator.pushNamed(context, Routes.guestPhone);
             },
           ),
@@ -52,8 +51,9 @@ class _HostEmailPageState extends State<HostEmailPage> {
     );
   }
 
-  Widget _fieldForEmail(Size media){
-    return TextField(
+  Widget _fieldForEmail(Size media) {
+    return TextFormField(
+      initialValue: prefs.email,
       textAlign: TextAlign.center,
       keyboardType: TextInputType.emailAddress,
       decoration: InputDecoration(border: InputBorder.none),
@@ -63,10 +63,9 @@ class _HostEmailPageState extends State<HostEmailPage> {
         color: blackColors,
         fontSize: media.width * 0.07,
       ),
-      onChanged: (value){
+      onChanged: (value) {
         prefs.email = value;
       },
     );
   }
-
 }

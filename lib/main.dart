@@ -1,23 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:meal/preferences/userpreferences.dart';
-import 'package:meal/providers/variables_providers.dart';
 import 'package:meal/routes/routes.dart';
 import 'package:meal/utils/utils.dart' as utils;
-import 'package:provider/provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   final prefs = new UserPreferences();
   await prefs.initPrefs();
-  return runApp(
-    MultiProvider(
-      providers: [
-        ChangeNotifierProvider(create: (_) => VariablesProvider()),
-      ],
-      child: MyApp(),
-    ),
-  );
+  return runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {

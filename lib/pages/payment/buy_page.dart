@@ -45,9 +45,8 @@ class _BuyPageState extends State<BuyPage> {
           } else {
             if (cantidad == 0) {
               cantidad = snapshot.data[0].quantityProducts;
-            } 
+            }
           }
-print(cantidad);
           return SizedBox(
             height: MediaQuery.of(context).size.height * 0.3,
             width: MediaQuery.of(context).size.width * 0.9,
@@ -146,16 +145,17 @@ print(cantidad);
           onPressed: () async {
             double price;
             if (widget.product.discount != null) {
-              price = roundDouble(cantidad *
-                  (widget.product.currentPrice -
-                      (widget.product.currentPrice * widget.product.discount/100)));
+              price = roundDouble((widget.product.currentPrice -
+                  (widget.product.currentPrice *
+                      (widget.product.discount / 100))));
             } else {
-              price = roundDouble(widget.product.currentPrice * cantidad);
+              price = roundDouble(widget.product.currentPrice);
             }
+
             final _shoppingCart = ShoppingCartModel(
                 idProduct: widget.product.idProduct,
                 quantityProducts: cantidad,
-                totalPrice: price,
+                price: price,
                 productComment: descripcion);
             await _shoppingCartProvider.newShoppingCart(_shoppingCart);
             Navigator.pop(context);

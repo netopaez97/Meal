@@ -14,15 +14,17 @@ class UserPreferences {
   }
 
   get phone {
-    return _prefs.getInt('phone') ?? '';
+    return _prefs.getString('phone') ?? '';
   }
-  set phone(int value) {
-    _prefs.setInt('phone', value);
+
+  set phone(String value) {
+    _prefs.setString('phone', value);
   }
 
   get email {
     return _prefs.getString('email') ?? '';
   }
+
   set email(String value) {
     _prefs.setString('email', value);
   }
@@ -30,7 +32,16 @@ class UserPreferences {
   get date {
     return _prefs.getString('date') ?? '';
   }
+
   set date(String value) {
     _prefs.setString('date', value);
+  }
+
+  get uid {
+    return _prefs.getString('uid') ?? '';
+  }
+
+  set uid(String value) {
+    _prefs.setString('uid', value);
   }
 }

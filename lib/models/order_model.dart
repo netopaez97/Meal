@@ -1,5 +1,7 @@
 import 'dart:convert';
 
+import 'package:meal/models/shopping_cart_model.dart';
+
 OrderModel orderModelFromJson(String str) =>
     OrderModel.fromJson(json.decode(str));
 
@@ -10,7 +12,7 @@ class OrderModel {
     this.idOrder,
     this.idUser,
     this.status,
-    this.username,
+    this.date,
     this.productsInCartList,
     this.direction,
     this.typeDelivery,
@@ -22,8 +24,8 @@ class OrderModel {
   String idOrder;
   String idUser;
   String status;
-  String username;
-  List<String> productsInCartList;
+  String date;
+  List<ShoppingCartModel> productsInCartList;
   String direction;
   String typeDelivery;
   int contactNumber;
@@ -34,9 +36,10 @@ class OrderModel {
         idOrder: json["idOrder"],
         idUser: json["idUser"],
         status: json["status"],
-        username: json["username"],
-        productsInCartList:
-            List<String>.from(json["productsInCartList"].map((x) => x)),
+        date: json["date"],
+        productsInCartList: List<ShoppingCartModel>.from(
+            json["productsInCartList"]
+                .map((x) => ShoppingCartModel.fromJson(x))),
         direction: json["direction"],
         typeDelivery: json["typeDelivery"],
         contactNumber: json["contactNumber"],
@@ -48,13 +51,22 @@ class OrderModel {
         "idOrder": idOrder,
         "idUser": idUser,
         "status": status,
-        "username": username,
+        "date": date,
         "productsInCartList":
-            List<dynamic>.from(productsInCartList.map((x) => x)),
+            List<dynamic>.from(productsInCartList.map((x) => x.toJson())),
         "direction": direction,
         "typeDelivery": typeDelivery,
         "contactNumber": contactNumber,
         "comments": comments,
         "paymentType": paymentType,
       };
+}
+
+class ProductsInCartList {
+  ProductsInCartList();
+
+  factory ProductsInCartList.fromJson(Map<String, dynamic> json) =>
+      ProductsInCartList();
+
+  Map<String, dynamic> toJson() => {};
 }

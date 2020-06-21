@@ -20,6 +20,7 @@ class PhonePage extends StatelessWidget {
         //   child: Image(image: AssetImage('assets/test.jpg')),
         // ),
         Input(
+            initialValue: prefs.phone,
             typeInput: TextInputType.number,
             onChanged: (value) {
               prefs.phone = value;
@@ -30,8 +31,10 @@ class PhonePage extends StatelessWidget {
             text: "Your phone number?",
             scale: media.width * 0.004,
           ),
-          onPressed: (){
-            Navigator.pushNamed(context, Routes.hostEmail);
+          onPressed: () {
+            if (prefs.phone != '') {
+              Navigator.pushNamed(context, Routes.hostEmail);
+            }
           },
         ),
       ],

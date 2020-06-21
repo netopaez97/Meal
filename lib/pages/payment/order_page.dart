@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:meal/models/order_model.dart';
 import 'package:meal/models/product_model.dart';
 import 'package:meal/models/shopping_cart_model.dart';
 import 'package:meal/preferences/userpreferences.dart';
+import 'package:meal/providers/order_provider.dart';
 import 'package:meal/providers/products_provider.dart';
 import 'package:meal/providers/shopping_cart_provider.dart';
 import 'package:meal/routes/routes.dart';
@@ -10,16 +12,18 @@ import 'package:mailer/mailer.dart';
 import 'package:mailer/smtp_server.dart';
 
 class OrderPage extends StatefulWidget {
+  static const routeName = 'order';
   @override
   _OrderState createState() => _OrderState();
 }
 
 class _OrderState extends State<OrderPage> {
   String dropdownValue = 'Carry out';
-  String phone;
+
   String address;
-  String comment;
+  String comments;
   bool valida = true;
+  List<ShoppingCartModel> list = [];
   @override
   Widget build(BuildContext context) {
     final media = MediaQuery.of(context).size;
@@ -77,7 +81,9 @@ class _OrderState extends State<OrderPage> {
                       border: OutlineInputBorder(),
                       hintText: 'Address',
                       hintStyle: TextStyle(
-                        color: blackColors.withOpacity(0.5),
+                        color: (valida)
+                            ? blackColors.withOpacity(0.5)
+                            : orangeColors.withOpacity(0.5),
                         fontSize: media.width * 0.05,
                       ),
                     ),
@@ -116,7 +122,7 @@ class _OrderState extends State<OrderPage> {
                     color: blackColors,
                     fontSize: media.width * 0.05,
                   ),
-                  onChanged: (value) => {comment = value},
+                  onChanged: (value) => {comments = value},
                 ),
               ),
             ),
@@ -143,7 +149,7 @@ class _OrderState extends State<OrderPage> {
         if (!snapshot.hasData) return Center(child: LinearProgressIndicator());
         if (snapshot.data == null || snapshot.data.length == 0)
           return Center(child: Text("You don't have a Meal in your Cart :'(."));
-
+        list = [];
         final shoppingCart = snapshot.data;
         return SizedBox(
           height: MediaQuery.of(context).size.height * 0.4,
@@ -159,7 +165,7 @@ class _OrderState extends State<OrderPage> {
 
   Widget _option(ShoppingCartModel _shoppingCart) {
     final ProductsProvider _productProvider = ProductsProvider();
-
+    list.add(_shoppingCart);
     return FutureBuilder(
       future: _productProvider.getProduct(_shoppingCart.idProduct),
       builder: (BuildContext context, AsyncSnapshot snapProduct) {
@@ -210,20 +216,42 @@ class _OrderState extends State<OrderPage> {
   }
 
   order() {
+    final prefs = new UserPreferences();
     final ShoppingCartProvider _shoppingCartProvider = ShoppingCartProvider();
+    final OrderProvider _orderProvider = OrderProvider();
     return FloatingActionButton(
       backgroundColor: blackColors,
       onPressed: () {
-        valida=true;
-        if (phone == null || phone == '') {
-          valida = false;
-        } else if (dropdownValue == 'Delivery') {
+        valida = true;
+        if (dropdownValue == 'Delivery') {
           if (address == null || address == '') {
             valida = false;
+            setState(() {});
           }
+        } else {
+          address = '';
+        }
+        if (comments == null || comments == '') {
+          comments = '';
         }
         if (valida) {
-          email();
+          //email();
+          if (prefs.uid.isEmpty) {
+            prefs.uid = DateTime.now().toString();
+          }
+          final order = OrderModel(
+            idUser: prefs.uid,
+            contactNumber: int.parse(prefs.phone),
+            date: DateTime.now().toString(),
+            typeDelivery: dropdownValue,
+            direction: address,
+            productsInCartList: list,
+            comments: comments,
+            status: 'pending',
+            paymentType: '',
+          );
+
+          _orderProvider.insertOrder(order);
 
           _shoppingCartProvider.deleteAll();
 

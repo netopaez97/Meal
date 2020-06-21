@@ -60,7 +60,7 @@ class MainDrawer extends StatelessWidget {
       leading: Icon(Icons.shopping_basket),
       trailing: Icon(Icons.navigate_next),
       onTap: (){
-        // Navigator.pushNamed(context, Routes.pending);
+        Navigator.pushNamed(context, Routes.orders);
       },
     );
   }

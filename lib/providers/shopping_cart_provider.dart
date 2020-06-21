@@ -33,7 +33,7 @@ class ShoppingCartProvider {
           'idCar INTEGER PRIMARY KEY,'
           'idProduct TEXT,'
           'quantityProducts INTEGER,'
-          'totalPrice DOUBLE,'
+          'price DOUBLE,'
           'productComment TEXT'
           ')');
     });
@@ -62,7 +62,7 @@ class ShoppingCartProvider {
 
   //OBTENER REGISTROS
 
-  getShoppingCart() async {
+  Future getShoppingCart() async {
     final db = await database;
     final res = await db.query('ShoppingCart');
     List<ShoppingCartModel> list = res.isNotEmpty

@@ -7,7 +7,7 @@ class Meal extends StatelessWidget {
   Widget build(BuildContext context) {
     final media = MediaQuery.of(context).size;
     return Container(
-      height:  media.width * 0.16,
+      height: media.width * 0.16,
       width: media.width * 0.6,
       child: FittedBox(
         fit: BoxFit.fill,
@@ -27,10 +27,12 @@ class Meal extends StatelessWidget {
 class Input extends StatelessWidget {
   final TextInputType typeInput;
   final onChanged;
+  final String initialValue;
 
   const Input({
     @required this.typeInput,
     @required this.onChanged,
+    this.initialValue = '',
   });
 
   @override
@@ -44,7 +46,8 @@ class Input extends StatelessWidget {
         borderRadius: BorderRadius.circular(10),
       ),
       child: Center(
-        child: TextField(
+        child: TextFormField(
+          initialValue: initialValue,
           textAlign: TextAlign.center,
           keyboardType: typeInput,
           decoration: InputDecoration(border: InputBorder.none),

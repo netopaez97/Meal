@@ -7,8 +7,7 @@ class ProductsProvider /* with ChangeNotifier*/ {
     return _db.where('availability', isEqualTo: true).snapshots();
   }
 
-   Future getProduct(String id) {
-    
+  Future getProduct(String id) {
     final res = _db.document(id).get();
 
     return res;
