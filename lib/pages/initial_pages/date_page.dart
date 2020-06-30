@@ -35,7 +35,7 @@ class _DatePageState extends State<DatePage> {
                 padding: EdgeInsets.zero,
                 onPressed: () => Navigator.pushNamedAndRemoveUntil(context, Routes.home, (Route routes) => false),
                 child: InputText(
-                  text: "What is your meal?",
+                  text: "When is your meal?",
                   scale: media.width * 0.004,
                 ),
               ),

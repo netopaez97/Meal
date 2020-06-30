@@ -68,7 +68,7 @@ class _OrdersPageState extends State<OrdersPage> {
 
           if (snapshot.data == null || snapshot.data.documents.length == 0)
             return Center(
-                child: Text("There is no products avaliable in our store."));
+                child: Text("You haven't ordered products before. Go to Meal!"));
 
           return SizedBox(
             height: MediaQuery.of(context).size.height,
@@ -89,9 +89,13 @@ class _OrdersPageState extends State<OrdersPage> {
   }
 
   Widget _option(OrderModel _order) {
+    
     final ProductsProvider _productProvider = ProductsProvider();
+
     List<ProductModel> list = List();
+
     double total = 0;
+
     _order.productsInCartList.forEach((element) async {
       total = (element.price * element.quantityProducts) + total;
       final res = await _productProvider.getProduct(element.idProduct);
@@ -113,7 +117,7 @@ class _OrdersPageState extends State<OrdersPage> {
             onTap: () {
               showDialog(
                   context: context,
-                  builder: (BuildContext context) => OrderDetailPage(list));
+                  builder: (BuildContext context) => OrderDetailPage(list, _order.productsInCartList));
             },
             // leading: CircleAvatar(
             //     backgroundColor: Colors.transparent,
@@ -130,7 +134,7 @@ class _OrdersPageState extends State<OrdersPage> {
                 SizedBox(height: 10),
                 Text("Quantity products: ${_order.productsInCartList.length}"),
                 SizedBox(height: 10),
-                Text("Total price: $total"),
+                Text("Total price: ${total.toStringAsFixed(2)}"),
                 SizedBox(height: 10),
               ],
             ),

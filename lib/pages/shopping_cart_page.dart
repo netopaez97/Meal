@@ -17,7 +17,7 @@ class _ShoppingCartPageState extends State<ShoppingCartPage> {
   final ShoppingCartProvider _shoppingCartProvider = ShoppingCartProvider();
   GlobalKey<ScaffoldState> _scaffolKey = GlobalKey<ScaffoldState>();
   final snackBarErrorCreacion = SnackBar(
-    content: Text('Hay productos que no estan disponibles'),
+    content: Text('There are products that are not avilable.'),
     duration: Duration(seconds: 5),
   );
 
@@ -159,7 +159,7 @@ class _ShoppingCartPageState extends State<ShoppingCartPage> {
                     SizedBox(height: 10),
                     (_product.availability == false)
                         ? Text(
-                            'No Disponible',
+                            'Not available',
                             style: TextStyle(color: orangeColors),
                           )
                         : SizedBox(),

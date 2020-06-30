@@ -10,6 +10,8 @@ import 'package:meal/routes/routes.dart';
 import 'package:meal/utils/utils.dart';
 import 'package:mailer/mailer.dart';
 import 'package:mailer/smtp_server.dart';
+import 'package:square_in_app_payments/in_app_payments.dart';
+import 'package:square_in_app_payments/models.dart' as cardModel;
 
 class OrderPage extends StatefulWidget {
   static const routeName = 'order';
@@ -221,7 +223,8 @@ class _OrderState extends State<OrderPage> {
     final OrderProvider _orderProvider = OrderProvider();
     return FloatingActionButton(
       backgroundColor: blackColors,
-      onPressed: () {
+      onPressed: _pay,
+      /*onPressed: () {
         valida = true;
         if (dropdownValue == 'Delivery') {
           if (address == null || address == '') {
@@ -259,34 +262,73 @@ class _OrderState extends State<OrderPage> {
               context, Routes.home, (Route routes) => false);
         }
       },
-      child: Icon(Icons.send, color: Colors.white),
+      */child: Icon(Icons.send, color: Colors.white),
     );
   }
+
+
+
+  email() async {
+    String username = 'up872094@gmail.com';
+    String password = 'up872094up872094';
+
+    final smtpServer = gmail(username, password);
+
+    final prefs = new UserPreferences();
+    // Creating the Gmail server
+
+    // Create our email message.
+    final message = Message()
+      ..from = Address(username)
+      ..recipients.add(prefs.email) //recipent email
+      // ..ccRecipients.addAll(['destCc1@example.com', 'destCc2@example.com']) //cc Recipents emails
+      // ..bccRecipients.add(Address('bccAddress@example.com')) //bcc Recipents emails
+      ..subject = 'Welcome to your MEAL dream.' //subject of the email
+      ..text =
+          'This email tests the functionality of Meal 3.0. This is a test email and will be changed with te right email. By the moment, enjoy te progress of this app. This email was sent by ${prefs.email} to invite you to take a diner at ${prefs.date}'; //body of the email
+
+    try {
+      final sendReport = await send(message, smtpServer);
+      print('Message sent: ' + sendReport.toString());
+    } on MailerException catch (e) {
+      print('Message not sent. \n' + e.toString());
+    }
+  }
+
+void _pay() {
+  InAppPayments.setSquareApplicationId('sandbox-sq0idb-vYBd8Czt8CuljT7mrTTAiw');
+  InAppPayments.startCardEntryFlow(
+    onCardEntryCancel: _cardEntryCancel,
+    onCardNonceRequestSuccess: _cardNonceRequestSuccess,
+  );
 }
 
-email() async {
-  String username = 'up872094@gmail.com';
-  String password = 'up872094up872094';
+void _cardEntryCancel() {
+ // Cancel
+}
 
-  final smtpServer = gmail(username, password);
+void _cardNonceRequestSuccess(cardModel.CardDetails result) {
+ // Use this nonce from your backend to pay via Square API
+ print("Resultado al hacer click ${result.nonce}");
 
-  final prefs = new UserPreferences();
-  // Creating the Gmail server
+ final bool _invalidZipCode = false;
 
-  // Create our email message.
-  final message = Message()
-    ..from = Address(username)
-    ..recipients.add(prefs.email) //recipent email
-    // ..ccRecipients.addAll(['destCc1@example.com', 'destCc2@example.com']) //cc Recipents emails
-    // ..bccRecipients.add(Address('bccAddress@example.com')) //bcc Recipents emails
-    ..subject = 'Welcome to your MEAL dream.' //subject of the email
-    ..text =
-        'This email tests the functionality of Meal 3.0. This is a test email and will be changed with te right email. By the moment, enjoy te progress of this app. This email was sent by ${prefs.email} to invite you to take a diner at ${prefs.date}'; //body of the email
+ if (_invalidZipCode) {
+   // Stay in the card flow and show an error:
+   InAppPayments.showCardNonceProcessingError('Invalid ZipCode');
+ }
 
-  try {
-    final sendReport = await send(message, smtpServer);
-    print('Message sent: ' + sendReport.toString());
-  } on MailerException catch (e) {
-    print('Message not sent. \n' + e.toString());
-  }
+ InAppPayments.completeCardEntry(
+   onCardEntryComplete: _cardEntryComplete,
+ );
+}
+
+
+void _cardEntryComplete() {
+  // Success
+  print("Se metió la tarjeta con éxito");
+}
+
+
+
 }
