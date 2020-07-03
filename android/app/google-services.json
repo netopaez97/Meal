@@ -1,35 +1,78 @@
 {
   "project_info": {
-    "project_number": "619498901886",
-    "firebase_url": "https://meal-kansascity.firebaseio.com",
-    "project_id": "meal-kansascity",
-    "storage_bucket": "meal-kansascity.appspot.com"
+    "project_number": "624557244157",
+    "firebase_url": "https://mealkansascity.firebaseio.com",
+    "project_id": "mealkansascity",
+    "storage_bucket": "mealkansascity.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:619498901886:android:baa0a13bbb2dbfb4a7632f",
+        "mobilesdk_app_id": "1:624557244157:android:aa5b9e4847d9a3f0fe0894",
         "android_client_info": {
           "package_name": "com.netopaez.meal"
         }
       },
       "oauth_client": [
         {
-          "client_id": "619498901886-9frlvf5rjnosivbolblt9nejr5h9vc3d.apps.googleusercontent.com",
+          "client_id": "624557244157-3ngfnc1f7p5ts4qdaf35tkad4ha012ka.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyAM6uKwrG56WXMntHLVouj5w61rUXxb6DM"
+          "current_key": "AIzaSyAkvjJeid_WJ8JGsTQAo6Q_wjVh6nU2F2g"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "619498901886-9frlvf5rjnosivbolblt9nejr5h9vc3d.apps.googleusercontent.com",
+              "client_id": "624557244157-3ngfnc1f7p5ts4qdaf35tkad4ha012ka.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "624557244157-004i7t2jvru702cg3kfp5dfecv5lieiu.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.netopaez.meal-admin"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:624557244157:android:dece5ec14eec13e6fe0894",
+        "android_client_info": {
+          "package_name": "com.netopaez.meal_admin"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "624557244157-3ngfnc1f7p5ts4qdaf35tkad4ha012ka.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAkvjJeid_WJ8JGsTQAo6Q_wjVh6nU2F2g"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "624557244157-3ngfnc1f7p5ts4qdaf35tkad4ha012ka.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "624557244157-004i7t2jvru702cg3kfp5dfecv5lieiu.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.netopaez.meal-admin"
+              }
             }
           ]
         }

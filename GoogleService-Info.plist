@@ -3,21 +3,21 @@
 <plist version="1.0">
 <dict>
 	<key>CLIENT_ID</key>
-	<string>619498901886-n40flv5jhugo5igqtluduqgo5ghchej2.apps.googleusercontent.com</string>
+	<string>624557244157-hefk1108vfrkakdg2tq0epgtdnuf4msf.apps.googleusercontent.com</string>
 	<key>REVERSED_CLIENT_ID</key>
-	<string>com.googleusercontent.apps.619498901886-n40flv5jhugo5igqtluduqgo5ghchej2</string>
+	<string>com.googleusercontent.apps.624557244157-hefk1108vfrkakdg2tq0epgtdnuf4msf</string>
 	<key>API_KEY</key>
-	<string>AIzaSyA8V6BA8wpg7WtOWDwV2mxqwSwvw5P8Zvw</string>
+	<string>AIzaSyCHzrk6ku3_TQbDH02YsweOzzWRcB5qu1c</string>
 	<key>GCM_SENDER_ID</key>
-	<string>619498901886</string>
+	<string>624557244157</string>
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
 	<string>com.netopaez.meal</string>
 	<key>PROJECT_ID</key>
-	<string>meal-kansascity</string>
+	<string>mealkansascity</string>
 	<key>STORAGE_BUCKET</key>
-	<string>meal-kansascity.appspot.com</string>
+	<string>mealkansascity.appspot.com</string>
 	<key>IS_ADS_ENABLED</key>
 	<false></false>
 	<key>IS_ANALYTICS_ENABLED</key>
@@ -29,8 +29,8 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:619498901886:ios:01404f23fb675c3da7632f</string>
+	<string>1:624557244157:ios:777e30076f9b014ffe0894</string>
 	<key>DATABASE_URL</key>
-	<string>https://meal-kansascity.firebaseio.com</string>
+	<string>https://mealkansascity.firebaseio.com</string>
 </dict>
 </plist>
