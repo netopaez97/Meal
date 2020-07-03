@@ -223,8 +223,8 @@ class _OrderState extends State<OrderPage> {
     final OrderProvider _orderProvider = OrderProvider();
     return FloatingActionButton(
       backgroundColor: blackColors,
-      onPressed: _pay,
-      /*onPressed: () {
+      //onPressed: _pay,
+      onPressed: () {
         valida = true;
         if (dropdownValue == 'Delivery') {
           if (address == null || address == '') {
@@ -262,11 +262,9 @@ class _OrderState extends State<OrderPage> {
               context, Routes.home, (Route routes) => false);
         }
       },
-      */child: Icon(Icons.send, color: Colors.white),
+      child: Icon(Icons.send, color: Colors.white),
     );
   }
-
-
 
   email() async {
     String username = 'up872094@gmail.com';
@@ -295,40 +293,37 @@ class _OrderState extends State<OrderPage> {
     }
   }
 
-void _pay() {
-  InAppPayments.setSquareApplicationId('sandbox-sq0idb-vYBd8Czt8CuljT7mrTTAiw');
-  InAppPayments.startCardEntryFlow(
-    onCardEntryCancel: _cardEntryCancel,
-    onCardNonceRequestSuccess: _cardNonceRequestSuccess,
-  );
-}
+  void _pay() {
+    InAppPayments.setSquareApplicationId(
+        'sandbox-sq0idb-vYBd8Czt8CuljT7mrTTAiw');
+    InAppPayments.startCardEntryFlow(
+      onCardEntryCancel: _cardEntryCancel,
+      onCardNonceRequestSuccess: _cardNonceRequestSuccess,
+    );
+  }
 
-void _cardEntryCancel() {
- // Cancel
-}
+  void _cardEntryCancel() {
+    // Cancel
+  }
 
-void _cardNonceRequestSuccess(cardModel.CardDetails result) {
- // Use this nonce from your backend to pay via Square API
- print("Resultado al hacer click ${result.nonce}");
+  void _cardNonceRequestSuccess(cardModel.CardDetails result) {
+    // Use this nonce from your backend to pay via Square API
+    print("Resultado al hacer click ${result.nonce}");
 
- final bool _invalidZipCode = false;
+    final bool _invalidZipCode = false;
 
- if (_invalidZipCode) {
-   // Stay in the card flow and show an error:
-   InAppPayments.showCardNonceProcessingError('Invalid ZipCode');
- }
+    if (_invalidZipCode) {
+      // Stay in the card flow and show an error:
+      InAppPayments.showCardNonceProcessingError('Invalid ZipCode');
+    }
 
- InAppPayments.completeCardEntry(
-   onCardEntryComplete: _cardEntryComplete,
- );
-}
+    InAppPayments.completeCardEntry(
+      onCardEntryComplete: _cardEntryComplete,
+    );
+  }
 
-
-void _cardEntryComplete() {
-  // Success
-  print("Se metió la tarjeta con éxito");
-}
-
-
-
+  void _cardEntryComplete() {
+    // Success
+    print("Se metió la tarjeta con éxito");
+  }
 }

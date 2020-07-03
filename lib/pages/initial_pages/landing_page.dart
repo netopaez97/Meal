@@ -7,22 +7,17 @@ class InitialPage extends StatelessWidget {
   static const routeName = 'InitialPage';
   @override
   Widget build(BuildContext context) {
-
     final media = MediaQuery.of(context).size;
     return Scaffold(
       appBar: AppBar(elevation: 0),
       backgroundColor: blackColors,
-      body: Padding(
-        padding: EdgeInsets.only(
-          left: media.width * 0.1,
-        ),
+      body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             Container(
               height: media.width * 0.16,
-              width: media.width * 0.8,
+              width: media.width * 0.9,
               child: FittedBox(
                 fit: BoxFit.fill,
                 child: Text(
@@ -42,44 +37,35 @@ class InitialPage extends StatelessWidget {
               padding: EdgeInsets.symmetric(
                 horizontal: media.width * 0.05,
               ),
-              height: media.width * 0.7,
-              width: media.width * 0.8,
+              width: media.width * 0.9,
               child: Text(
                 'Thank you for using MEAL! This is a pilot version of the app, which we are working to improve. Please let us know what you think!\nShare your suggestions for ways we can improve! you can participate in a short survey at the end of your order. Enjoy your MEAL!',
                 style: TextStyle(
                   color: Colors.white,
                   fontWeight: FontWeight.normal,
                 ),
-                textScaleFactor: media.width * 0.004,
+                textAlign: TextAlign.justify,
+                textScaleFactor: media.width * 0.0045,
               ),
             ),
             CupertinoButton(
-              padding: EdgeInsets.zero,
-              child: Row(
-                children: <Widget>[
-                  Icon(Icons.add,
-                      size: media.width * 0.15, color: orangeColor),
-                  SizedBox(
-                    width: 5,
+              child: Container(
+                width: media.width * 0.8,
+                child: Text(
+                  "Go to Meal",
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.normal,
                   ),
-                  Container(
-                    height: media.width * 0.1,
-                    width: media.width * 0.6,
-                    child: FittedBox(
-                      fit: BoxFit.fill,
-                      child: Text(
-                        "Go to meal",
-                        style: TextStyle(
-                          color: orangeColor,
-                          fontWeight: FontWeight.normal,
-                        ),
-                        textScaleFactor: media.width * 0.0055,
-                      ),
-                    ),
-                  ),
-                ],
+                  textAlign: TextAlign.center,
+                  textScaleFactor: media.width * 0.006,
+                ),
+                decoration: BoxDecoration(
+                  color: orangeColors,
+                  borderRadius: BorderRadius.circular(10),
+                ),
               ),
-              onPressed: (){
+              onPressed: () {
                 Navigator.pushNamed(context, Routes.hostPhone);
               },
             ),

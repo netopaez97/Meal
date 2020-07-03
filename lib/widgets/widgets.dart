@@ -7,8 +7,8 @@ class Meal extends StatelessWidget {
   Widget build(BuildContext context) {
     final media = MediaQuery.of(context).size;
     return Container(
-      height: media.width * 0.16,
-      width: media.width * 0.6,
+      height: media.width * 0.2,
+      width: media.width * 0.8,
       child: FittedBox(
         fit: BoxFit.fill,
         child: Text(
@@ -39,7 +39,7 @@ class Input extends StatelessWidget {
   Widget build(BuildContext context) {
     final media = MediaQuery.of(context).size;
     return Container(
-      width: media.width * 0.6,
+      width: media.width * 0.8,
       height: media.width * 0.14,
       decoration: BoxDecoration(
         color: Colors.white,
@@ -78,6 +78,7 @@ class InputText extends StatelessWidget {
       alignment: Alignment.center,
       child: Text(
         text,
+        textAlign: TextAlign.center,
         style: TextStyle(
           color: Colors.white,
           fontWeight: FontWeight.normal,

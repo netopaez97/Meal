@@ -10,26 +10,47 @@ class EmailPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final media = MediaQuery.of(context).size;
     return Scaffold(
-      appBar: AppBar(elevation: 0,),
+      appBar: AppBar(
+        elevation: 0,
+      ),
       backgroundColor: blackColors,
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          Meal(),
-          Input(
-              typeInput: TextInputType.emailAddress,
-              onChanged: (value) {}),
-          CupertinoButton(
-            padding: EdgeInsets.zero,
-            child: InputText(
+      body: SingleChildScrollView(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            SizedBox(height: media.width * 0.5),
+            Meal(),
+            SizedBox(height: 5),
+            Input(typeInput: TextInputType.number, onChanged: (value) {}),
+            SizedBox(height: 5),
+            InputText(
               text: "Your guest's email?",
-              scale: media.width * 0.004,
+              scale: media.width * 0.0065,
             ),
-            onPressed: (){
-              Navigator.pushNamed(context, Routes.selection);
-            },
-          )
-        ],
+            SizedBox(height: media.width * 0.5),
+            CupertinoButton(
+              child: Container(
+                width: media.width * 0.8,
+                child: Text(
+                  "Next",
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.normal,
+                  ),
+                  textAlign: TextAlign.center,
+                  textScaleFactor: media.width * 0.006,
+                ),
+                decoration: BoxDecoration(
+                  color: orangeColors,
+                  borderRadius: BorderRadius.circular(10),
+                ),
+              ),
+              onPressed: () {
+                Navigator.pushNamed(context, Routes.selection);
+              },
+            ),
+          ],
+        ),
       ),
     );
   }

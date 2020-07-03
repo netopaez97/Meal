@@ -1,33 +1,65 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:meal/providers/guest_provider.dart';
 import 'package:meal/routes/routes.dart';
 import 'package:meal/utils/utils.dart';
 import 'package:meal/widgets/widgets.dart';
+import 'package:provider/provider.dart';
 
 class GuestPage extends StatelessWidget {
   static const routeName = 'GuestPage';
   @override
   Widget build(BuildContext context) {
+    final guestProvider = Provider.of<GuestProvider>(context);
     final media = MediaQuery.of(context).size;
+
     return Scaffold(
       appBar: AppBar(elevation: 0),
       backgroundColor: blackColors,
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          Meal(),
-          Input(typeInput: TextInputType.number, onChanged: (value) {}),
-          CupertinoButton(
-            padding: EdgeInsets.zero,
-            child: InputText(
-              text: "Your guest's phone?",
-              scale: media.width * 0.004,
+      body: SingleChildScrollView(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            SizedBox(height: media.width * 0.5),
+            Meal(),
+            SizedBox(height: 5),
+            Input(
+              typeInput: TextInputType.number,
+              onChanged: (value) => guestProvider.phone = int.parse(value),
             ),
-            onPressed: (){
-              Navigator.pushNamed(context, Routes.guestEmail);
-            },
-          )
-        ],
+            SizedBox(height: 5),
+            InputText(
+              text: "Your guest's phone?",
+              scale: media.width * 0.006,
+            ),
+            SizedBox(height: media.width * 0.5),
+            CupertinoButton(
+              child: Container(
+                width: media.width * 0.8,
+                child: Text(
+                  "Next",
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.normal,
+                  ),
+                  textAlign: TextAlign.center,
+                  textScaleFactor: media.width * 0.006,
+                ),
+                decoration: BoxDecoration(
+                  color: orangeColors,
+                  borderRadius: BorderRadius.circular(10),
+                ),
+              ),
+              onPressed: () {
+                guestProvider.guestCount++;
+                print(guestProvider.phone);
+                guestProvider.setGuests(guestProvider.phone);
+                print(guestProvider.guests);
+                Navigator.pushNamed(context, Routes.selection);
+              },
+            ),
+          ],
+        ),
       ),
     );
   }

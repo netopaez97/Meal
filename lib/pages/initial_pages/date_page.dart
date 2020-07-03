@@ -14,7 +14,6 @@ class DatePage extends StatefulWidget {
 }
 
 class _DatePageState extends State<DatePage> {
-
   final _prefs = UserPreferences();
 
   @override
@@ -31,17 +30,38 @@ class _DatePageState extends State<DatePage> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
               Meal(),
+              InputText(
+                text: "When is your meal?",
+                scale: media.width * 0.006,
+              ),
               CupertinoButton(
-                padding: EdgeInsets.zero,
-                onPressed: () => Navigator.pushNamedAndRemoveUntil(context, Routes.home, (Route routes) => false),
-                child: InputText(
-                  text: "When is your meal?",
-                  scale: media.width * 0.004,
+                child: Container(
+                  padding: EdgeInsets.symmetric(vertical: 5),
+                  width: media.width * 0.8,
+                  child: Text(
+                    "Next",
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.normal,
+                    ),
+                    textAlign: TextAlign.center,
+                    textScaleFactor: media.width * 0.005,
+                  ),
+                  decoration: BoxDecoration(
+                    color: orangeColors,
+                    borderRadius: BorderRadius.circular(10),
+                  ),
                 ),
+                // onPressed: () => Navigator.pushNamedAndRemoveUntil(
+                //     context, Routes.home, (Route routes) => false),
+                onPressed: () {
+                  Navigator.pushNamed(context, Routes.pickup);
+                },
               ),
             ],
           ),
-          SizedBox(height: media.width * 0.2),
+
+          SizedBox(height: media.width * 0.1),
           Container(
             color: Colors.white,
             height: media.width * 0.7,

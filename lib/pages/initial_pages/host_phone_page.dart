@@ -15,25 +15,42 @@ class PhonePage extends StatelessWidget {
     var container = Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
+        SizedBox(height: media.width * 0.5),
         Meal(),
-        // Container(
-        //   child: Image(image: AssetImage('assets/test.jpg')),
-        // ),
+        SizedBox(height: 5),
         Input(
-            initialValue: prefs.phone,
-            typeInput: TextInputType.number,
-            onChanged: (value) {
-              prefs.phone = value;
-            }),
+          initialValue: prefs.phone,
+          typeInput: TextInputType.number,
+          onChanged: (value) {
+            prefs.phone = value;
+          },
+        ),
+        SizedBox(height: 5),
+        InputText(
+          text: "Your phone number?",
+          scale: media.width * 0.006,
+        ),
+        SizedBox(height: media.width * 0.5),
         CupertinoButton(
-          padding: EdgeInsets.zero,
-          child: InputText(
-            text: "Your phone number?",
-            scale: media.width * 0.004,
+          child: Container(
+            width: media.width * 0.8,
+            child: Text(
+              "Next",
+              style: TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.normal,
+              ),
+              textAlign: TextAlign.center,
+              textScaleFactor: media.width * 0.006,
+            ),
+            decoration: BoxDecoration(
+              color: orangeColors,
+              borderRadius: BorderRadius.circular(10),
+            ),
           ),
           onPressed: () {
             if (prefs.phone != '') {
-              Navigator.pushNamed(context, Routes.hostEmail);
+              Navigator.pushNamed(context, Routes.guestPhone);
             }
           },
         ),
@@ -42,7 +59,7 @@ class PhonePage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(elevation: 0),
       backgroundColor: blackColors,
-      body: container,
+      body: SingleChildScrollView(child: container),
     );
   }
 }

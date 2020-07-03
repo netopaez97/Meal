@@ -6,6 +6,9 @@ import 'package:meal/pages/initial_pages/guest_phone_page.dart';
 import 'package:meal/pages/initial_pages/host_email_page.dart';
 import 'package:meal/pages/initial_pages/host_phone_page.dart';
 import 'package:meal/pages/initial_pages/landing_page.dart';
+import 'package:meal/pages/initial_pages/menu_page.dart';
+import 'package:meal/pages/initial_pages/payment_page.dart';
+import 'package:meal/pages/initial_pages/pick_up_page.dart';
 import 'package:meal/pages/initial_pages/selection_page.dart';
 import 'package:meal/pages/initial_pages/splashscreen_page.dart';
 import 'package:meal/pages/login/login_page.dart';
@@ -32,6 +35,9 @@ Map<String, WidgetBuilder> getApplicationRoutes() {
     SplashscreenPage.routeName: (BuildContext context) => SplashscreenPage(),
     OrdersPage.routeName: (BuildContext context) => OrdersPage(),
     OrderPage.routeName: (BuildContext context) => OrderPage(),
+    PickUpPage.routeName: (BuildContext context) => PickUpPage(),
+    PaymentPage.routeName: (BuildContext context) => PaymentPage(),
+    MenuPage.routeName: (BuildContext context) => MenuPage(),
   };
 }
 
@@ -51,4 +57,7 @@ class Routes {
   static const String splash = SplashscreenPage.routeName;
   static const String orders = OrdersPage.routeName;
   static const String order = OrderPage.routeName;
+  static const String pickup = PickUpPage.routeName;
+  static const String payment = PaymentPage.routeName;
+  static const String menu = MenuPage.routeName;
 }

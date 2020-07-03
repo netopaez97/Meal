@@ -68,7 +68,8 @@ class _OrdersPageState extends State<OrdersPage> {
 
           if (snapshot.data == null || snapshot.data.documents.length == 0)
             return Center(
-                child: Text("You haven't ordered products before. Go to Meal!"));
+                child:
+                    Text("You haven't ordered products before. Go to Meal!"));
 
           return SizedBox(
             height: MediaQuery.of(context).size.height,
@@ -89,7 +90,6 @@ class _OrdersPageState extends State<OrdersPage> {
   }
 
   Widget _option(OrderModel _order) {
-    
     final ProductsProvider _productProvider = ProductsProvider();
 
     List<ProductModel> list = List();
@@ -117,7 +117,8 @@ class _OrdersPageState extends State<OrdersPage> {
             onTap: () {
               showDialog(
                   context: context,
-                  builder: (BuildContext context) => OrderDetailPage(list, _order.productsInCartList));
+                  builder: (BuildContext context) =>
+                      OrderDetailPage(list, _order.productsInCartList));
             },
             // leading: CircleAvatar(
             //     backgroundColor: Colors.transparent,
@@ -138,15 +139,15 @@ class _OrdersPageState extends State<OrdersPage> {
                 SizedBox(height: 10),
               ],
             ),
-            // trailing: IconButton(
-            //   icon: Icon(Icons.add_shopping_cart),
-            //   onPressed: () {
-            //     showDialog(
-            //       context: context,
-            //       builder: (BuildContext context) => BuyPage(_producto),
-            //     );
-            //   },
-            // ),
+            trailing: IconButton(
+              icon: Icon(
+                Icons.video_call,
+                size: MediaQuery.of(context).size.width * 0.1,
+              ),
+              onPressed: () {
+                Navigator.pushNamed(context, Routes.indexConference);
+              },
+            ),
           ),
         ),
         Divider(
