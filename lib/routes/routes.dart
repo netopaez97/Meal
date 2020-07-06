@@ -15,6 +15,7 @@ import 'package:meal/pages/login/login_page.dart';
 import 'package:meal/pages/orders.dart';
 import 'package:meal/pages/payment/order_page.dart';
 import 'package:meal/pages/shopping_cart_page.dart';
+import 'package:meal/pages/video_conference/conference_page.dart';
 // import 'package:meal/pages/video_conference/conference_page.dart';
 import 'package:meal/pages/video_conference/index_conference.dart';
 
@@ -26,7 +27,7 @@ Map<String, WidgetBuilder> getApplicationRoutes() {
     EmailPage.routeName: (BuildContext context) => EmailPage(),
     GuestPage.routeName: (BuildContext context) => GuestPage(),
     DatePage.routeName: (BuildContext context) => DatePage(),
-    // ConferencePage.routeName :    (BuildContext context) => ConferencePage(),
+    ConferencePage.routeName :    (BuildContext context) => ConferencePage(),
     IndexPage.routeName: (BuildContext context) => IndexPage(),
     SelectionPage.routeName: (BuildContext context) => SelectionPage(),
     LoginPage.routeName: (BuildContext context) => LoginPage(),
@@ -48,7 +49,7 @@ class Routes {
   static const String guestPhone = GuestPage.routeName;
   static const String guestEmail = EmailPage.routeName;
   static const String date = DatePage.routeName;
-  // static const String conference         = ConferencePage.routeName;
+  static const String conference         = ConferencePage.routeName;
   static const String indexConference = IndexPage.routeName;
   static const String selection = SelectionPage.routeName;
   static const String login = LoginPage.routeName;

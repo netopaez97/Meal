@@ -4,9 +4,9 @@ import 'package:agora_rtc_engine/agora_rtc_engine.dart';
 import 'package:flutter/material.dart';
 import 'package:meal/utils/utils.dart';
 
-
-
 class ConferencePage extends StatefulWidget {
+  static const routeName = 'conference';
+
   /// non-modifiable channel name of the page
   final String channelName;
 
@@ -14,7 +14,9 @@ class ConferencePage extends StatefulWidget {
   final ClientRole role;
 
   /// Creates a call page with given channel name.
-  const ConferencePage({Key key, this.channelName, this.role}) : super(key: key);
+  const ConferencePage(
+      {Key key, this.channelName, this.role = ClientRole.Broadcaster})
+      : super(key: key);
 
   @override
   _ConferencePageState createState() => _ConferencePageState();

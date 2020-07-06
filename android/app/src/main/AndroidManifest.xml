@@ -1,5 +1,4 @@
-<manifest xmlns:android="http://schemas.android.com/apk/res/android" 
-	package="com.netopaez.meal">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="com.netopaez.meal">
 	<!--
 	io.flutter.app.FlutterApplication is an android.app.Application that
 	calls FlutterMain.startInitialization(this); in its onCreate method.
@@ -24,19 +23,8 @@
 				<category android:name="android.intent.category.LAUNCHER" />
 			</intent-filter>
 			<intent-filter>
-				<action android:name="android.intent.action.VIEW" />
+				<action android:name="FLUTTER_NOTIFICATION_CLICK" />
 				<category android:name="android.intent.category.DEFAULT" />
-				<category android:name="android.intent.category.BROWSABLE" />
-				<!-- Accepts URIs that begin with YOUR_SCHEME://YOUR_HOST -->
-				<data android:scheme="meal11111" android:host="meal" />
-			</intent-filter>
-			<!-- App Links -->
-			<intent-filter android:autoVerify="true">
-				<action android:name="android.intent.action.VIEW" />
-				<category android:name="android.intent.category.DEFAULT" />
-				<category android:name="android.intent.category.BROWSABLE" />
-				<!-- Accepts URIs that begin with https://YOUR_HOST -->
-				<data android:scheme="https" android:host="meal" />
 			</intent-filter>
 		</activity>
 		<!--

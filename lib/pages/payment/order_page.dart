@@ -4,15 +4,19 @@ import 'package:meal/models/order_model.dart';
 import 'package:meal/models/product_model.dart';
 import 'package:meal/models/shopping_cart_model.dart';
 import 'package:meal/preferences/userpreferences.dart';
+import 'package:meal/providers/guest_provider.dart';
 import 'package:meal/providers/order_provider.dart';
 import 'package:meal/providers/products_provider.dart';
+import 'package:meal/providers/push_nofitications_provider.dart';
 import 'package:meal/providers/shopping_cart_provider.dart';
 import 'package:meal/routes/routes.dart';
+import 'package:meal/services/dynamic_link_service.dart';
 import 'package:meal/utils/utils.dart';
-import 'package:mailer/mailer.dart';
-import 'package:mailer/smtp_server.dart';
+import 'package:provider/provider.dart';
+import 'package:sms_maintained/sms.dart';
 import 'package:square_in_app_payments/in_app_payments.dart';
 import 'package:square_in_app_payments/models.dart' as cardModel;
+import 'package:url_launcher/url_launcher.dart';
 
 class OrderPage extends StatefulWidget {
   static const routeName = 'order';
@@ -222,11 +226,14 @@ class _OrderState extends State<OrderPage> {
     final prefs = new UserPreferences();
     final ShoppingCartProvider _shoppingCartProvider = ShoppingCartProvider();
     final OrderProvider _orderProvider = OrderProvider();
+    final _guestProvider = Provider.of<GuestProvider>(context);
+    final DynamicLinkService _dynamicLinkService = DynamicLinkService();
+    final pushProvider = new PushNotificationProvider();
     return FloatingActionButton(
       backgroundColor: blackColors,
       //onPressed: _pay,
-      onPressed: () {
-        return _pay();
+      onPressed: () async {
+        // return _pay();
         valida = true;
         if (dropdownValue == 'Delivery') {
           if (address == null || address == '') {
@@ -240,10 +247,28 @@ class _OrderState extends State<OrderPage> {
           comments = '';
         }
         if (valida) {
-          //email();
+          Uri _emailLaunchUri;
+          final url = await _dynamicLinkService
+              .createDynamicLink(DateTime.now().toString());
+          // _guestProvider.guests.forEach((num) => {
+          //       _emailLaunchUri = Uri(
+          //           scheme: 'sms',
+          //           path: '$num',
+          //           queryParameters: {'body': 'Unete a mi videollamada $url'}),
+          //       launch(_emailLaunchUri.toString()),
+          //     });
+
+          print(_guestProvider.guests.toList().toString());
+          _emailLaunchUri = Uri(
+              scheme: 'sms',
+              path: _guestProvider.guests.toList().toString(),
+              queryParameters: {'body': 'Unete a mi videollamada $url'});
+          launch(_emailLaunchUri.toString());
+          pushProvider.sendAndRetrieveMessage();
           if (prefs.uid.isEmpty) {
             prefs.uid = DateTime.now().toString();
           }
+
           final order = OrderModel(
             idUser: prefs.uid,
             contactNumber: int.parse(prefs.phone),
@@ -268,32 +293,21 @@ class _OrderState extends State<OrderPage> {
     );
   }
 
-  email() async {
-    String username = 'up872094@gmail.com';
-    String password = 'up872094up872094';
+  // sms() {
+  //   SmsSender sender = SmsSender();
+  //   String address = "+573172790113";
 
-    final smtpServer = gmail(username, password);
-
-    final prefs = new UserPreferences();
-    // Creating the Gmail server
-
-    // Create our email message.
-    final message = Message()
-      ..from = Address(username)
-      ..recipients.add(prefs.email) //recipent email
-      // ..ccRecipients.addAll(['destCc1@example.com', 'destCc2@example.com']) //cc Recipents emails
-      // ..bccRecipients.add(Address('bccAddress@example.com')) //bcc Recipents emails
-      ..subject = 'Welcome to your MEAL dream.' //subject of the email
-      ..text =
-          'This email tests the functionality of Meal 3.0. This is a test email and will be changed with te right email. By the moment, enjoy te progress of this app. This email was sent by ${prefs.email} to invite you to take a diner at ${prefs.date}'; //body of the email
-
-    try {
-      final sendReport = await send(message, smtpServer);
-      print('Message sent: ' + sendReport.toString());
-    } on MailerException catch (e) {
-      print('Message not sent. \n' + e.toString());
-    }
-  }
+  //   SmsMessage message = SmsMessage(
+  //       address, 'Este es un mensaje automatico enviado desde flutter!');
+  //   message.onStateChanged.listen((state) {
+  //     if (state == SmsMessageState.Sent) {
+  //       print("SMS is sent!");
+  //     } else if (state == SmsMessageState.Delivered) {
+  //       print("SMS is delivered!");
+  //     }
+  //   });
+  //   sender.sendSms(message);
+  // }
 
   void _pay() {
     InAppPayments.setSquareApplicationId(
@@ -353,3 +367,30 @@ class _OrderState extends State<OrderPage> {
       
   }
 }
+
+// email() async {
+//   String username = 'up872094@gmail.com';
+//   String password = 'up872094up872094';
+
+//   final smtpServer = gmail(username, password);
+
+//   final prefs = new UserPreferences();
+//   // Creating the Gmail server
+
+//   // Create our email message.
+//   final message = Message()
+//     ..from = Address(username)
+//     ..recipients.add(prefs.email) //recipent email
+//     // ..ccRecipients.addAll(['destCc1@example.com', 'destCc2@example.com']) //cc Recipents emails
+//     // ..bccRecipients.add(Address('bccAddress@example.com')) //bcc Recipents emails
+//     ..subject = 'Welcome to your MEAL dream.' //subject of the email
+//     ..text =
+//         'This email tests the functionality of Meal 3.0. This is a test email and will be changed with te right email. By the moment, enjoy te progress of this app. This email was sent by ${prefs.email} to invite you to take a diner at ${prefs.date}'; //body of the email
+
+//   try {
+//     final sendReport = await send(message, smtpServer);
+//     print('Message sent: ' + sendReport.toString());
+//   } on MailerException catch (e) {
+//     print('Message not sent. \n' + e.toString());
+//   }
+// }

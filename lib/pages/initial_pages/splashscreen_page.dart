@@ -5,7 +5,6 @@ import 'package:meal/routes/routes.dart';
 import 'package:meal/widgets/widgets.dart';
 
 class SplashscreenPage extends StatefulWidget {
-
   static const routeName = '/splash';
 
   @override
@@ -14,10 +13,12 @@ class SplashscreenPage extends StatefulWidget {
 
 class _SplashscreenPageState extends State<SplashscreenPage> {
   @override
-  void initState() { 
-    Timer(Duration(seconds:1), () => Navigator.pushNamedAndRemoveUntil(context, Routes.initial, (Route routes) => false));
+  void initState() {
+    Timer(
+        Duration(seconds: 1),
+        () => Navigator.pushNamedAndRemoveUntil(
+            context, Routes.initial, (Route routes) => false));
     super.initState();
-    
   }
 
   @override
