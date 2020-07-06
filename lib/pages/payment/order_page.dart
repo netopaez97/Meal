@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:http/http.dart';
 import 'package:meal/models/order_model.dart';
 import 'package:meal/models/product_model.dart';
 import 'package:meal/models/shopping_cart_model.dart';
@@ -225,6 +226,7 @@ class _OrderState extends State<OrderPage> {
       backgroundColor: blackColors,
       //onPressed: _pay,
       onPressed: () {
+        return _pay();
         valida = true;
         if (dropdownValue == 'Delivery') {
           if (address == null || address == '') {
@@ -295,7 +297,7 @@ class _OrderState extends State<OrderPage> {
 
   void _pay() {
     InAppPayments.setSquareApplicationId(
-        'sandbox-sq0idb-vYBd8Czt8CuljT7mrTTAiw');
+        'sq0idp-7IcCxIk1_YjHDYYt2-hcyw');
     InAppPayments.startCardEntryFlow(
       onCardEntryCancel: _cardEntryCancel,
       onCardNonceRequestSuccess: _cardNonceRequestSuccess,
@@ -306,9 +308,10 @@ class _OrderState extends State<OrderPage> {
     // Cancel
   }
 
-  void _cardNonceRequestSuccess(cardModel.CardDetails result) {
+  void _cardNonceRequestSuccess(cardModel.CardDetails result) async {
     // Use this nonce from your backend to pay via Square API
     print("Resultado al hacer click ${result.nonce}");
+
 
     final bool _invalidZipCode = false;
 
@@ -318,12 +321,35 @@ class _OrderState extends State<OrderPage> {
     }
 
     InAppPayments.completeCardEntry(
-      onCardEntryComplete: _cardEntryComplete,
+      onCardEntryComplete: (){
+        _cardEntryComplete(result.nonce);
+      },
     );
   }
 
-  void _cardEntryComplete() {
-    // Success
-    print("Se metió la tarjeta con éxito");
+  void _cardEntryComplete(String _details) async {
+    
+    Response response = await get("http://192.168.1.9:8080?nonce=" + _details);
+
+      await showDialog(
+        context: context,
+        builder: (BuildContext ctx) {
+          return AlertDialog(
+            title: Text("Square Payments API Response"),
+            content: SingleChildScrollView(
+              child: 
+                Text(response.body.toString()),
+            ),
+            actions: <Widget>[
+              FlatButton(
+                child: Text("OK"),
+                onPressed: () {
+                  Navigator.pop(ctx);
+                },
+              ),
+            ],
+          );
+       });
+      
   }
 }
