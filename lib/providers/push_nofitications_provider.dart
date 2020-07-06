@@ -1,9 +1,11 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:http/http.dart' as http;
 import 'package:meal/preferences/userpreferences.dart';
+import 'package:meal/providers/tokens_fcm_provider.dart';
 
 class PushNotificationProvider {
   // Replace with server token from firebase console settings.
@@ -76,6 +78,17 @@ class PushNotificationProvider {
       const IosNotificationSettings(sound: true, badge: true, alert: true),
     );
 
+    final TokensFCMProvider _tokenFCMProvider = TokensFCMProvider();
+    List<DocumentSnapshot> _listOfTokenSnap = await _tokenFCMProvider.getAllTheAdminsTokens();
+
+    List<String> _listOfToken = [];
+    _listOfTokenSnap.forEach((value){
+      _listOfToken.add(value.data["token"]);
+    });
+    
+    ///Look at all the admin tokens available
+    
+
     await http.post(
       'https://fcm.googleapis.com/fcm/send',
       headers: <String, String>{
@@ -96,10 +109,7 @@ class PushNotificationProvider {
             // 'status': 'done'
           },
           //'restricted_package_name': 'com.netopaez.meal_admin',
-          'registration_ids': [
-            'cHkFjasmRE2CaoBhpiYT-c:APA91bEZTt-UGUaX9W0uJMceeZEv8-cymoZXrFOM5aSmAYuPjYZqPafI8t_LcoAI4vWNG4wjMtBJFU4KiFY0wrJpU0kZ5mUXV856-p5ygcM90Hhr9gBp_qharFeU3Oh3HW1VujRYYgH1',
-            'c7XGJBuHKe_LbidKny5Xa8:APA91bFqRPS0U2I1CfIzXEwRTqbu76lqtccKF5z76yvPSyvc83T2DUwr8Qn6GDmccuO8vJfcrwuzbxLc4zvxvX-BbCi7xMOu2HjX6N3OF4UcOfj-3D78cMqMSwHU8So9awU_dcLaZiZi'
-          ],
+          'registration_ids': _listOfToken,
         },
       ),
     );

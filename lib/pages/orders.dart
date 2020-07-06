@@ -111,7 +111,9 @@ class _OrdersPageState extends State<OrdersPage> {
           elevation: 2,
           color: (_order.status == 'pending')
               ? orangeColors.withOpacity(0.6)
-              : Colors.green.withOpacity(0.6),
+              : (_order.status == 'canceled')
+                ? Colors.red.withOpacity(0.6)
+                : Colors.green.withOpacity(0.6),
           child: ListTile(
             // onTap: () => _scaffolKey.currentState.showSnackBar(snackBarErrorCreacion),
             onTap: () {
