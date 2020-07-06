@@ -1,3 +1,4 @@
+import 'package:meal/providers/push_nofitications_provider.dart';
 import 'package:meal/services/dynamic_link_service.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
@@ -34,6 +35,23 @@ class _MyAppState extends State<MyApp> {
   void initState() {
     super.initState();
     _dynamicLinkService.initDynamicLinks(navigatorKey);
+    super.initState();
+    int contador = 1;
+    final pushProvider = new PushNotificationProvider();
+    pushProvider.initNotifications();
+    pushProvider.mensajes.listen((data) {
+      print('Argumento del push');
+      print(data);
+      if (data != 'Message' && contador == 0) {
+        contador++;
+        print(contador);
+        navigatorKey.currentState.pushNamed(Routes.order);
+      } else {
+        print(contador);
+        contador = 0;
+        print(contador);
+      }
+    });
   }
 
   @override

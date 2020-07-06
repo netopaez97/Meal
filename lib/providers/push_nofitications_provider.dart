@@ -9,6 +9,58 @@ class PushNotificationProvider {
   final String serverToken =
       'AAAAkWqDPv0:APA91bFV_69oRn4hTcZDLxD41-iM5vSr6Gto_DfwEtUc36Xcf9i1qCKjJld2g_MH6PUcyLy2Q0uT4ppceLwTH1lbjcDrsyP7z16uq0Ckq6_-r2W-Dqz2EIS49qpm_D1dfAIozw_uGxi5';
   final FirebaseMessaging firebaseMessaging = FirebaseMessaging();
+  static int contador = 0;
+
+  final _mensajesStreamController = StreamController<String>.broadcast();
+
+  Stream<String> get mensajes => _mensajesStreamController.stream;
+
+  initNotifications() {
+    firebaseMessaging.requestNotificationPermissions();
+    firebaseMessaging.getToken().then((token) {
+      print('====== FCM Token ======');
+      print(token);
+    });
+    firebaseMessaging.configure(
+      onMessage: (info) async {
+        if (contador == 0) {
+          print('====== On Message ======');
+          print(info);
+          String argumento = 'Message';
+          _mensajesStreamController.sink.add(argumento);
+          contador++;
+        } else {
+          contador = 0;
+        }
+      },
+      onLaunch: (info) async {
+        if (contador == 0) {
+          print('====== On Launch ======');
+          print(info);
+          String argumento = 'Launch';
+          _mensajesStreamController.sink.add(argumento);
+        } else {
+          contador = 0;
+        }
+      },
+      onResume: (info) async {
+        if (contador == 0) {
+          print('====== On Resume ======');
+          print(info);
+
+          String argumento = 'Resume';
+
+          _mensajesStreamController.sink.add(argumento);
+        } else {
+          contador = 0;
+        }
+      },
+    );
+  }
+
+  dispose() {
+    _mensajesStreamController?.close();
+  }
 
   Future<Map<String, dynamic>> sendAndRetrieveMessage() async {
     await firebaseMessaging.requestNotificationPermissions(
