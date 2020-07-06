@@ -21,6 +21,7 @@ class OrderModel {
     this.paymentType,
     this.price,
     this.nameClient,
+    this.tokenClient
   });
 
   String idOrder;
@@ -35,6 +36,7 @@ class OrderModel {
   String paymentType;
   String price;
   String nameClient;
+  String tokenClient;
 
   factory OrderModel.fromJson(Map<String, dynamic> json) => OrderModel(
         idOrder: json["idOrder"],
@@ -51,6 +53,7 @@ class OrderModel {
         paymentType: json["paymentType"],
         price: json["price"],
         nameClient: json["nameClient"],
+        tokenClient: json["tokenClient"],
       );
 
   Map<String, dynamic> toJson() => {
@@ -67,6 +70,7 @@ class OrderModel {
         "paymentType": paymentType,
         "price": price,
         "nameClient": nameClient,
+        "tokenClient": tokenClient,
       };
 }
 

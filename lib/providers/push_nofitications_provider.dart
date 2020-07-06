@@ -3,6 +3,7 @@ import 'dart:convert';
 
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:http/http.dart' as http;
+import 'package:meal/preferences/userpreferences.dart';
 
 class PushNotificationProvider {
   // Replace with server token from firebase console settings.
@@ -10,6 +11,7 @@ class PushNotificationProvider {
       'AAAAkWqDPv0:APA91bFV_69oRn4hTcZDLxD41-iM5vSr6Gto_DfwEtUc36Xcf9i1qCKjJld2g_MH6PUcyLy2Q0uT4ppceLwTH1lbjcDrsyP7z16uq0Ckq6_-r2W-Dqz2EIS49qpm_D1dfAIozw_uGxi5';
   final FirebaseMessaging firebaseMessaging = FirebaseMessaging();
   static int contador = 0;
+  UserPreferences _userPreferences = UserPreferences();
 
   final _mensajesStreamController = StreamController<String>.broadcast();
 
@@ -18,8 +20,15 @@ class PushNotificationProvider {
   initNotifications() {
     firebaseMessaging.requestNotificationPermissions();
     firebaseMessaging.getToken().then((token) {
+
       print('====== FCM Token ======');
       print(token);
+
+      if(_userPreferences.tokenFCM == null || _userPreferences.tokenFCM == ''){
+        _userPreferences.tokenFCM = token;
+        print("The user toker in preferences is: ${_userPreferences.tokenFCM}");
+      }
+      print("The user toker in preferences is: ${_userPreferences.tokenFCM}");
     });
     firebaseMessaging.configure(
       onMessage: (info) async {

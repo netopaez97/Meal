@@ -13,7 +13,6 @@ import 'package:meal/routes/routes.dart';
 import 'package:meal/services/dynamic_link_service.dart';
 import 'package:meal/utils/utils.dart';
 import 'package:provider/provider.dart';
-import 'package:sms_maintained/sms.dart';
 import 'package:square_in_app_payments/in_app_payments.dart';
 import 'package:square_in_app_payments/models.dart' as cardModel;
 import 'package:url_launcher/url_launcher.dart';
@@ -31,6 +30,9 @@ class _OrderState extends State<OrderPage> {
   String comments;
   bool valida = true;
   List<ShoppingCartModel> list = [];
+
+  final UserPreferences _userPreferences = UserPreferences();
+
   @override
   Widget build(BuildContext context) {
     final media = MediaQuery.of(context).size;
@@ -231,6 +233,7 @@ class _OrderState extends State<OrderPage> {
     final pushProvider = new PushNotificationProvider();
     return FloatingActionButton(
       backgroundColor: blackColors,
+      child: Icon(Icons.send, color: Colors.white),
       //onPressed: _pay,
       onPressed: () async {
         // return _pay();
@@ -263,12 +266,20 @@ class _OrderState extends State<OrderPage> {
               scheme: 'sms',
               path: _guestProvider.guests.toList().toString(),
               queryParameters: {'body': 'Unete a mi videollamada $url'});
-          launch(_emailLaunchUri.toString());
+
+          //Send text message.
+          if(_guestProvider.guests.toList() != [null])
+            launch(_emailLaunchUri.toString());
+
+          //Send push notification to admin
           pushProvider.sendAndRetrieveMessage();
+          
+          //Save a temp uis to the database
           if (prefs.uid.isEmpty) {
             prefs.uid = DateTime.now().toString();
           }
 
+          //Create the order
           final order = OrderModel(
             idUser: prefs.uid,
             contactNumber: int.parse(prefs.phone),
@@ -279,6 +290,7 @@ class _OrderState extends State<OrderPage> {
             comments: comments,
             status: 'pending',
             paymentType: '',
+            tokenClient: _userPreferences.tokenFCM
           );
 
           _orderProvider.insertOrder(order);
@@ -289,7 +301,6 @@ class _OrderState extends State<OrderPage> {
               context, Routes.home, (Route routes) => false);
         }
       },
-      child: Icon(Icons.send, color: Colors.white),
     );
   }
 

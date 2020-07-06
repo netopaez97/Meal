@@ -44,4 +44,12 @@ class UserPreferences {
   set uid(String value) {
     _prefs.setString('uid', value);
   }
+
+  get tokenFCM {
+    return _prefs.getString('tokenFCM') ?? '';
+  }
+
+  set tokenFCM(String value) {
+    _prefs.setString('tokenFCM', value);
+  }
 }
