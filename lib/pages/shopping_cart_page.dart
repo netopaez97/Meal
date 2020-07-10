@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:meal/models/product_model.dart';
 import 'package:meal/providers/products_provider.dart';
 import 'package:meal/providers/shopping_cart_provider.dart';
+import 'package:meal/providers/variable_provider.dart';
 import 'package:meal/routes/routes.dart';
 import 'package:meal/utils/utils.dart';
+import 'package:provider/provider.dart';
 
 class ShoppingCartPage extends StatefulWidget {
   static const routeName = 'ShoppingCartPage';
@@ -197,6 +199,8 @@ class _ShoppingCartPageState extends State<ShoppingCartPage> {
   Widget _totalBuy() {
     final ShoppingCartProvider _shoppingCartProvider = ShoppingCartProvider();
     final media = MediaQuery.of(context).size;
+    final _variableProvider =
+        Provider.of<VariableProvider>(context, listen: false);
 
     return Card(
       child: Row(
@@ -222,6 +226,7 @@ class _ShoppingCartPageState extends State<ShoppingCartPage> {
 
               return InkWell(
                 onTap: () {
+                  _variableProvider.total = total;
                   state();
                   if (availability) {
                     Navigator.pushNamed(context, Routes.order);

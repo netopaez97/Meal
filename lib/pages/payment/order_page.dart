@@ -11,6 +11,7 @@ import 'package:meal/providers/order_provider.dart';
 import 'package:meal/providers/products_provider.dart';
 import 'package:meal/providers/push_nofitications_provider.dart';
 import 'package:meal/providers/shopping_cart_provider.dart';
+import 'package:meal/providers/variable_provider.dart';
 import 'package:meal/routes/routes.dart';
 import 'package:meal/services/dynamic_link_service.dart';
 import 'package:meal/utils/utils.dart';
@@ -232,6 +233,7 @@ class _OrderState extends State<OrderPage> {
     final ShoppingCartProvider _shoppingCartProvider = ShoppingCartProvider();
     final OrderProvider _orderProvider = OrderProvider();
     final _guestProvider = Provider.of<GuestProvider>(context);
+    final _variableProvider = Provider.of<VariableProvider>(context);
     final DynamicLinkService _dynamicLinkService = DynamicLinkService();
     final pushProvider = new PushNotificationProvider();
     return FloatingActionButton(
@@ -271,36 +273,38 @@ class _OrderState extends State<OrderPage> {
           //     queryParameters: {'body': 'Unete a mi videollamada $url'});
 
           //Send text message.
-          if (_guestProvider.guests.toList() != [null])
+          if (_guestProvider.guests.toList() != [null]) {
             //launch(_emailLaunchUri.toString());
-            _pay();
+          }
+
           // //Send push notification to admin
           // pushProvider.sendAndRetrieveMessage();
+          _pay();
+          //Save a temp uis to the database
+          if (prefs.uid.isEmpty) {
+            prefs.uid = DateTime.now().toString();
+          }
 
-          // //Save a temp uis to the database
-          // if (prefs.uid.isEmpty) {
-          //   prefs.uid = DateTime.now().toString();
-          // }
+          //Create the order
+          final order = OrderModel(
+              idUser: prefs.uid,
+              price: _variableProvider.total.toString(),
+              contactNumber: int.parse(prefs.phone),
+              date: DateTime.now().toString(),
+              typeDelivery: dropdownValue,
+              direction: address,
+              productsInCartList: list,
+              comments: comments,
+              status: 'pending',
+              paymentType: '',
+              tokenClient: _userPreferences.tokenFCM);
 
-          // //Create the order
-          // final order = OrderModel(
-          //     idUser: prefs.uid,
-          //     contactNumber: int.parse(prefs.phone),
-          //     date: DateTime.now().toString(),
-          //     typeDelivery: dropdownValue,
-          //     direction: address,
-          //     productsInCartList: list,
-          //     comments: comments,
-          //     status: 'pending',
-          //     paymentType: '',
-          //     tokenClient: _userPreferences.tokenFCM);
+          _orderProvider.insertOrder(order);
 
-          // _orderProvider.insertOrder(order);
+          _shoppingCartProvider.deleteAll();
 
-          // _shoppingCartProvider.deleteAll();
-
-          // Navigator.pushNamedAndRemoveUntil(
-          //     context, Routes.home, (Route routes) => false);
+          Navigator.pushNamedAndRemoveUntil(
+              context, Routes.home, (Route routes) => false);
         }
       },
     );
@@ -352,34 +356,7 @@ class _OrderState extends State<OrderPage> {
       },
     );
   }
-
-  void _cardEntryComplete(String _details) async {
-    Response response =
-        await get("https://mealkc.herokuapp.com/payment?nonce=" + _details);
-
-    await showDialog(
-        context: context,
-        builder: (BuildContext ctx) {
-          return AlertDialog(
-            title: Text("Square Payments API Response"),
-            content: SingleChildScrollView(
-              child: Text(response.body.toString()),
-            ),
-            actions: <Widget>[
-              FlatButton(
-                child: Text("OK"),
-                onPressed: () {
-                  Navigator.pop(ctx);
-                },
-              ),
-            ],
-          );
-        });
-  }
 }
-
-String chargeServerHost = "https://mealkc.herokuapp.com";
-String chargeUrl = "$chargeServerHost/payment";
 
 class ChargeException implements Exception {
   String errorMessage;
@@ -388,7 +365,14 @@ class ChargeException implements Exception {
 
 Future<void> chargeCard(
     cardModel.CardDetails result, BuildContext context) async {
-  var body = jsonEncode({"nonce": result.nonce});
+  final _variableProvider =
+      Provider.of<VariableProvider>(context, listen: false);
+
+  String chargeServerHost = "https://mealkc.herokuapp.com";
+  String chargeUrl = "$chargeServerHost/payment";
+
+  var body =
+      jsonEncode({"nonce": result.nonce, "price": _variableProvider.total});
   http.Response response;
 
   response = await http.post(chargeUrl, body: body, headers: {
@@ -446,4 +430,28 @@ Future<void> chargeCard(
 //   } on MailerException catch (e) {
 //     print('Message not sent. \n' + e.toString());
 //   }
+// }
+
+// void _cardEntryComplete(String _details) async {
+//   Response response =
+//       await get("https://mealkc.herokuapp.com/payment?nonce=" + _details);
+
+//   await showDialog(
+//       context: context,
+//       builder: (BuildContext ctx) {
+//         return AlertDialog(
+//           title: Text("Square Payments API Response"),
+//           content: SingleChildScrollView(
+//             child: Text(response.body.toString()),
+//           ),
+//           actions: <Widget>[
+//             FlatButton(
+//               child: Text("OK"),
+//               onPressed: () {
+//                 Navigator.pop(ctx);
+//               },
+//             ),
+//           ],
+//         );
+//       });
 // }
