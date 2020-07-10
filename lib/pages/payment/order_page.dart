@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 import 'package:meal/models/order_model.dart';
@@ -16,6 +18,7 @@ import 'package:provider/provider.dart';
 import 'package:square_in_app_payments/in_app_payments.dart';
 import 'package:square_in_app_payments/models.dart' as cardModel;
 import 'package:url_launcher/url_launcher.dart';
+import 'package:http/http.dart' as http;
 
 class OrderPage extends StatefulWidget {
   static const routeName = 'order';
@@ -250,55 +253,54 @@ class _OrderState extends State<OrderPage> {
           comments = '';
         }
         if (valida) {
-          Uri _emailLaunchUri;
-          final url = await _dynamicLinkService
-              .createDynamicLink(DateTime.now().toString());
-          // _guestProvider.guests.forEach((num) => {
-          //       _emailLaunchUri = Uri(
-          //           scheme: 'sms',
-          //           path: '$num',
-          //           queryParameters: {'body': 'Unete a mi videollamada $url'}),
-          //       launch(_emailLaunchUri.toString()),
-          //     });
+          // Uri _emailLaunchUri;
+          // final url = await _dynamicLinkService
+          //     .createDynamicLink(DateTime.now().toString());
+          // // _guestProvider.guests.forEach((num) => {
+          // //       _emailLaunchUri = Uri(
+          // //           scheme: 'sms',
+          // //           path: '$num',
+          // //           queryParameters: {'body': 'Unete a mi videollamada $url'}),
+          // //       launch(_emailLaunchUri.toString()),
+          // //     });
 
-          print(_guestProvider.guests.toList().toString());
-          _emailLaunchUri = Uri(
-              scheme: 'sms',
-              path: _guestProvider.guests.toList().toString(),
-              queryParameters: {'body': 'Unete a mi videollamada $url'});
+          // print(_guestProvider.guests.toList().toString());
+          // _emailLaunchUri = Uri(
+          //     scheme: 'sms',
+          //     path: _guestProvider.guests.toList().toString(),
+          //     queryParameters: {'body': 'Unete a mi videollamada $url'});
 
           //Send text message.
-          if(_guestProvider.guests.toList() != [null])
-            launch(_emailLaunchUri.toString());
+          if (_guestProvider.guests.toList() != [null])
+            //launch(_emailLaunchUri.toString());
+            _pay();
+          // //Send push notification to admin
+          // pushProvider.sendAndRetrieveMessage();
 
-          //Send push notification to admin
-          pushProvider.sendAndRetrieveMessage();
-          
-          //Save a temp uis to the database
-          if (prefs.uid.isEmpty) {
-            prefs.uid = DateTime.now().toString();
-          }
+          // //Save a temp uis to the database
+          // if (prefs.uid.isEmpty) {
+          //   prefs.uid = DateTime.now().toString();
+          // }
 
-          //Create the order
-          final order = OrderModel(
-            idUser: prefs.uid,
-            contactNumber: int.parse(prefs.phone),
-            date: DateTime.now().toString(),
-            typeDelivery: dropdownValue,
-            direction: address,
-            productsInCartList: list,
-            comments: comments,
-            status: 'pending',
-            paymentType: '',
-            tokenClient: _userPreferences.tokenFCM
-          );
+          // //Create the order
+          // final order = OrderModel(
+          //     idUser: prefs.uid,
+          //     contactNumber: int.parse(prefs.phone),
+          //     date: DateTime.now().toString(),
+          //     typeDelivery: dropdownValue,
+          //     direction: address,
+          //     productsInCartList: list,
+          //     comments: comments,
+          //     status: 'pending',
+          //     paymentType: '',
+          //     tokenClient: _userPreferences.tokenFCM);
 
-          _orderProvider.insertOrder(order);
+          // _orderProvider.insertOrder(order);
 
-          _shoppingCartProvider.deleteAll();
+          // _shoppingCartProvider.deleteAll();
 
-          Navigator.pushNamedAndRemoveUntil(
-              context, Routes.home, (Route routes) => false);
+          // Navigator.pushNamedAndRemoveUntil(
+          //     context, Routes.home, (Route routes) => false);
         }
       },
     );
@@ -320,9 +322,9 @@ class _OrderState extends State<OrderPage> {
   //   sender.sendSms(message);
   // }
 
-  void _pay() {
-    InAppPayments.setSquareApplicationId(
-        'sq0idp-7IcCxIk1_YjHDYYt2-hcyw');
+  void _pay() async {
+    await InAppPayments.setSquareApplicationId(
+        'sandbox-sq0idb-nqLe4yTCaxfrdjoAJVz6og');
     InAppPayments.startCardEntryFlow(
       onCardEntryCancel: _cardEntryCancel,
       onCardNonceRequestSuccess: _cardNonceRequestSuccess,
@@ -337,7 +339,6 @@ class _OrderState extends State<OrderPage> {
     // Use this nonce from your backend to pay via Square API
     print("Resultado al hacer click ${result.nonce}");
 
-
     final bool _invalidZipCode = false;
 
     if (_invalidZipCode) {
@@ -346,24 +347,23 @@ class _OrderState extends State<OrderPage> {
     }
 
     InAppPayments.completeCardEntry(
-      onCardEntryComplete: (){
-        _cardEntryComplete(result.nonce);
+      onCardEntryComplete: () {
+        chargeCard(result, context);
       },
     );
   }
 
   void _cardEntryComplete(String _details) async {
-    
-    Response response = await get("http://192.168.1.9:8080?nonce=" + _details);
+    Response response =
+        await get("https://mealkc.herokuapp.com/payment?nonce=" + _details);
 
-      await showDialog(
+    await showDialog(
         context: context,
         builder: (BuildContext ctx) {
           return AlertDialog(
             title: Text("Square Payments API Response"),
             content: SingleChildScrollView(
-              child: 
-                Text(response.body.toString()),
+              child: Text(response.body.toString()),
             ),
             actions: <Widget>[
               FlatButton(
@@ -374,8 +374,50 @@ class _OrderState extends State<OrderPage> {
               ),
             ],
           );
-       });
-      
+        });
+  }
+}
+
+String chargeServerHost = "https://mealkc.herokuapp.com";
+String chargeUrl = "$chargeServerHost/payment";
+
+class ChargeException implements Exception {
+  String errorMessage;
+  ChargeException(this.errorMessage);
+}
+
+Future<void> chargeCard(
+    cardModel.CardDetails result, BuildContext context) async {
+  var body = jsonEncode({"nonce": result.nonce});
+  http.Response response;
+
+  response = await http.post(chargeUrl, body: body, headers: {
+    "Accept": "application/json",
+    "content-type": "application/json"
+  });
+
+  var responseBody = json.decode(response.body);
+  if (response.statusCode == 200) {
+    return await showDialog(
+        context: context,
+        builder: (BuildContext ctx) {
+          return AlertDialog(
+            title: Text("Square Payments API Response"),
+            content: SingleChildScrollView(
+              child: Text(response.body.toString()),
+            ),
+            actions: <Widget>[
+              FlatButton(
+                child: Text("OK"),
+                onPressed: () {
+                  Navigator.pop(ctx);
+                },
+              ),
+            ],
+          );
+        });
+  } else {
+    throw ChargeException(responseBody["errorMessage"]);
   }
 }
 
