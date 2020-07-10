@@ -236,7 +236,7 @@ class _OrderState extends State<OrderPage> {
       child: Icon(Icons.send, color: Colors.white),
       //onPressed: _pay,
       onPressed: () async {
-        // return _pay();
+        return _pay();
         valida = true;
         if (dropdownValue == 'Delivery') {
           if (address == null || address == '') {
@@ -322,7 +322,7 @@ class _OrderState extends State<OrderPage> {
 
   void _pay() {
     InAppPayments.setSquareApplicationId(
-        'sq0idp-7IcCxIk1_YjHDYYt2-hcyw');
+        'sandbox-sq0idb-nqLe4yTCaxfrdjoAJVz6og');
     InAppPayments.startCardEntryFlow(
       onCardEntryCancel: _cardEntryCancel,
       onCardNonceRequestSuccess: _cardNonceRequestSuccess,
@@ -347,6 +347,7 @@ class _OrderState extends State<OrderPage> {
 
     InAppPayments.completeCardEntry(
       onCardEntryComplete: (){
+        return print(result.nonce);
         _cardEntryComplete(result.nonce);
       },
     );
