@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 import 'package:meal/models/order_model.dart';
@@ -9,6 +11,7 @@ import 'package:meal/providers/order_provider.dart';
 import 'package:meal/providers/products_provider.dart';
 import 'package:meal/providers/push_nofitications_provider.dart';
 import 'package:meal/providers/shopping_cart_provider.dart';
+import 'package:meal/providers/variable_provider.dart';
 import 'package:meal/routes/routes.dart';
 import 'package:meal/services/dynamic_link_service.dart';
 import 'package:meal/utils/utils.dart';
@@ -16,6 +19,7 @@ import 'package:provider/provider.dart';
 import 'package:square_in_app_payments/in_app_payments.dart';
 import 'package:square_in_app_payments/models.dart' as cardModel;
 import 'package:url_launcher/url_launcher.dart';
+import 'package:http/http.dart' as http;
 
 class OrderPage extends StatefulWidget {
   static const routeName = 'order';
@@ -229,6 +233,7 @@ class _OrderState extends State<OrderPage> {
     final ShoppingCartProvider _shoppingCartProvider = ShoppingCartProvider();
     final OrderProvider _orderProvider = OrderProvider();
     final _guestProvider = Provider.of<GuestProvider>(context);
+    final _variableProvider = Provider.of<VariableProvider>(context);
     final DynamicLinkService _dynamicLinkService = DynamicLinkService();
     final pushProvider = new PushNotificationProvider();
     return FloatingActionButton(
@@ -250,30 +255,31 @@ class _OrderState extends State<OrderPage> {
           comments = '';
         }
         if (valida) {
-          Uri _emailLaunchUri;
-          final url = await _dynamicLinkService
-              .createDynamicLink(DateTime.now().toString());
-          // _guestProvider.guests.forEach((num) => {
-          //       _emailLaunchUri = Uri(
-          //           scheme: 'sms',
-          //           path: '$num',
-          //           queryParameters: {'body': 'Unete a mi videollamada $url'}),
-          //       launch(_emailLaunchUri.toString()),
-          //     });
+          // Uri _emailLaunchUri;
+          // final url = await _dynamicLinkService
+          //     .createDynamicLink(DateTime.now().toString());
+          // // _guestProvider.guests.forEach((num) => {
+          // //       _emailLaunchUri = Uri(
+          // //           scheme: 'sms',
+          // //           path: '$num',
+          // //           queryParameters: {'body': 'Unete a mi videollamada $url'}),
+          // //       launch(_emailLaunchUri.toString()),
+          // //     });
 
-          print(_guestProvider.guests.toList().toString());
-          _emailLaunchUri = Uri(
-              scheme: 'sms',
-              path: _guestProvider.guests.toList().toString(),
-              queryParameters: {'body': 'Unete a mi videollamada $url'});
+          // print(_guestProvider.guests.toList().toString());
+          // _emailLaunchUri = Uri(
+          //     scheme: 'sms',
+          //     path: _guestProvider.guests.toList().toString(),
+          //     queryParameters: {'body': 'Unete a mi videollamada $url'});
 
           //Send text message.
-          if(_guestProvider.guests.toList() != [null])
-            launch(_emailLaunchUri.toString());
+          if (_guestProvider.guests.toList() != [null]) {
+            //launch(_emailLaunchUri.toString());
+          }
 
-          //Send push notification to admin
-          pushProvider.sendAndRetrieveMessage();
-          
+          // //Send push notification to admin
+          // pushProvider.sendAndRetrieveMessage();
+          _pay();
           //Save a temp uis to the database
           if (prefs.uid.isEmpty) {
             prefs.uid = DateTime.now().toString();
@@ -281,17 +287,17 @@ class _OrderState extends State<OrderPage> {
 
           //Create the order
           final order = OrderModel(
-            idUser: prefs.uid,
-            contactNumber: int.parse(prefs.phone),
-            date: DateTime.now().toString(),
-            typeDelivery: dropdownValue,
-            direction: address,
-            productsInCartList: list,
-            comments: comments,
-            status: 'pending',
-            paymentType: '',
-            tokenClient: _userPreferences.tokenFCM
-          );
+              idUser: prefs.uid,
+              price: _variableProvider.total.toString(),
+              contactNumber: int.parse(prefs.phone),
+              date: DateTime.now().toString(),
+              typeDelivery: dropdownValue,
+              direction: address,
+              productsInCartList: list,
+              comments: comments,
+              status: 'pending',
+              paymentType: '',
+              tokenClient: _userPreferences.tokenFCM);
 
           _orderProvider.insertOrder(order);
 
@@ -320,8 +326,8 @@ class _OrderState extends State<OrderPage> {
   //   sender.sendSms(message);
   // }
 
-  void _pay() {
-    InAppPayments.setSquareApplicationId(
+  void _pay() async {
+    await InAppPayments.setSquareApplicationId(
         'sandbox-sq0idb-nqLe4yTCaxfrdjoAJVz6og');
     InAppPayments.startCardEntryFlow(
       onCardEntryCancel: _cardEntryCancel,
@@ -337,7 +343,6 @@ class _OrderState extends State<OrderPage> {
     // Use this nonce from your backend to pay via Square API
     print("Resultado al hacer click ${result.nonce}");
 
-
     final bool _invalidZipCode = false;
 
     if (_invalidZipCode) {
@@ -346,25 +351,44 @@ class _OrderState extends State<OrderPage> {
     }
 
     InAppPayments.completeCardEntry(
-      onCardEntryComplete: (){
-        return print(result.nonce);
-        _cardEntryComplete(result.nonce);
+      onCardEntryComplete: () {
+        chargeCard(result, context);
       },
     );
   }
+}
 
-  void _cardEntryComplete(String _details) async {
-    
-    Response response = await get("http://192.168.1.9:8080?nonce=" + _details);
+class ChargeException implements Exception {
+  String errorMessage;
+  ChargeException(this.errorMessage);
+}
 
-      await showDialog(
+Future<void> chargeCard(
+    cardModel.CardDetails result, BuildContext context) async {
+  final _variableProvider =
+      Provider.of<VariableProvider>(context, listen: false);
+
+  String chargeServerHost = "https://mealkc.herokuapp.com";
+  String chargeUrl = "$chargeServerHost/payment";
+
+  var body =
+      jsonEncode({"nonce": result.nonce, "price": _variableProvider.total});
+  http.Response response;
+
+  response = await http.post(chargeUrl, body: body, headers: {
+    "Accept": "application/json",
+    "content-type": "application/json"
+  });
+
+  var responseBody = json.decode(response.body);
+  if (response.statusCode == 200) {
+    return await showDialog(
         context: context,
         builder: (BuildContext ctx) {
           return AlertDialog(
             title: Text("Square Payments API Response"),
             content: SingleChildScrollView(
-              child: 
-                Text(response.body.toString()),
+              child: Text(response.body.toString()),
             ),
             actions: <Widget>[
               FlatButton(
@@ -375,8 +399,9 @@ class _OrderState extends State<OrderPage> {
               ),
             ],
           );
-       });
-      
+        });
+  } else {
+    throw ChargeException(responseBody["errorMessage"]);
   }
 }
 
@@ -405,4 +430,28 @@ class _OrderState extends State<OrderPage> {
 //   } on MailerException catch (e) {
 //     print('Message not sent. \n' + e.toString());
 //   }
+// }
+
+// void _cardEntryComplete(String _details) async {
+//   Response response =
+//       await get("https://mealkc.herokuapp.com/payment?nonce=" + _details);
+
+//   await showDialog(
+//       context: context,
+//       builder: (BuildContext ctx) {
+//         return AlertDialog(
+//           title: Text("Square Payments API Response"),
+//           content: SingleChildScrollView(
+//             child: Text(response.body.toString()),
+//           ),
+//           actions: <Widget>[
+//             FlatButton(
+//               child: Text("OK"),
+//               onPressed: () {
+//                 Navigator.pop(ctx);
+//               },
+//             ),
+//           ],
+//         );
+//       });
 // }

@@ -1,4 +1,5 @@
 import 'package:meal/providers/push_nofitications_provider.dart';
+import 'package:meal/providers/variable_provider.dart';
 import 'package:meal/services/dynamic_link_service.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
@@ -15,6 +16,7 @@ void main() async {
   return runApp(MultiProvider(
     providers: [
       ChangeNotifierProvider(create: (_) => GuestProvider()),
+      ChangeNotifierProvider(create: (_) => VariableProvider()),
     ],
     child: MyApp(),
   ));
