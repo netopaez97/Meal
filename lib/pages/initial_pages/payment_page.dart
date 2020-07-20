@@ -1,11 +1,13 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:meal/preferences/userpreferences.dart';
 import 'package:meal/routes/routes.dart';
 import 'package:meal/utils/utils.dart';
 import 'package:meal/widgets/widgets.dart';
 
 class PaymentPage extends StatelessWidget {
   static const routeName = 'PaymentPage';
+  final prefs = new UserPreferences();
   @override
   Widget build(BuildContext context) {
     final media = MediaQuery.of(context).size;
@@ -62,7 +64,11 @@ class PaymentPage extends StatelessWidget {
                     borderRadius: BorderRadius.circular(10),
                   ),
                 ),
-                onPressed: () => Navigator.pushNamed(context, Routes.menu),
+                onPressed: () {
+                  prefs.payment = host;
+                  Navigator.pushNamedAndRemoveUntil(
+                      context, Routes.home, (Route routes) => false);
+                },
               ),
               SizedBox(height: media.width * 0.05),
               InputText(
@@ -89,7 +95,11 @@ class PaymentPage extends StatelessWidget {
                     borderRadius: BorderRadius.circular(10),
                   ),
                 ),
-                onPressed: () => Navigator.pushNamed(context, Routes.menu),
+                onPressed: () {
+                  prefs.payment = guest;
+                  Navigator.pushNamedAndRemoveUntil(
+                      context, Routes.home, (Route routes) => false);
+                },
               ),
             ],
           ),

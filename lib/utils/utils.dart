@@ -40,3 +40,7 @@ double roundDouble(double value) {
   double mod = pow(10.0, 2);
   return ((value * mod).round().toDouble() / mod);
 }
+
+String host = 'host';
+String guest = 'guest';
+String noguests = 'noguests';

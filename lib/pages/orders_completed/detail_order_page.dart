@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:meal/models/product_model.dart';
-import 'package:meal/providers/shopping_cart_provider.dart';
+import 'package:meal/models/shopping_cart_model.dart';
 import 'package:meal/utils/utils.dart';
 
 class OrderDetailPage extends StatefulWidget {
   final List<ProductModel> products;
   final List<ShoppingCartModel> _productsInShopinCart;
-  OrderDetailPage(this.products, this._productsInShopinCart, {Key key}) : super(key: key);
+  OrderDetailPage(this.products, this._productsInShopinCart, {Key key})
+      : super(key: key);
 
   @override
   _OrderDetailPageState createState() => _OrderDetailPageState();
@@ -47,7 +48,9 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
                   'You have ordered ${widget._productsInShopinCart[index].quantityProducts} ${product.name}',
                   style: TextStyle(color: Colors.white),
                 ),
-                Divider(color: Colors.white12,),
+                Divider(
+                  color: Colors.white12,
+                ),
               ],
             );
           },

@@ -33,7 +33,7 @@ class ProductModel {
   factory ProductModel.fromJson(Map<String, dynamic> json) => ProductModel(
         idProduct: json["idProduct"],
         name: json["name"],
-        currentPrice: json["currentPrice"],
+        currentPrice: json["currentPrice"].toDouble(),
         category: json["category"],
         discount: json["discount"].toDouble(),
         description: json["description"],

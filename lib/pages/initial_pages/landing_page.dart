@@ -2,12 +2,14 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:meal/routes/routes.dart';
 import 'package:meal/utils/utils.dart';
+import 'package:meal/preferences/userpreferences.dart';
 
 class InitialPage extends StatelessWidget {
   static const routeName = 'InitialPage';
   @override
   Widget build(BuildContext context) {
     final media = MediaQuery.of(context).size;
+    final prefs = new UserPreferences();
     return Scaffold(
       appBar: AppBar(elevation: 0),
       backgroundColor: blackColors,
@@ -66,7 +68,29 @@ class InitialPage extends StatelessWidget {
                 ),
               ),
               onPressed: () {
-                Navigator.pushNamed(context, Routes.hostPhone);
+                if (prefs.uid.isEmpty) {
+                  Navigator.pushNamed(context, Routes.hostPhone);
+                } else {
+                  Navigator.pushNamed(context, Routes.selection);
+                }
+                // if (prefs.date.isEmpty) {
+                // if (prefs.uid.isEmpty) {
+                //   Navigator.pushNamed(context, Routes.hostPhone);
+                // } else {
+                //   Navigator.pushNamed(context, Routes.selection);
+                // }
+                // } else {
+                //   final date = DateTime.parse(prefs.date);
+                //   final dateTime =
+                //       '${DateTime.now().year}-${DateTime.now().month}-${DateTime.now().day}';
+                //   final dateMeal = '${date.year}-${date.month}-${date.day}';
+                //   if (dateTime == dateMeal) {
+                //     Navigator.pushNamed(context, Routes.home);
+                //   } else {
+                //     prefs.date = '';
+                //     Navigator.pushNamed(context, Routes.selection);
+                //   }
+                // }
               },
             ),
           ],

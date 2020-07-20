@@ -3,8 +3,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 import 'package:meal/models/product_model.dart';
-import 'package:meal/pages/payment/buy_page.dart';
-import 'package:meal/pages/payment/detail_page.dart';
+import 'package:meal/pages/order/buy_page.dart';
+import 'package:meal/pages/order/detail_page.dart';
+import 'package:meal/preferences/userpreferences.dart';
 import 'package:meal/providers/products_provider.dart';
 import 'package:meal/utils/utils.dart';
 import 'package:meal/widgets/drawer.dart';
@@ -19,6 +20,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  final prefs = UserPreferences();
   GlobalKey<ScaffoldState> _scaffolKey = GlobalKey<ScaffoldState>();
   final snackBarErrorCreacion = SnackBar(
     content: Text('This function has not been implemented.'),
@@ -27,6 +29,15 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    prefs.send = false;
+    prefs.rol = host;
+    prefs.menu = host;
+    prefs.pickup = host;
+    prefs.payment = guest;
+    prefs.guest1 = '3172790113';
+    prefs.guest2 = '';
+    prefs.guest3 = '';
+    //prefs.guest = '';
     return Scaffold(
       drawer: MainDrawer(),
       key: _scaffolKey,
@@ -175,11 +186,17 @@ class _HomePageState extends State<HomePage> {
                 builder: (BuildContext context) =>
                     ProductDetailPage(_producto)),
             leading: CircleAvatar(
-                backgroundColor: Colors.transparent,
-                radius: MediaQuery.of(context).size.width * 0.1,
-                child: Image.network(
-                  _producto.image,
-                )),
+              backgroundColor: Colors.transparent,
+              radius: MediaQuery.of(context).size.width * 0.1,
+              child: (_producto.image != null)
+                  ? FadeInImage(
+                      placeholder: AssetImage('assets/test.jpg'),
+                      image: NetworkImage(_producto.image),
+                      height: 300.0,
+                      fit: BoxFit.cover,
+                    )
+                  : Image(image: AssetImage('assets/test.jpg')),
+            ),
             title: Text(_producto.name),
             subtitle: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -194,12 +211,14 @@ class _HomePageState extends State<HomePage> {
             ),
             trailing: IconButton(
               icon: Icon(Icons.add_shopping_cart),
-              onPressed: () {
-                showDialog(
-                  context: context,
-                  builder: (BuildContext context) => BuyPage(_producto),
-                );
-              },
+              onPressed: (prefs.send)
+                  ? null
+                  : () {
+                      showDialog(
+                        context: context,
+                        builder: (BuildContext context) => BuyPage(_producto),
+                      );
+                    },
             ),
           ),
         ),

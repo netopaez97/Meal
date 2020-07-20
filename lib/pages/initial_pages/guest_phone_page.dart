@@ -1,116 +1,94 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:meal/providers/guest_provider.dart';
+import 'package:meal/preferences/userpreferences.dart';
 import 'package:meal/routes/routes.dart';
 import 'package:meal/utils/utils.dart';
 import 'package:meal/widgets/widgets.dart';
-import 'package:provider/provider.dart';
 
 class GuestPage extends StatelessWidget {
   static const routeName = 'GuestPage';
   @override
   Widget build(BuildContext context) {
-    final guestProvider = Provider.of<GuestProvider>(context);
+    final prefs = UserPreferences();
     final media = MediaQuery.of(context).size;
-
+    GlobalKey<ScaffoldState> _scaffolKey = GlobalKey<ScaffoldState>();
+    var container = Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: <Widget>[
+        SizedBox(height: media.width * 0.2),
+        Meal(),
+        SizedBox(height: 10),
+        InputPhone(
+          initialValue: prefs.guest1,
+          onChanged: (value) => prefs.guest1 = value,
+        ),
+        SizedBox(height: 5),
+        InputText(
+          text: "Your first guest's phone?",
+          scale: media.width * 0.0045,
+        ),
+        SizedBox(height: 10),
+        InputPhone(
+          initialValue: prefs.guest2,
+          onChanged: (value) => prefs.guest2 = value,
+        ),
+        SizedBox(height: 5),
+        InputText(
+          text: "Your second guest's phone?",
+          scale: media.width * 0.0045,
+        ),
+        SizedBox(height: 10),
+        InputPhone(
+          initialValue: prefs.guest3,
+          onChanged: (value) => prefs.guest3 = value,
+        ),
+        SizedBox(height: 5),
+        InputText(
+          text: "Your third guest's phone?",
+          scale: media.width * 0.0045,
+        ),
+        SizedBox(height: media.width * 0.2),
+        CupertinoButton(
+          child: Container(
+            width: media.width * 0.8,
+            child: Text(
+              "Next",
+              style: TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.normal,
+              ),
+              textAlign: TextAlign.center,
+              textScaleFactor: media.width * 0.006,
+            ),
+            decoration: BoxDecoration(
+              color: orangeColors,
+              borderRadius: BorderRadius.circular(10),
+            ),
+          ),
+          onPressed: () async {
+            if (prefs.guest1 != null && prefs.guest1 != '') {
+              prefs.uidguest1 = 'First guest - ${prefs.guest1}';
+              if (prefs.guest2 != null && prefs.guest2 != '') {
+                prefs.uidguest2 = 'Second guest - ${prefs.guest2}';
+              }
+              if (prefs.guest3 != null && prefs.guest3 != '') {
+                prefs.uidguest3 = 'Third guest - ${prefs.guest3}';
+              }
+              Navigator.pushNamed(context, Routes.date);
+            } else {
+              _scaffolKey.currentState.showSnackBar(SnackBar(
+                content: Text('Must have at least one first guest'),
+                duration: Duration(seconds: 4),
+              ));
+            }
+          },
+        ),
+      ],
+    );
     return Scaffold(
       appBar: AppBar(elevation: 0),
       backgroundColor: blackColors,
-      body: SingleChildScrollView(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            SizedBox(height: media.width * 0.5),
-            Meal(),
-            SizedBox(height: 5),
-            Input(
-              typeInput: TextInputType.number,
-              onChanged: (value) => guestProvider.phone = int.parse(value),
-            ),
-            SizedBox(height: 5),
-            InputText(
-              text: "Your guest's phone?",
-              scale: media.width * 0.006,
-            ),
-            SizedBox(height: media.width * 0.5),
-            CupertinoButton(
-              child: Container(
-                width: media.width * 0.8,
-                child: Text(
-                  "Next",
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.normal,
-                  ),
-                  textAlign: TextAlign.center,
-                  textScaleFactor: media.width * 0.006,
-                ),
-                decoration: BoxDecoration(
-                  color: orangeColors,
-                  borderRadius: BorderRadius.circular(10),
-                ),
-              ),
-              onPressed: () {
-                guestProvider.guestCount++;
-                print(guestProvider.phone);
-                guestProvider.setGuests(guestProvider.phone);
-                print(guestProvider.guests);
-                Navigator.pushNamed(context, Routes.selection);
-              },
-            ),
-          ],
-        ),
-      ),
+      body: SingleChildScrollView(child: container),
     );
   }
 }
-
-// class GuestPage extends StatelessWidget {
-//   static const routeName = 'GuestPage';
-//   @override
-//   Widget build(BuildContext context) {
-//     final primaryColor = Color(0xffF26722);
-//     final backgroundColor = Color(0xff241C24);
-//     return Scaffold(
-//       appBar: AppBar(elevation: 0),
-//       backgroundColor: backgroundColor,
-//       body: Container(
-//         width: MediaQuery.of(context).size.width,
-//         child: Column(
-//           mainAxisAlignment: MainAxisAlignment.center,
-//           children: <Widget>[
-//             Meal(),
-//             SizedBox(height: 10),
-//             Input(
-//               typeInput: TextInputType.number,
-//               primaryColor: primaryColor,
-//               backgroundColor: backgroundColor,
-//             ),
-//             SizedBox(height: 10),
-
-//             Container(
-//               width: pageWidthPresentation,
-//               child: Row(
-//                 children: <Widget>[
-//                   Flexible(child: InputText(text: "Your guest's phone"),),
-//                   CupertinoButton(
-//                     onPressed: (){
-//                       Navigator.pushNamed(context, Routes.guestEmail);
-//                     },
-//                     padding: EdgeInsets.zero,
-//                     child: Column(
-//                       children: <Widget>[
-//                         Icon(Icons.add, size:50, color: orangeColor),
-//                         Text("Add guest", style: TextStyle(fontSize: 17, color: Colors.white))
-//                       ]
-//                     )
-//                   ),
-//                 ]
-//               )
-//             )
-//           ],
-//         ),
-//       ),
-//     );
-//   }
-// }

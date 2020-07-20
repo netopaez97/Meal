@@ -1,11 +1,8 @@
 import 'package:meal/providers/push_nofitications_provider.dart';
-import 'package:meal/providers/variable_provider.dart';
 import 'package:meal/services/dynamic_link_service.dart';
-import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:meal/preferences/userpreferences.dart';
-import 'package:meal/providers/guest_provider.dart';
 import 'package:meal/routes/routes.dart';
 import 'package:meal/utils/utils.dart' as utils;
 
@@ -13,13 +10,7 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   final prefs = new UserPreferences();
   await prefs.initPrefs();
-  return runApp(MultiProvider(
-    providers: [
-      ChangeNotifierProvider(create: (_) => GuestProvider()),
-      ChangeNotifierProvider(create: (_) => VariableProvider()),
-    ],
-    child: MyApp(),
-  ));
+  return runApp(MyApp());
 }
 
 class MyApp extends StatefulWidget {
@@ -37,7 +28,7 @@ class _MyAppState extends State<MyApp> {
   void initState() {
     super.initState();
     _dynamicLinkService.initDynamicLinks(navigatorKey);
-    super.initState();
+
     int contador = 1;
     final pushProvider = new PushNotificationProvider();
     pushProvider.initNotifications();
@@ -67,7 +58,8 @@ class _MyAppState extends State<MyApp> {
       navigatorKey: navigatorKey,
       theme: ThemeData(
           primaryColor: utils.blackColor, primarySwatch: Colors.orange),
-      initialRoute: Routes.initial,
+      //initialRoute: Routes.initial,
+      initialRoute: Routes.home,
       routes: getApplicationRoutes(),
     );
   }

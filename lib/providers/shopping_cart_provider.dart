@@ -1,100 +1,155 @@
-import 'dart:io';
+import 'dart:convert';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:meal/models/product_model.dart';
 import 'package:meal/models/shopping_cart_model.dart';
-export 'package:meal/models/shopping_cart_model.dart';
-import 'package:path/path.dart';
-import 'package:sqflite/sqflite.dart';
-import 'package:path_provider/path_provider.dart';
+import 'package:meal/preferences/userpreferences.dart';
+import 'package:meal/utils/utils.dart';
 
 class ShoppingCartProvider {
-  static Database _database;
-  static final ShoppingCartProvider db = ShoppingCartProvider();
-  final String _table = 'ShoppingCart';
+  final CollectionReference _collectionReferenceDB =
+      Firestore.instance.collection("users");
+  final String _table = 'shoppingcart';
+  UserPreferences prefs = UserPreferences();
 
-  ShoppingCartProvider();
+  ///Agregar producto a BD de cada restaurante
+  ///1. Verificar que no hay productos con el mismo id guardados.
+  ///2. Si ya hay guardados, actualizar la cantidad de productos
+  ///Si no hay guardados, agregarlo, no actualziarlo.
+  Future newShoppingCart(ShoppingCartModel _productCart) async {
+    if (prefs.uid.isEmpty) {
+      prefs.uid = DateTime.now().toString();
+    }
 
-  Future<Database> get database async {
-    if (_database != null) return _database;
+    final resId = await _collectionReferenceDB
+        .document(prefs.uid)
+        .collection(_table)
+        .where("idProduct", isEqualTo: _productCart.idProduct)
+        .where("mealFor", isEqualTo: _productCart.mealFor)
+        .getDocuments();
 
-    _database = await initDB();
-
-    return _database;
-  }
-
-  initDB() async {
-    Directory documentsDirectory = await getApplicationDocumentsDirectory();
-
-    final path = join(documentsDirectory.path, 'ShoppingCartDB.db');
-
-    return await openDatabase(path, version: 1, onOpen: (db) {},
-        onCreate: (Database db, int version) async {
-      await db.execute('CREATE TABLE ShoppingCart ('
-          'idCar INTEGER PRIMARY KEY,'
-          'idProduct TEXT,'
-          'quantityProducts INTEGER,'
-          'price DOUBLE,'
-          'productComment TEXT'
-          ')');
-    });
-  }
-
-  //AGREGAR REGISTROS
-
-  newShoppingCart(ShoppingCartModel shoppingCart) async {
-    final db = await database;
-    final resId = await db.query(
-      _table,
-      where: 'idProduct = ?',
-      whereArgs: [shoppingCart.idProduct],
-    );
-    if (resId.isEmpty) {
-      final res = await db.insert(_table, shoppingCart.toJson());
-      return res;
+    if (resId.documents.isEmpty) {
+      return await _collectionReferenceDB
+          .document(prefs.uid)
+          .collection(_table)
+          .add(_productCart.toJson());
     } else {
-      shoppingCart.quantityProducts = shoppingCart.quantityProducts;
-      shoppingCart.idCar = resId[0]["idCar"];
-
-      return await db.update(_table, shoppingCart.toJson(),
-          where: 'idCar = ?', whereArgs: [shoppingCart.idCar]);
+      return await _collectionReferenceDB
+          .document(prefs.uid)
+          .collection(_table)
+          .document(resId.documents[0].documentID)
+          .setData(_productCart.toJson());
     }
   }
 
-  //OBTENER REGISTROS
+  //Este método devuelve la cantidad de productos que han sido guardados en la base de datos
+  getProductShoppingCart(ProductModel product, mealFor) async {
+    var res;
+    if (prefs.uid.isEmpty) {
+      prefs.uid = DateTime.now().toString();
+    }
+    ShoppingCartModel shoppingCartModel = ShoppingCartModel();
+    if (prefs.rol == guest) {
+      final resUser = await _collectionReferenceDB
+          .where('phone', isEqualTo: int.parse(prefs.host.split(' - ')[1]))
+          .getDocuments();
 
-  Future getShoppingCart() async {
-    final db = await database;
-    final res = await db.query('ShoppingCart');
-    List<ShoppingCartModel> list = res.isNotEmpty
-        ? res.map((c) => ShoppingCartModel.fromJson(c)).toList()
-        : [];
+      res = await _collectionReferenceDB
+          .document(resUser.documents[0].documentID)
+          .collection(_table)
+          .where("idProduct", isEqualTo: product.idProduct)
+          .where("mealFor", isEqualTo: mealFor)
+          .getDocuments();
+    } else {
+      res = await _collectionReferenceDB
+          .document(prefs.uid)
+          .collection(_table)
+          .where("idProduct", isEqualTo: product.idProduct)
+          .where("mealFor", isEqualTo: mealFor)
+          .getDocuments();
+    }
+
+    if (res.documents.isEmpty) {
+      return shoppingCartModel;
+    } else {
+      shoppingCartModel =
+          shoppingCartModelFromJson(jsonEncode(res.documents[0].data));
+      shoppingCartModel.idCar = res.documents[0].documentID;
+    }
+
+    return shoppingCartModel;
+  }
+
+  getShoppingCart() async {
+    List<ShoppingCartModel> list = [];
+    ShoppingCartModel shoppingCartModel = ShoppingCartModel();
+
+    final res = await _collectionReferenceDB
+        .document(prefs.uid)
+        .collection(_table)
+        .getDocuments();
+    if (res.documents.isEmpty) {
+      return list;
+    }
+    res.documents.forEach((element) {
+      shoppingCartModel = shoppingCartModelFromJson(jsonEncode(element.data));
+      shoppingCartModel.idCar = element.documentID;
+      list.add(shoppingCartModel);
+    });
+
     return list;
   }
 
-  getProductShoppingCart(ProductModel product) async {
-    final db = await database;
-    final res = await db.query(
-      _table,
-      where: 'idProduct = ?',
-      whereArgs: [product.idProduct],
-    );
-    List<ShoppingCartModel> shoppingCart = res.isNotEmpty
-        ? res.map((c) => ShoppingCartModel.fromJson(c)).toList()
-        : [];
-    return shoppingCart;
-  }
-  // BORRAR REGISTROS
+  getShoppingCartMealFor(String mealFor) async {
+    List<ShoppingCartModel> list = [];
+    ShoppingCartModel shoppingCartModel = ShoppingCartModel();
+    final res = await _collectionReferenceDB
+        .document(prefs.uid)
+        .collection(_table)
+        .where('mealFor', isEqualTo: mealFor)
+        .getDocuments();
+    if (res.documents.isEmpty) {
+      return list;
+    }
+    res.documents.forEach((element) {
+      shoppingCartModel = shoppingCartModelFromJson(jsonEncode(element.data));
+      shoppingCartModel.idCar = element.documentID;
+      list.add(shoppingCartModel);
+    });
 
-  deleteShoppingCart(int id) async {
-    final db = await database;
-    final res =
-        await db.delete('ShoppingCart', where: 'idCar = ?', whereArgs: [id]);
-    return res;
+    return list;
   }
 
   deleteAll() async {
-    final db = await database;
-    final res = await db.rawDelete('DELETE FROM ShoppingCart');
+    List<ShoppingCartModel> list = [];
+    ShoppingCartModel shoppingCartModel = ShoppingCartModel();
+    final res = await _collectionReferenceDB
+        .document(prefs.uid)
+        .collection(_table)
+        .getDocuments();
+    if (res.documents.isEmpty) {
+      return null;
+    }
+    res.documents.forEach((element) {
+      shoppingCartModel = shoppingCartModelFromJson(jsonEncode(element.data));
+      shoppingCartModel.idCar = element.documentID;
+      list.add(shoppingCartModel);
+    });
+    list.forEach((element) async {
+      await _collectionReferenceDB
+          .document(prefs.uid)
+          .collection(_table)
+          .document(element.idCar)
+          .delete();
+    });
+  }
+
+  deleteShoppingCart(String _idCarrito) async {
+    final res = await _collectionReferenceDB
+        .document(prefs.uid)
+        .collection(_table)
+        .document(_idCarrito)
+        .delete();
     return res;
   }
 }

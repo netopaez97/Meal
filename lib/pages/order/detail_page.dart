@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:meal/models/product_model.dart';
-import 'package:meal/pages/payment/buy_page.dart';
+import 'package:meal/pages/order/buy_page.dart';
 import 'package:meal/utils/utils.dart';
 
 class ProductDetailPage extends StatefulWidget {
@@ -78,13 +78,13 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                     ),
                   )
                 : Container(),
-            Text(
-              'Rating: ${widget.product.rating}',
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: media.width * 0.045,
-              ),
-            ),
+            // Text(
+            //   'Rating: ${widget.product.rating}',
+            //   style: TextStyle(
+            //     color: Colors.white,
+            //     fontSize: media.width * 0.045,
+            //   ),
+            // ),
           ],
         ),
       ),

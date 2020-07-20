@@ -2,14 +2,15 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:meal/models/order_model.dart';
 import 'package:meal/models/product_model.dart';
-import 'package:meal/pages/detail_order_page.dart';
+import 'package:meal/pages/orders_completed/detail_order_page.dart';
+import 'package:meal/preferences/userpreferences.dart';
 
 import 'package:meal/providers/order_provider.dart';
 import 'package:meal/providers/products_provider.dart';
 import 'package:meal/utils/utils.dart';
 import 'package:meal/widgets/drawer.dart';
 
-import '../routes/routes.dart';
+import '../../routes/routes.dart';
 
 class OrdersPage extends StatefulWidget {
   static const routeName = 'Orders';
@@ -112,8 +113,8 @@ class _OrdersPageState extends State<OrdersPage> {
           color: (_order.status == 'pending')
               ? orangeColors.withOpacity(0.6)
               : (_order.status == 'canceled')
-                ? Colors.red.withOpacity(0.6)
-                : Colors.green.withOpacity(0.6),
+                  ? Colors.red.withOpacity(0.6)
+                  : Colors.green.withOpacity(0.6),
           child: ListTile(
             // onTap: () => _scaffolKey.currentState.showSnackBar(snackBarErrorCreacion),
             onTap: () {
@@ -141,15 +142,19 @@ class _OrdersPageState extends State<OrdersPage> {
                 SizedBox(height: 10),
               ],
             ),
-            trailing: IconButton(
-              icon: Icon(
-                Icons.video_call,
-                size: MediaQuery.of(context).size.width * 0.1,
-              ),
-              onPressed: () {
-                Navigator.pushNamed(context, Routes.indexConference);
-              },
-            ),
+            trailing: (_order.channelName == '')
+                ? null
+                : IconButton(
+                    icon: Icon(
+                      Icons.video_call,
+                      size: MediaQuery.of(context).size.width * 0.1,
+                    ),
+                    onPressed: () {
+                      final prefs = new UserPreferences();
+                      prefs.channelName = _order.channelName;
+                      Navigator.pushNamed(context, Routes.indexConference);
+                    },
+                  ),
           ),
         ),
         Divider(

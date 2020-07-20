@@ -24,13 +24,11 @@ class Meal extends StatelessWidget {
   }
 }
 
-class Input extends StatelessWidget {
-  final TextInputType typeInput;
+class InputPhone extends StatelessWidget {
   final onChanged;
   final String initialValue;
 
-  const Input({
-    @required this.typeInput,
+  const InputPhone({
     @required this.onChanged,
     this.initialValue = '',
   });
@@ -49,7 +47,7 @@ class Input extends StatelessWidget {
         child: TextFormField(
           initialValue: initialValue,
           textAlign: TextAlign.center,
-          keyboardType: typeInput,
+          keyboardType: TextInputType.number,
           decoration: InputDecoration(border: InputBorder.none),
           cursorColor: orangeColors,
           cursorWidth: 1.0,
@@ -58,6 +56,17 @@ class Input extends StatelessWidget {
             fontSize: media.width * 0.07,
           ),
           onChanged: onChanged,
+          validator: (value) {
+            if (value != null && value != '') {
+              if (double.tryParse(value) == null) {
+                return 'Solo numeros';
+              } else {
+                return null;
+              }
+            } else {
+              return null;
+            }
+          },
         ),
       ),
     );

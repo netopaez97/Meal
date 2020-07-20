@@ -13,13 +13,15 @@ class ShoppingCartModel {
     this.quantityProducts,
     this.price,
     this.productComment,
+    this.mealFor,
   });
 
-  int idCar;
+  String idCar;
   String idProduct;
   int quantityProducts;
   double price;
   String productComment;
+  String mealFor;
 
   factory ShoppingCartModel.fromJson(Map<String, dynamic> json) =>
       ShoppingCartModel(
@@ -28,6 +30,7 @@ class ShoppingCartModel {
         quantityProducts: json["quantityProducts"],
         price: json["price"],
         productComment: json["productComment"],
+        mealFor: json["mealFor"],
       );
 
   Map<String, dynamic> toJson() => {
@@ -36,5 +39,6 @@ class ShoppingCartModel {
         "quantityProducts": quantityProducts,
         "price": price,
         "productComment": productComment,
+        "mealFor": mealFor,
       };
 }

@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:meal/providers/shopping_cart_provider.dart';
+import 'package:meal/models/shopping_cart_model.dart';
 
 OrderModel orderModelFromJson(String str) =>
     OrderModel.fromJson(json.decode(str));
@@ -21,7 +21,8 @@ class OrderModel {
     this.paymentType,
     this.price,
     this.nameClient,
-    this.tokenClient
+    this.tokenClient,
+    this.channelName,
   });
 
   String idOrder;
@@ -34,9 +35,10 @@ class OrderModel {
   int contactNumber;
   String comments;
   String paymentType;
-  String price;
+  double price;
   String nameClient;
   String tokenClient;
+  String channelName;
 
   factory OrderModel.fromJson(Map<String, dynamic> json) => OrderModel(
         idOrder: json["idOrder"],
@@ -51,9 +53,10 @@ class OrderModel {
         contactNumber: json["contactNumber"],
         comments: json["comments"],
         paymentType: json["paymentType"],
-        price: json["price"],
+        price: json["price"].toDouble(),
         nameClient: json["nameClient"],
         tokenClient: json["tokenClient"],
+        channelName: json["channelName"],
       );
 
   Map<String, dynamic> toJson() => {
@@ -71,6 +74,7 @@ class OrderModel {
         "price": price,
         "nameClient": nameClient,
         "tokenClient": tokenClient,
+        "channelName": channelName,
       };
 }
 

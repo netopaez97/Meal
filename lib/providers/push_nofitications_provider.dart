@@ -22,11 +22,11 @@ class PushNotificationProvider {
   initNotifications() {
     firebaseMessaging.requestNotificationPermissions();
     firebaseMessaging.getToken().then((token) {
-
       print('====== FCM Token ======');
       print(token);
 
-      if(_userPreferences.tokenFCM == null || _userPreferences.tokenFCM == ''){
+      if (_userPreferences.tokenFCM == null ||
+          _userPreferences.tokenFCM == '') {
         _userPreferences.tokenFCM = token;
         print("The user toker in preferences is: ${_userPreferences.tokenFCM}");
       }
@@ -74,20 +74,20 @@ class PushNotificationProvider {
   }
 
   Future<Map<String, dynamic>> sendAndRetrieveMessage() async {
-    await firebaseMessaging.requestNotificationPermissions(
+    firebaseMessaging.requestNotificationPermissions(
       const IosNotificationSettings(sound: true, badge: true, alert: true),
     );
 
     final TokensFCMProvider _tokenFCMProvider = TokensFCMProvider();
-    List<DocumentSnapshot> _listOfTokenSnap = await _tokenFCMProvider.getAllTheAdminsTokens();
+    List<DocumentSnapshot> _listOfTokenSnap =
+        await _tokenFCMProvider.getAllTheAdminsTokens();
 
     List<String> _listOfToken = [];
-    _listOfTokenSnap.forEach((value){
+    _listOfTokenSnap.forEach((value) {
       _listOfToken.add(value.data["token"]);
     });
-    
+
     ///Look at all the admin tokens available
-    
 
     await http.post(
       'https://fcm.googleapis.com/fcm/send',

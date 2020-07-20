@@ -1,14 +1,18 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:meal/preferences/userpreferences.dart';
 import 'package:meal/routes/routes.dart';
 import 'package:meal/utils/utils.dart';
 import 'package:meal/widgets/widgets.dart';
 
 class PickUpPage extends StatelessWidget {
   static const routeName = 'PickUpPage';
+
+  final prefs = new UserPreferences();
   @override
   Widget build(BuildContext context) {
     final media = MediaQuery.of(context).size;
+
     return Scaffold(
       appBar: AppBar(elevation: 0),
       backgroundColor: blackColors,
@@ -62,7 +66,10 @@ class PickUpPage extends StatelessWidget {
                     borderRadius: BorderRadius.circular(10),
                   ),
                 ),
-                onPressed: () => Navigator.pushNamed(context, Routes.payment),
+                onPressed: () {
+                  prefs.pickup = host;
+                  Navigator.pushNamed(context, Routes.payment);
+                },
               ),
               SizedBox(height: media.width * 0.05),
               InputText(
@@ -89,7 +96,10 @@ class PickUpPage extends StatelessWidget {
                     borderRadius: BorderRadius.circular(10),
                   ),
                 ),
-                onPressed: () => Navigator.pushNamed(context, Routes.payment),
+                onPressed: () {
+                  prefs.pickup = guest;
+                  Navigator.pushNamed(context, Routes.payment);
+                },
               ),
             ],
           ),

@@ -1,11 +1,13 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:meal/preferences/userpreferences.dart';
 import 'package:meal/routes/routes.dart';
 import 'package:meal/utils/utils.dart';
 import 'package:meal/widgets/widgets.dart';
 
 class MenuPage extends StatelessWidget {
   static const routeName = 'Menu';
+  final prefs = new UserPreferences();
   @override
   Widget build(BuildContext context) {
     final media = MediaQuery.of(context).size;
@@ -62,8 +64,10 @@ class MenuPage extends StatelessWidget {
                     borderRadius: BorderRadius.circular(10),
                   ),
                 ),
-                onPressed: () => Navigator.pushNamedAndRemoveUntil(
-                    context, Routes.home, (Route routes) => false),
+                onPressed: () {
+                  prefs.menu = host;
+                  Navigator.pushNamed(context, Routes.pickup);
+                },
               ),
               SizedBox(height: media.width * 0.05),
               InputText(
@@ -91,8 +95,10 @@ class MenuPage extends StatelessWidget {
                     borderRadius: BorderRadius.circular(10),
                   ),
                 ),
-                onPressed: () => Navigator.pushNamedAndRemoveUntil(
-                    context, Routes.home, (Route routes) => false),
+                onPressed: () {
+                  prefs.menu = guest;
+                  Navigator.pushNamed(context, Routes.pickup);
+                },
               ),
             ],
           ),
