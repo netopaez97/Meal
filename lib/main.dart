@@ -58,8 +58,8 @@ class _MyAppState extends State<MyApp> {
       navigatorKey: navigatorKey,
       theme: ThemeData(
           primaryColor: utils.blackColor, primarySwatch: Colors.orange),
-      //initialRoute: Routes.initial,
-      initialRoute: Routes.home,
+      initialRoute: Routes.initial,
+      //initialRoute: Routes.home,
       routes: getApplicationRoutes(),
     );
   }

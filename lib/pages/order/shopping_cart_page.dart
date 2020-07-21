@@ -301,10 +301,13 @@ class _ShoppingCartPageState extends State<ShoppingCartPage> {
                 onTap: () async {
                   state();
                   if (availability) {
-                    if (prefs.rol == host &&
-                        prefs.menu == host &&
-                        prefs.pickup == host &&
-                        prefs.payment == host) {
+                    if ((prefs.rol == host &&
+                            prefs.menu == host &&
+                            prefs.pickup == host &&
+                            prefs.payment == host) ||
+                        (prefs.menu == guest &&
+                            prefs.pickup == guest &&
+                            prefs.payment == guest)) {
                       Navigator.pushNamed(context, Routes.order);
                     } else if (prefs.rol == host &&
                         prefs.menu == host &&

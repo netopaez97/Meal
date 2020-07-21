@@ -49,7 +49,17 @@ class ShoppingCartProvider {
       prefs.uid = DateTime.now().toString();
     }
     ShoppingCartModel shoppingCartModel = ShoppingCartModel();
-    if (prefs.rol == guest) {
+    if (prefs.rol == guest &&
+        prefs.menu == guest &&
+        prefs.pickup == guest &&
+        prefs.payment == guest) {
+      res = await _collectionReferenceDB
+          .document(prefs.uid)
+          .collection(_table)
+          .where("idProduct", isEqualTo: product.idProduct)
+          .where("mealFor", isEqualTo: int.parse(prefs.host.split(' - ')[1]))
+          .getDocuments();
+    } else if (prefs.rol == guest) {
       final resUser = await _collectionReferenceDB
           .where('phone', isEqualTo: int.parse(prefs.host.split(' - ')[1]))
           .getDocuments();

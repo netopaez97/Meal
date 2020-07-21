@@ -56,8 +56,10 @@ class _DatePageState extends State<DatePage> {
                 //     context, Routes.home, (Route routes) => false),
                 onPressed: () {
                   if (prefs.rol != noguests) {
+                    prefs.channelName = DateTime.now().toString();
                     Navigator.pushNamed(context, Routes.menu);
                   } else {
+                    prefs.channelName = '';
                     Navigator.pushNamedAndRemoveUntil(
                         context, Routes.home, (Route routes) => false);
                   }

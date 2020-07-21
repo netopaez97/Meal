@@ -183,7 +183,16 @@ class _OrderState extends State<OrderPage> {
       child: ListView(
         children: <Widget>[
           SizedBox(height: 10),
-          (prefs.rol == host || prefs.rol == noguests)
+          (prefs.rol == host ||
+                  prefs.rol == noguests ||
+                  (prefs.rol == host &&
+                      prefs.menu == guest &&
+                      prefs.pickup == guest &&
+                      prefs.payment == guest) ||
+                  (prefs.rol == guest &&
+                      prefs.menu == guest &&
+                      prefs.pickup == guest &&
+                      prefs.payment == guest))
               ? Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.start,
@@ -333,7 +342,11 @@ class _OrderState extends State<OrderPage> {
                           fontSize: media.width * 0.05,
                         )),
                     Divider(),
-                    (prefs.payment == host)
+                    (prefs.rol == noguests ||
+                            prefs.payment == host ||
+                            (prefs.menu == guest &&
+                                prefs.pickup == guest &&
+                                prefs.payment == guest))
                         ? _suggestedOptions()
                         : _suggestedOptionsHostAndGuest(prefs.host),
                     Divider(),
@@ -537,7 +550,15 @@ class _OrderState extends State<OrderPage> {
     final DynamicLinkService _dynamicLinkService = DynamicLinkService();
     final pushProvider = new PushNotificationProvider();
     bool pay = false;
-    if (prefs.rol == host) {
+    if (prefs.rol == host ||
+        (prefs.rol == host &&
+            prefs.menu == guest &&
+            prefs.pickup == guest &&
+            prefs.payment == guest) ||
+        (prefs.rol == guest &&
+            prefs.menu == guest &&
+            prefs.pickup == guest &&
+            prefs.payment == guest)) {
       valida = true;
       if (deliveryType == 'Delivery') {
         if (address == null || address == '') {
@@ -561,23 +582,19 @@ class _OrderState extends State<OrderPage> {
         if (pay) {
           //Create the order
 
-          String channelName = '';
-          if (prefs.rol == host) {
-            channelName = DateTime.now().toString();
-          }
-
           final order = OrderModel(
               idUser: prefs.uid,
               price: total,
               contactNumber: int.parse(prefs.phone),
-              date: DateTime.now().toString(),
+              //date: DateTime.now().toString(),
+              date: prefs.date,
               typeDelivery: deliveryType,
               direction: address,
               productsInCartList: list,
               comments: comments,
               status: 'pending',
               paymentType: paymentType,
-              channelName: channelName,
+              channelName: prefs.channelName,
               tokenClient: prefs.tokenFCM);
 
           final resOrder = await _orderProvider.insertOrder(order);
@@ -602,7 +619,7 @@ class _OrderState extends State<OrderPage> {
                           if (prefs.rol == host && prefs.menu == host) {
                             Uri _launchSms;
                             final url = await _dynamicLinkService
-                                .createDynamicLinkConference(channelName);
+                                .createDynamicLinkConference(prefs.channelName);
 
                             List<String> phonesList = [];
                             phones.forEach((element) {

@@ -30,14 +30,14 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     prefs.send = false;
-    prefs.rol = host;
-    prefs.menu = host;
-    prefs.pickup = host;
-    prefs.payment = guest;
-    prefs.guest1 = '3172790113';
-    prefs.guest2 = '';
-    prefs.guest3 = '';
-    //prefs.guest = '';
+    // prefs.rol = host;
+    // prefs.menu = guest;
+    // prefs.pickup = guest;
+    // prefs.payment = guest;
+    // prefs.guest1 = '3172790113';
+    // prefs.guest2 = '';
+    // prefs.guest3 = '';
+    // //prefs.guest = '';
     return Scaffold(
       drawer: MainDrawer(),
       key: _scaffolKey,
