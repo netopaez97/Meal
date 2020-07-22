@@ -47,6 +47,10 @@ class _OrderState extends State<OrderPage> {
   bool availability = true;
   List<String> phones = [];
 
+
+  //Loading to show or hide the ORDER NOW buttom:
+  bool _loading = false;
+
   @override
   void initState() {
     super.initState();
@@ -69,7 +73,7 @@ class _OrderState extends State<OrderPage> {
     _listaProductosCarrito = [];
     availability = true;
     total = 0.0;
-    if (prefs.rol == host && prefs.payment == host) {
+    if ((prefs.rol == host && prefs.payment == host) || (prefs.rol == noguests)) {
       await _shoppingCartProvider.getShoppingCart().then((res) {
         if (res != null) {
           total = 0.0;
@@ -504,7 +508,9 @@ class _OrderState extends State<OrderPage> {
             style: TextStyle(color: blackColors),
             textScaleFactor: media.width * 0.004,
           )),
-          InkWell(
+          _loading == true
+          ? Center(child: CircularProgressIndicator())
+          : InkWell(
             onTap: (order) ? null : orderNow,
             child: Card(
               elevation: 5,
@@ -542,6 +548,7 @@ class _OrderState extends State<OrderPage> {
 
   orderNow() async {
     setState(() {
+      _loading = true;
       order = true;
     });
     final prefs = new UserPreferences();
@@ -549,16 +556,27 @@ class _OrderState extends State<OrderPage> {
     final OrderProvider _orderProvider = OrderProvider();
     final DynamicLinkService _dynamicLinkService = DynamicLinkService();
     final pushProvider = new PushNotificationProvider();
+
+    
+    ///pay: Si una persona quiere pagar con tarjeta de crétido esta variable revisa si en realidad ha pagado.
+    ///Puede ser true o false.
+    ///Si decide pagar cuando reciba el pedido a domicilio, va a ser true siempre.
     bool pay = false;
+
     if (prefs.rol == host ||
         (prefs.rol == host &&
             prefs.menu == guest &&
             prefs.pickup == guest &&
             prefs.payment == guest) ||
+
+
         (prefs.rol == guest &&
             prefs.menu == guest &&
             prefs.pickup == guest &&
-            prefs.payment == guest)) {
+            prefs.payment == guest) ||
+
+
+         prefs.rol == noguests) {
       valida = true;
       if (deliveryType == 'Delivery') {
         if (address == null || address == '') {
@@ -574,166 +592,211 @@ class _OrderState extends State<OrderPage> {
       if (valida) {
         // Primero se realiza el pago, _pay() debe devolver true
         if (paymentType == 'Pay now') {
-          //pay = _pay();
-          pay = true;
+          await _pay();
         } else {
-          pay = true;
+          orderDone(
+            context,
+            prefs,
+            total,
+            deliveryType,
+            address,
+            list,
+            comments,
+            paymentType,
+            _orderProvider,
+            pushProvider,
+            _shoppingCartProvider,
+            _dynamicLinkService,
+            phones,
+          );
         }
-        if (pay) {
-          //Create the order
-
-          final order = OrderModel(
-              idUser: prefs.uid,
-              price: total,
-              contactNumber: int.parse(prefs.phone),
-              //date: DateTime.now().toString(),
-              date: prefs.date,
-              typeDelivery: deliveryType,
-              direction: address,
-              productsInCartList: list,
-              comments: comments,
-              status: 'pending',
-              paymentType: paymentType,
-              channelName: prefs.channelName,
-              tokenClient: prefs.tokenFCM);
-
-          final resOrder = await _orderProvider.insertOrder(order);
-          if (resOrder) {
-            pushProvider.sendAndRetrieveMessage();
-
-            _shoppingCartProvider.deleteAll();
-            showDialog(
-                context: context,
-                builder: (BuildContext ctx) {
-                  return AlertDialog(
-                    title: Text("Successful order"),
-                    content: SingleChildScrollView(
-                      child: Text("Your order has been successful."),
-                    ),
-                    actions: <Widget>[
-                      FlatButton(
-                        child: Text("OK"),
-                        onPressed: () async {
-                          Navigator.pushNamedAndRemoveUntil(
-                              context, Routes.home, (Route routes) => false);
-                          if (prefs.rol == host && prefs.menu == host) {
-                            Uri _launchSms;
-                            final url = await _dynamicLinkService
-                                .createDynamicLinkConference(prefs.channelName);
-
-                            List<String> phonesList = [];
-                            phones.forEach((element) {
-                              phonesList.add(element.split(' - ')[1]);
-                            });
-                            _launchSms = Uri(
-                                scheme: 'sms',
-                                path: phonesList.toString(),
-                                queryParameters: {
-                                  'body': 'Unete a mi videollamada $url'
-                                });
-                            launch(_launchSms.toString());
-                          }
-                        },
-                      ),
-                    ],
-                  );
-                });
-          } else {
-            print('Error');
-          }
-        } else {}
       }
+
+    ///Este caso sucede cuando un invitado va a pagar su pedido pero el host recoge el pedido o lo recibe en su casa.
     } else if (prefs.rol == guest && prefs.payment == guest) {
       if (paymentType == 'Pay now') {
-        //pay = _pay();
-        pay = true;
+        await _pay();
       } else {
-        pay = true;
-      }
-      if (pay) {
-        final userProvider = UserProvider();
+       final userProvider = UserProvider();
         await userProvider.readyUser(prefs.uid, true);
         Navigator.pushNamedAndRemoveUntil(
             context, Routes.home, (Route routes) => false);
       }
+    }
+    else{
+      _scaffolKey.currentState.showSnackBar(snackBarErrorCreacion);
     }
     setState(() {
       order = false;
     });
   }
 
-  // _pay() async {
-  //   await InAppPayments.setSquareApplicationId(
-  //       'sandbox-sq0idb-nqLe4yTCaxfrdjoAJVz6og');
-  //   InAppPayments.startCardEntryFlow(
-  //     onCardEntryCancel: _cardEntryCancel,
-  //     onCardNonceRequestSuccess: _cardNonceRequestSuccess,
-  //   );
-  //   return true;
-  // }
+  _pay() async {
+    await InAppPayments.setSquareApplicationId(
+        'sandbox-sq0idb-nqLe4yTCaxfrdjoAJVz6og');
+    await InAppPayments.startCardEntryFlow(
+      onCardEntryCancel: _cardEntryCancel,
+      onCardNonceRequestSuccess: _cardNonceRequestSuccess,
+    );
+  }
 
-  // void _cardEntryCancel() {
-  //   // Cancel
-  // }
+  void _cardEntryCancel() async {
+    await showDialog(
+      context: context,
+      builder: (BuildContext context ) =>AlertDialog(
+        title: Text("Card entry canceled")
+      )
+    );
+  }
 
-  // void _cardNonceRequestSuccess(cardModel.CardDetails result) async {
-  //   // Use this nonce from your backend to pay via Square API
-  //   print("Resultado al hacer click ${result.nonce}");
+  Future _cardNonceRequestSuccess(cardModel.CardDetails result) async {
 
-  //   final bool _invalidZipCode = false;
+    final ShoppingCartProvider _shoppingCartProvider = ShoppingCartProvider();
+    final OrderProvider _orderProvider = OrderProvider();
+    final DynamicLinkService _dynamicLinkService = DynamicLinkService();
+    final _pushProvider = new PushNotificationProvider();
 
-  //   if (_invalidZipCode) {
-  //     // Stay in the card flow and show an error:
-  //     InAppPayments.showCardNonceProcessingError('Invalid ZipCode');
-  //   }
+    // Use this nonce from your backend to pay via Square API
+    print("Resultado al hacer click ${result.nonce}");
 
-  //   InAppPayments.completeCardEntry(
-  //     onCardEntryComplete: () {
-  //       chargeCard(result, context);
-  //     },
-  //   );
-  // }
+    final bool _invalidZipCode = false;
+
+    if (_invalidZipCode) {
+      // Stay in the card flow and show an error:
+      InAppPayments.showCardNonceProcessingError('Invalid ZipCode');
+    }
+
+    InAppPayments.completeCardEntry(
+      onCardEntryComplete: () async {
+        await chargeCard(result, context, total);
+        
+        ///1. Validar que entre como host
+        ///o que entre como guest y deba hacer todo el pedido
+        ///o que entre como host y los invitados deban hacer todo el pedio
+        if (prefs.rol == host ||
+        (prefs.rol == host &&
+            prefs.menu == guest &&
+            prefs.pickup == guest &&
+            prefs.payment == guest) ||
+
+
+        (prefs.rol == guest &&
+            prefs.menu == guest &&
+            prefs.pickup == guest &&
+            prefs.payment == guest) ||
+
+
+         prefs.rol == noguests)
+         
+         {
+           orderDone(context, prefs, total, deliveryType, address, list, comments, paymentType, _orderProvider, _pushProvider, _shoppingCartProvider, _dynamicLinkService, phones);
+         }
+
+        ///2. Validar que el rol sea guest y que el pago lo haga el guest.
+         else if (prefs.rol == guest && prefs.payment == guest) {
+          final userProvider = UserProvider();
+            await userProvider.readyUser(prefs.uid, true);
+            Navigator.pushNamedAndRemoveUntil(
+                context, Routes.home, (Route routes) => false);
+        }
+      },
+    );
+  }
 }
 
-// class ChargeException implements Exception {
-//   String errorMessage;
-//   ChargeException(this.errorMessage);
-// }
+class ChargeException implements Exception {
+  String errorMessage;
+  ChargeException(this.errorMessage);
+}
 
-// Future<void> chargeCard(
-//     cardModel.CardDetails result, BuildContext context) async {
-//   String chargeServerHost = "https://mealkc.herokuapp.com";
-//   String chargeUrl = "$chargeServerHost/payment";
+Future<void> chargeCard(
 
-//   var body = jsonEncode({"nonce": result.nonce, "price": 0});
-//   http.Response response;
+    cardModel.CardDetails result, BuildContext context, double total) async {
+  String chargeServerHost = "https://mealkc.herokuapp.com";
+  String chargeUrl = "$chargeServerHost/payment";
 
-//   response = await http.post(chargeUrl, body: body, headers: {
-//     "Accept": "application/json",
-//     "content-type": "application/json"
-//   });
 
-//   var responseBody = json.decode(response.body);
-//   if (response.statusCode == 200) {
-//     return await showDialog(
-//         context: context,
-//         builder: (BuildContext ctx) {
-//           return AlertDialog(
-//             title: Text("Square Payments API Response"),
-//             content: SingleChildScrollView(
-//               child: Text(response.body.toString()),
-//             ),
-//             actions: <Widget>[
-//               FlatButton(
-//                 child: Text("OK"),
-//                 onPressed: () {
-//                   Navigator.pop(ctx);
-//                 },
-//               ),
-//             ],
-//           );
-//         });
-//   } else {
-//     throw ChargeException(responseBody["errorMessage"]);
-//   }
-// }
+  var body = jsonEncode({"nonce": result.nonce, "price": total});
+  http.Response response;
+
+  response = await http.post(chargeUrl, body: body, headers: {
+    "Accept": "application/json",
+    "content-type": "application/json"
+  });
+
+  var responseBody = json.decode(response.body);
+  if (response.statusCode == 200) {
+
+    ///HERE WE CAN SHOW OR DO SOMETHING FOR THE FUTURE
+
+  } else {
+    throw ChargeException(responseBody["errorMessage"]);
+  }
+}
+
+
+orderDone(BuildContext context, UserPreferences prefs, double total, String deliveryType, String address,
+          List<ShoppingCartModel> list, String comments, String paymentType, OrderProvider _orderProvider,
+          PushNotificationProvider pushProvider, ShoppingCartProvider _shoppingCartProvider,
+          DynamicLinkService _dynamicLinkService, List<String> phones
+) async {
+  final order = OrderModel(
+    idUser: prefs.uid,
+    price: total,
+    contactNumber: int.parse(prefs.phone),
+    //date: DateTime.now().toString(),
+    date: prefs.date,
+    typeDelivery: deliveryType,
+    direction: address,
+    productsInCartList: list,
+    comments: comments,
+    status: 'pending',
+    paymentType: paymentType,
+    channelName: prefs.channelName,
+    tokenClient: prefs.tokenFCM);
+
+final resOrder = await _orderProvider.insertOrder(order);
+if (resOrder) {
+  pushProvider.sendAndRetrieveMessage();
+
+  _shoppingCartProvider.deleteAll();
+  showDialog(
+      context: context,
+      builder: (BuildContext ctx) {
+        return AlertDialog(
+          title: Text("Successful order"),
+          content: SingleChildScrollView(
+            child: Text("Your order has been successfuly created."),
+          ),
+          actions: <Widget>[
+            FlatButton(
+              child: Text("OK"),
+              onPressed: () async {
+                Navigator.pushNamedAndRemoveUntil(
+                    context, Routes.home, (Route routes) => false);
+                if (prefs.rol == host && prefs.menu == host) {
+                  Uri _launchSms;
+                  final url = await _dynamicLinkService
+                      .createDynamicLinkConference(prefs.channelName);
+
+                  List<String> phonesList = [];
+                  phones.forEach((element) {
+                    phonesList.add(element.split(' - ')[1]);
+                  });
+                  _launchSms = Uri(
+                      scheme: 'sms',
+                      path: phonesList.toString(),
+                      queryParameters: {
+                        'body': 'Unete a mi videollamada $url'
+                      });
+                  launch(_launchSms.toString());
+                }
+              },
+            ),
+          ],
+        );
+      });
+} else {
+  print('Error');
+}
+}

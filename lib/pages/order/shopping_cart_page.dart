@@ -372,6 +372,13 @@ class _ShoppingCartPageState extends State<ShoppingCartPage> {
                           ));
                         }
                       }
+                      ///Si el usuario simplemente quiere pedir para él mismo y nadie más, entonces no se debe validar nada
+                    } else if (prefs.rol == noguests){
+                      Navigator.pushNamed(context, Routes.order);
+                    }
+                    else {
+                      _scaffolKey.currentState
+                        .showSnackBar(snackBarErrorCreacion);
                     }
                   } else {
                     _scaffolKey.currentState
