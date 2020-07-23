@@ -40,10 +40,16 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
             SizedBox(height: 20),
             Container(
               width: double.infinity,
-              child: Image.network(
-                widget.product.image,
-                fit: BoxFit.contain,
-              ),
+              child: (widget.product.image != null)
+                  ? FadeInImage(
+                      placeholder: AssetImage('assets/test.jpg'),
+                      image: NetworkImage(
+                        widget.product.image,
+                      ),
+                      height: 300.0,
+                      fit: BoxFit.cover,
+                    )
+                  : Image(image: AssetImage('assets/test.jpg')),
             ),
             SizedBox(height: 10),
             Text(

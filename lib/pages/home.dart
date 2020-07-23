@@ -42,7 +42,7 @@ class _HomePageState extends State<HomePage> {
       drawer: MainDrawer(),
       key: _scaffolKey,
       appBar: _superiorNavBar(),
-      body: _pageBody(),
+      body: _pageBody(), 
     );
   }
 
