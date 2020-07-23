@@ -1,15 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:meal/models/product_model.dart';
 import 'package:meal/models/shopping_cart_model.dart';
-import 'package:meal/models/user_model.dart';
 import 'package:meal/preferences/userpreferences.dart';
 import 'package:meal/providers/products_provider.dart';
 import 'package:meal/providers/shopping_cart_provider.dart';
-import 'package:meal/providers/user_provider.dart';
 import 'package:meal/routes/routes.dart';
-import 'package:meal/services/dynamic_link_service.dart';
 import 'package:meal/utils/utils.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 class ShoppingCartPage extends StatefulWidget {
   static const routeName = 'ShoppingCartPage';
@@ -101,12 +97,16 @@ class _ShoppingCartPageState extends State<ShoppingCartPage> {
         actions: <Widget>[
           IconButton(
             icon: Icon(Icons.delete_forever),
-            onPressed: (prefs.send)
-                ? null
-                : () async {
-                    await _shoppingCartProvider.deleteAll();
-                    state();
-                  },
+            onPressed: () async {
+              await _shoppingCartProvider.deleteAll();
+              state();
+            },
+            // onPressed: (prefs.send)
+            //     ? null
+            //     : () async {
+            //         await _shoppingCartProvider.deleteAll();
+            //         state();
+            //       },
           )
         ],
       ),
@@ -252,13 +252,18 @@ class _ShoppingCartPageState extends State<ShoppingCartPage> {
                 ),
                 trailing: IconButton(
                   icon: Icon(Icons.remove_shopping_cart),
-                  onPressed: (prefs.send)
-                      ? null
-                      : () {
-                          _shoppingCartProvider
-                              .deleteShoppingCart(_shoppingCart.idCar);
-                          state();
-                        },
+                  onPressed: () {
+                    _shoppingCartProvider
+                        .deleteShoppingCart(_shoppingCart.idCar);
+                    state();
+                  },
+                  // onPressed: (prefs.send)
+                  //     ? null
+                  //     : () {
+                  //         _shoppingCartProvider
+                  //             .deleteShoppingCart(_shoppingCart.idCar);
+                  //         state();
+                  //       },
                 ),
               ),
             ),
@@ -309,76 +314,78 @@ class _ShoppingCartPageState extends State<ShoppingCartPage> {
                             prefs.pickup == guest &&
                             prefs.payment == guest)) {
                       Navigator.pushNamed(context, Routes.order);
-                    } else if (prefs.rol == host &&
-                        prefs.menu == host &&
-                        prefs.pickup == host &&
-                        prefs.payment == guest) {
-                      final userProvider = UserProvider();
-                      bool valida1 = true;
-                      bool valida2 = true;
-                      bool valida3 = true;
-                      UserModel user1;
-                      UserModel user2;
-                      UserModel user3;
-                      if (prefs.guest1 != null && prefs.guest1 != '') {
-                        user1 = await userProvider.getUser(prefs.guest1);
-                        valida1 = user1.ready;
-                      }
-                      if (prefs.guest2 != null && prefs.guest2 != '') {
-                        user2 = userProvider.getUser(prefs.guest1);
-                        valida2 = user2.ready;
-                      }
-                      if (prefs.guest3 != null && prefs.guest3 != '') {
-                        user3 = userProvider.getUser(prefs.guest1);
-                        valida3 = user3.ready;
-                      }
-                      if (valida1 && valida2 && valida3) {
-                        prefs.send = false;
-                        if (prefs.guest1 != null && prefs.guest1 != '') {
-                          userProvider.readyUser(user1.idUser, false);
-                        }
-                        if (prefs.guest2 != null && prefs.guest2 != '') {
-                          userProvider.readyUser(user2.idUser, false);
-                        }
-                        if (prefs.guest3 != null && prefs.guest3 != '') {
-                          userProvider.readyUser(user3.idUser, false);
-                        }
-                        Navigator.pushNamed(context, Routes.order);
-                      } else {
-                        if (!prefs.send) {
-                          prefs.send = true;
-                          final DynamicLinkService _dynamicLinkService =
-                              DynamicLinkService();
-                          final url = await _dynamicLinkService
-                              .createDynamicLinkOrder();
-                          List<String> phonesList = [];
-                          phones.forEach((element) {
-                            phonesList.add(element.split(' - ')[1]);
-                          });
-                          Uri _launchSms;
-                          _launchSms = Uri(
-                              scheme: 'sms',
-                              path: phonesList.toString(),
-                              queryParameters: {
-                                'body': 'Unete a mi videollamada $url'
-                              });
-                          launch(_launchSms.toString());
-                        } else {
-                          prefs.send = false;
-                          _scaffolKey.currentState.showSnackBar(SnackBar(
-                            content: Text(
-                                'There are products that are not avilable.'),
-                            duration: Duration(seconds: 5),
-                          ));
-                        }
-                      }
-                      ///Si el usuario simplemente quiere pedir para él mismo y nadie más, entonces no se debe validar nada
-                    } else if (prefs.rol == noguests){
-                      Navigator.pushNamed(context, Routes.order);
                     }
-                    else {
+                    //  else if (prefs.rol == host &&
+                    //     prefs.menu == host &&
+                    //     prefs.pickup == host &&
+                    //     prefs.payment == guest) {
+                    //   final userProvider = UserProvider();
+                    //   bool valida1 = true;
+                    //   bool valida2 = true;
+                    //   bool valida3 = true;
+                    //   UserModel user1;
+                    //   UserModel user2;
+                    //   UserModel user3;
+                    //   if (prefs.guest1 != null && prefs.guest1 != '') {
+                    //     user1 = await userProvider.getUser(prefs.guest1);
+                    //     valida1 = user1.ready;
+                    //   }
+                    //   if (prefs.guest2 != null && prefs.guest2 != '') {
+                    //     user2 = userProvider.getUser(prefs.guest1);
+                    //     valida2 = user2.ready;
+                    //   }
+                    //   if (prefs.guest3 != null && prefs.guest3 != '') {
+                    //     user3 = userProvider.getUser(prefs.guest1);
+                    //     valida3 = user3.ready;
+                    //   }
+                    //   if (valida1 && valida2 && valida3) {
+                    //     prefs.send = false;
+                    //     if (prefs.guest1 != null && prefs.guest1 != '') {
+                    //       userProvider.readyUser(user1.idUser, false);
+                    //     }
+                    //     if (prefs.guest2 != null && prefs.guest2 != '') {
+                    //       userProvider.readyUser(user2.idUser, false);
+                    //     }
+                    //     if (prefs.guest3 != null && prefs.guest3 != '') {
+                    //       userProvider.readyUser(user3.idUser, false);
+                    //     }
+                    //     Navigator.pushNamed(context, Routes.order);
+                    //   } else {
+                    //     if (!prefs.send) {
+                    //       prefs.send = true;
+                    //       final DynamicLinkService _dynamicLinkService =
+                    //           DynamicLinkService();
+                    //       final url = await _dynamicLinkService
+                    //           .createDynamicLinkOrder();
+                    //       List<String> phonesList = [];
+                    //       phones.forEach((element) {
+                    //         phonesList.add(element.split(' - ')[1]);
+                    //       });
+                    //       Uri _launchSms;
+                    //       _launchSms = Uri(
+                    //           scheme: 'sms',
+                    //           path: phonesList.toString(),
+                    //           queryParameters: {
+                    //             'body': 'Unete a mi videollamada $url'
+                    //           });
+                    //       launch(_launchSms.toString());
+                    //     } else {
+                    //       prefs.send = false;
+                    //       _scaffolKey.currentState.showSnackBar(SnackBar(
+                    //         content: Text(
+                    //             'There are products that are not avilable.'),
+                    //         duration: Duration(seconds: 5),
+                    //       ));
+                    //     }
+                    //   }
+
+                    //   ///Si el usuario simplemente quiere pedir para él mismo y nadie más, entonces no se debe validar nada
+                    // }
+                    else if (prefs.rol == noguests) {
+                      Navigator.pushNamed(context, Routes.order);
+                    } else {
                       _scaffolKey.currentState
-                        .showSnackBar(snackBarErrorCreacion);
+                          .showSnackBar(snackBarErrorCreacion);
                     }
                   } else {
                     _scaffolKey.currentState

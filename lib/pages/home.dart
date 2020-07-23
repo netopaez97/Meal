@@ -29,7 +29,7 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    prefs.send = false;
+    // prefs.send = false;
     // prefs.rol = host;
     // prefs.menu = guest;
     // prefs.pickup = guest;
@@ -211,14 +211,20 @@ class _HomePageState extends State<HomePage> {
             ),
             trailing: IconButton(
               icon: Icon(Icons.add_shopping_cart),
-              onPressed: (prefs.send)
-                  ? null
-                  : () {
-                      showDialog(
-                        context: context,
-                        builder: (BuildContext context) => BuyPage(_producto),
-                      );
-                    },
+              onPressed: () {
+                showDialog(
+                  context: context,
+                  builder: (BuildContext context) => BuyPage(_producto),
+                );
+              },
+              // onPressed: (prefs.send)
+              //     ? null
+              //     : () {
+              //         showDialog(
+              //           context: context,
+              //           builder: (BuildContext context) => BuyPage(_producto),
+              //         );
+              //       },
             ),
           ),
         ),

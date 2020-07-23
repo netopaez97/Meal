@@ -1,7 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:meal/preferences/userpreferences.dart';
+import 'package:meal/providers/sms_provider.dart';
 import 'package:meal/routes/routes.dart';
+import 'package:meal/services/dynamic_link_service.dart';
 import 'package:meal/utils/utils.dart';
 import 'package:meal/widgets/widgets.dart';
 
@@ -66,7 +68,10 @@ class MenuPage extends StatelessWidget {
                 ),
                 onPressed: () {
                   prefs.menu = host;
-                  Navigator.pushNamed(context, Routes.pickup);
+                  prefs.pickup = host;
+                  prefs.payment = host;
+                  Navigator.pushNamedAndRemoveUntil(
+                      context, Routes.home, (Route routes) => false);
                 },
               ),
               SizedBox(height: media.width * 0.05),
@@ -95,9 +100,45 @@ class MenuPage extends StatelessWidget {
                     borderRadius: BorderRadius.circular(10),
                   ),
                 ),
-                onPressed: () {
+                onPressed: () async {
                   prefs.menu = guest;
-                  Navigator.pushNamed(context, Routes.pickup);
+                  prefs.pickup = guest;
+                  prefs.payment = guest;
+
+                  Navigator.pushNamedAndRemoveUntil(
+                      context, Routes.home, (Route routes) => false);
+                  if (prefs.menu == guest &&
+                      prefs.pickup == guest &&
+                      prefs.payment == guest) {
+                    final DynamicLinkService _dynamicLinkService =
+                        DynamicLinkService();
+                    //Class to call sms massages
+                    final SmsProvider _smsProvider = SmsProvider();
+                    Navigator.pushNamedAndRemoveUntil(
+                        context, Routes.home, (Route routes) => false);
+                    final url =
+                        await _dynamicLinkService.createDynamicLinkOrder();
+                    List<String> phones = [];
+                    if (prefs.guest1 != null && prefs.guest1 != '') {
+                      phones.add(prefs.uidguest1);
+                    }
+                    if (prefs.guest2 != null && prefs.guest2 != '') {
+                      phones.add(prefs.uidguest2);
+                    }
+                    if (prefs.guest3 != null && prefs.guest3 != '') {
+                      phones.add(prefs.uidguest3);
+                    }
+                    String textMessage = 'Ordena en esta direccion $url';
+                    phones.forEach((element) {
+                      /// The data arrive with the next behaviour:
+                      /// [
+                      ///   "firstGuest - 8167198664",
+                      ///   "secondGuest - 8167199654"
+                      /// ]
+                      _smsProvider.sendSms(
+                          element.split(' - ')[1], textMessage);
+                    });
+                  }
                 },
               ),
             ],

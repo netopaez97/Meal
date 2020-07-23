@@ -2,10 +2,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:meal/preferences/userpreferences.dart';
 import 'package:meal/routes/routes.dart';
-import 'package:meal/services/dynamic_link_service.dart';
 import 'package:meal/utils/utils.dart';
 import 'package:meal/widgets/widgets.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 class PaymentPage extends StatelessWidget {
   static const routeName = 'PaymentPage';
@@ -101,38 +99,36 @@ class PaymentPage extends StatelessWidget {
                   prefs.payment = guest;
                   Navigator.pushNamedAndRemoveUntil(
                       context, Routes.home, (Route routes) => false);
-                  if (prefs.menu == guest &&
-                      prefs.pickup == guest &&
-                      prefs.payment == guest) {
-                    final DynamicLinkService _dynamicLinkService =
-                        DynamicLinkService();
-                    Navigator.pushNamedAndRemoveUntil(
-                        context, Routes.home, (Route routes) => false);
-                    Uri _launchSms;
-                    final url =
-                        await _dynamicLinkService.createDynamicLinkOrder();
-                    List<String> phones = [];
-                    if (prefs.guest1 != null && prefs.guest1 != '') {
-                      phones.add(prefs.uidguest1);
-                    }
-                    if (prefs.guest2 != null && prefs.guest2 != '') {
-                      phones.add(prefs.uidguest2);
-                    }
-                    if (prefs.guest3 != null && prefs.guest3 != '') {
-                      phones.add(prefs.uidguest3);
-                    }
-                    List<String> phonesList = [];
-                    phones.forEach((element) {
-                      phonesList.add(element.split(' - ')[1]);
-                    });
-                    _launchSms = Uri(
-                        scheme: 'sms',
-                        path: phonesList.toString(),
-                        queryParameters: {
-                          'body': 'Unete a mi videollamada $url'
-                        });
-                    launch(_launchSms.toString());
-                  }
+                  // if (prefs.menu == guest &&
+                  //     prefs.pickup == guest &&
+                  //     prefs.payment == guest) {
+                  //   final DynamicLinkService _dynamicLinkService =
+                  //       DynamicLinkService();
+                  //   //Class to call sms massages
+                  //   final SmsProvider _smsProvider = SmsProvider();
+                  //   Navigator.pushNamedAndRemoveUntil(
+                  //       context, Routes.home, (Route routes) => false);
+                  //   final url =
+                  //       await _dynamicLinkService.createDynamicLinkOrder();
+                  //   List<String> phones = [];
+                  //   if (prefs.guest1 != null && prefs.guest1 != '') {
+                  //     phones.add(prefs.uidguest1);
+                  //   }
+                  //   if (prefs.guest2 != null && prefs.guest2 != '') {
+                  //     phones.add(prefs.uidguest2);
+                  //   }
+                  //   if (prefs.guest3 != null && prefs.guest3 != '') {
+                  //     phones.add(prefs.uidguest3);
+                  //   }
+                  //   phones.forEach((element) {
+                  //     /// The data arrive with the next behaviour:
+                  //     /// [
+                  //     ///   "firstGuest - 8167198664",
+                  //     ///   "secondGuest - 8167199654"
+                  //     /// ]
+                  //     _smsProvider.sendSms(element.split(' - ')[1]);
+                  //   });
+                  // }
                 },
               ),
             ],
