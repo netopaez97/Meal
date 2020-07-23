@@ -21,6 +21,14 @@ class UserPreferences {
     prefs.setString('phone', value);
   }
 
+  get name {
+    return prefs.getString('name') ?? '';
+  }
+
+  set name(String value) {
+    prefs.setString('name', value);
+  }
+
   get send {
     return prefs.getBool('send') ?? false;
   }
