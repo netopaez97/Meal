@@ -201,6 +201,38 @@ class _OrderState extends State<OrderPage> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: <Widget>[
+                    TextFormField(
+                      initialValue: prefs.name,
+                      textAlign: TextAlign.left,
+                      keyboardType: TextInputType.text,
+                      decoration: InputDecoration(
+                        labelText: 'Name',
+                        labelStyle: TextStyle(color: blackColors),
+                        border: OutlineInputBorder(
+                            borderSide: BorderSide(
+                          color: blackColors,
+                        )),
+                        hintText: 'Name',
+                        errorText: (valida) ? '' : 'Please complete this field',
+                        errorStyle: TextStyle(
+                          fontSize: media.width * 0.05,
+                        ),
+                        errorBorder: OutlineInputBorder(
+                            borderSide: BorderSide(
+                          color: blackColors,
+                        )),
+                        hintStyle: TextStyle(
+                          fontSize: media.width * 0.05,
+                        ),
+                      ),
+                      cursorColor: blackColors,
+                      cursorWidth: 1.0,
+                      style: TextStyle(
+                        color: blackColors,
+                        fontSize: media.width * 0.05,
+                      ),
+                      onChanged: (value) => {prefs.name = value},
+                    ),
                     Row(
                       children: <Widget>[
                         Text(
@@ -246,15 +278,13 @@ class _OrderState extends State<OrderPage> {
                               errorText:
                                   (valida) ? '' : 'Please complete this field',
                               errorStyle: TextStyle(
-                                color: (valida)
-                                    ? blackColors.withOpacity(0.5)
-                                    : orangeColors.withOpacity(0.5),
                                 fontSize: media.width * 0.05,
                               ),
+                              errorBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                color: blackColors,
+                              )),
                               hintStyle: TextStyle(
-                                color: (valida)
-                                    ? blackColors.withOpacity(0.5)
-                                    : orangeColors.withOpacity(0.5),
                                 fontSize: media.width * 0.05,
                               ),
                             ),
@@ -757,6 +787,7 @@ orderDone(
     DynamicLinkService _dynamicLinkService,
     List<String> phones) async {
   final order = OrderModel(
+      nameClient: prefs.name,
       idUser: prefs.uid,
       price: total,
       contactNumber: int.parse(prefs.phone),
