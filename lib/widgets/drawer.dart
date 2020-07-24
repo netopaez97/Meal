@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:meal/preferences/userpreferences.dart';
 import 'package:meal/routes/routes.dart';
 import 'package:meal/utils/utils.dart' as utils;
 
@@ -6,21 +7,31 @@ class MainDrawer extends StatelessWidget {
 
   final String _userName  = "Ian Gonsher";
   final String _userEmail = "ian_gonsher@brown.edu";
+  final UserPreferences _userPreferences = UserPreferences();
 
   @override
   Widget build(BuildContext context) {
 
 
     return Drawer(
-      child: ListView(
+      child: Column(
         children: <Widget>[
-          _userAccount(context),
-          _home(context),
-          _orders(context),
-          _friends(context),
-          _signOut(context),
+          SizedBox(
+            height: MediaQuery.of(context).size.height*0.95,
+            child: ListView(
+              children: <Widget>[
+                _userAccount(context),
+                _home(context),
+                _orders(context),
+                // _friends(context),
+                _signOut(context),
+              ],
+            ),
+          ),
+          Text("Powered by Luis Ernesto and Luis Carlos", textAlign: TextAlign.right, style: TextStyle(color: Colors.grey.withOpacity(0.8))),
         ],
       ),
+      
     );
   }
 
@@ -32,9 +43,9 @@ class MainDrawer extends StatelessWidget {
         color: Colors.white
       ),
       currentAccountPicture: CircleAvatar(
-        child: Text(_userEmail[0].toUpperCase(), style: TextStyle(color: utils.blackColor,))
+        child: Text("M", style: TextStyle(color: utils.blackColor,))
       ),
-      accountName: Text(_userName, style: TextStyle(color: Colors.black),),
+      accountName: Text(_userPreferences.phone, style: TextStyle(color: Colors.black),),
       accountEmail: Text(_userEmail, style: TextStyle(color: Colors.black),),
     );
   }
