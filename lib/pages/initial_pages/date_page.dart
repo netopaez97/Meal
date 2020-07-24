@@ -15,11 +15,16 @@ class DatePage extends StatefulWidget {
 
 class _DatePageState extends State<DatePage> {
   final prefs = UserPreferences();
+  DateTime  _dateForMeeting;
 
   @override
   Widget build(BuildContext context) {
+
+    //variables to manage the days in Date Time Picker
+    var now = DateTime.now();
+    var today= new DateTime(now.year, now.month, now.day);
+
     final media = MediaQuery.of(context).size;
-    DateTime _dateTime = DateTime.now();
     return Scaffold(
       appBar: AppBar(elevation: 0),
       backgroundColor: blackColors,
@@ -54,14 +59,17 @@ class _DatePageState extends State<DatePage> {
                 ),
                 // onPressed: () => Navigator.pushNamedAndRemoveUntil(
                 //     context, Routes.home, (Route routes) => false),
-                onPressed: () {
+                onPressed: () async {
+
+                  if(prefs.date == null || prefs.date == "")
+                    return await _requestSetDate();
+                  
                   if (prefs.rol != noguests) {
                     prefs.channelName = DateTime.now().toString();
                     Navigator.pushNamed(context, Routes.menu);
                   } else {
                     prefs.channelName = '';
-                    Navigator.pushNamedAndRemoveUntil(
-                        context, Routes.home, (Route routes) => false);
+                    Navigator.pushNamedAndRemoveUntil(context, Routes.home, (Route routes) => false);
                   }
                 },
               ),
@@ -81,12 +89,13 @@ class _DatePageState extends State<DatePage> {
                 ),
               ),
               child: CupertinoDatePicker(
-                initialDateTime: _dateTime,
-                minimumDate: _dateTime,
-                onDateTimeChanged: (dateTime) {
+                minimumDate: today,
+                mode: CupertinoDatePickerMode.dateAndTime,
+                onDateTimeChanged: (DateTime dateTime) {
                   setState(() {
-                    _dateTime = dateTime;
-                    prefs.date = _dateTime.toString();
+                    _dateForMeeting = dateTime;
+                    prefs.date = _dateForMeeting.toString();
+                    print(prefs.date);
                   });
                 },
               ),
@@ -94,6 +103,20 @@ class _DatePageState extends State<DatePage> {
           ),
         ],
       ),
+    );
+  }
+
+  Future _requestSetDate() {
+    return showDialog(
+      context: context,
+      builder: (BuildContext context){
+        return AlertDialog(
+          title: Text("Please, choose a date."),
+          actions: <Widget>[
+            FlatButton(onPressed: (){Navigator.pop(context);}, child: Text("Ok"))
+          ],
+        );
+      }
     );
   }
 }

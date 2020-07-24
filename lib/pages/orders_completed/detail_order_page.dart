@@ -20,7 +20,7 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
     return AlertDialog(
       title: Center(
         child: Text(
-          'Productos for this order',
+          'Products for this order',
           style: TextStyle(
             color: orangeColors,
             fontSize: media.width * 0.08,

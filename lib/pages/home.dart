@@ -102,7 +102,7 @@ class _HomePageState extends State<HomePage> {
         children: <Widget>[
           _categoryLogo("Drinks", "assets/drink.jpg"),
           _categoryLogo("Dinner", "assets/hamburguer.jpg"),
-          _categoryLogo("COVID-19", "assets/theBarKc.jpg")
+          _categoryLogo("Others", "assets/theBarKc.jpg")
         ],
       ),
     );

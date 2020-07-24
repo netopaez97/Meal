@@ -68,6 +68,7 @@ class InitialPage extends StatelessWidget {
                 ),
               ),
               onPressed: () {
+                prefs.date = null;
                 if (prefs.uid.isEmpty) {
                   Navigator.pushNamed(context, Routes.hostPhone);
                 } else {

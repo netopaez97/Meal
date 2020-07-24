@@ -723,6 +723,21 @@ Future<void> chargeCard(
     ///HERE WE CAN SHOW OR DO SOMETHING FOR THE FUTURE
 
   } else {
+    print(responseBody["errorMessage"]);
+    await showDialog(
+      context: context,
+      builder: (BuildContext context){
+        return AlertDialog(
+          title: Text("The payment could not be processed."),
+          actions: <Widget>[
+            FlatButton(onPressed: (){
+              Navigator.pop(context);
+              Navigator.pop(context);
+            }, child: Text("Ok"))
+          ],
+        );
+      }
+    );
     throw ChargeException(responseBody["errorMessage"]);
   }
 }
