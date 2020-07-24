@@ -142,7 +142,7 @@ class _OrdersPageState extends State<OrdersPage> {
                 SizedBox(height: 10),
               ],
             ),
-            trailing: (_order.channelName == '')
+            trailing: (_order.channelName == '' || _order.channelName == null)
                 ? null
                 : IconButton(
                     icon: Icon(
