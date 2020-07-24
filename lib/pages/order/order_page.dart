@@ -42,7 +42,7 @@ class _OrderState extends State<OrderPage> {
   bool order = false;
   List<ShoppingCartModel> list = [];
 
-  List _listaProductosCarrito;
+  List<ShoppingCartModel> _listaProductosCarrito;
   double total = 0.0;
   bool availability = true;
   List<String> phones = [];
@@ -72,6 +72,10 @@ class _OrderState extends State<OrderPage> {
     _listaProductosCarrito = [];
     availability = true;
     total = 0.0;
+
+    ///This case is when:
+    /// the host want to pay for his guests or
+    /// the host want to eat alone
     if ((prefs.rol == host && prefs.payment == host) ||
         (prefs.rol == noguests)) {
       await _shoppingCartProvider.getShoppingCart().then((res) {
@@ -101,7 +105,10 @@ class _OrderState extends State<OrderPage> {
           });
         }
       });
-    } else if (prefs.rol == host) {
+    } 
+    ///No entendí este caso, en el anterior el rol también es host
+    else if (prefs.rol == host) {
+      print("Entra a host");
       await _shoppingCartProvider
           .getShoppingCartMealFor(prefs.host)
           .then((res) {
@@ -131,6 +138,8 @@ class _OrderState extends State<OrderPage> {
           });
         }
       });
+    
+    ///This case is when the user is a guest and want to pay for his own.
     } else if (prefs.rol == guest) {
       await _shoppingCartProvider
           .getShoppingCartMealFor(prefs.guest)
@@ -162,8 +171,9 @@ class _OrderState extends State<OrderPage> {
         }
       });
     }
-
-    print(_listaProductosCarrito);
+    else{
+      return showDialog(context: context, builder: (BuildContext context) =>AlertDialog(title:Text("No hemos pensado en esto")));
+    }
   }
 
   @override
@@ -245,6 +255,7 @@ class _OrderState extends State<OrderPage> {
                         SizedBox(width: 20),
                         Container(
                           child: DropdownButton<String>(
+                            underline: DropdownButtonHideUnderline(child: Container()),
                             value: deliveryType,
                             icon: Icon(Icons.arrow_downward),
                             iconSize: 24,
@@ -313,6 +324,7 @@ class _OrderState extends State<OrderPage> {
                               SizedBox(width: 20),
                               Container(
                                 child: DropdownButton<String>(
+                                  underline: DropdownButtonHideUnderline(child: Container()),
                                   value: paymentType,
                                   icon: Icon(Icons.arrow_downward),
                                   iconSize: 24,

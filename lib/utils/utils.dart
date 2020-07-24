@@ -44,3 +44,9 @@ double roundDouble(double value) {
 String host = 'host';
 String guest = 'guest';
 String noguests = 'noguests';
+
+
+///Categories
+String foodCategory = 'food';
+String drinkCategory = 'drink';
+String otherCategory = 'other';

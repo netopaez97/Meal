@@ -16,7 +16,7 @@ class PhonePage extends StatelessWidget {
     var container = Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
-        SizedBox(height: media.width * 0.5),
+        SizedBox(height: media.width * 0.45),
         Meal(),
         SizedBox(height: 5),
         InputPhone(
@@ -30,7 +30,7 @@ class PhonePage extends StatelessWidget {
           text: "Your phone number?",
           scale: media.width * 0.006,
         ),
-        SizedBox(height: media.width * 0.5),
+        SizedBox(height: media.width * 0.45),
         CupertinoButton(
           child: Container(
             width: media.width * 0.8,

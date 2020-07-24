@@ -143,6 +143,7 @@ class _BuyPageState extends State<BuyPage> {
                           borderRadius: BorderRadius.all(Radius.circular(5)),
                         ),
                         child: DropdownButton<String>(
+                          underline: DropdownButtonHideUnderline(child: Container()),
                           value: dropdownValue,
                           elevation: 16,
                           style: TextStyle(color: blackColors),

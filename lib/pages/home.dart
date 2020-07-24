@@ -4,11 +4,14 @@ import 'package:flutter/material.dart';
 
 import 'package:meal/models/product_model.dart';
 import 'package:meal/pages/order/buy_page.dart';
+import 'package:meal/pages/order/categories.dart';
 import 'package:meal/pages/order/detail_page.dart';
 import 'package:meal/preferences/userpreferences.dart';
 import 'package:meal/providers/products_provider.dart';
 import 'package:meal/utils/utils.dart';
 import 'package:meal/widgets/drawer.dart';
+
+import 'package:meal/utils/utils.dart' as utils;
 
 import '../routes/routes.dart';
 
@@ -100,9 +103,9 @@ class _HomePageState extends State<HomePage> {
         padding: EdgeInsets.only(left: 4, right: 4),
         scrollDirection: Axis.horizontal,
         children: <Widget>[
-          _categoryLogo("Drinks", "assets/drink.jpg"),
-          _categoryLogo("Dinner", "assets/hamburguer.jpg"),
-          _categoryLogo("Others", "assets/theBarKc.jpg")
+          _categoryLogo(utils.drinkCategory, "assets/drink.jpg"),
+          _categoryLogo(utils.foodCategory, "assets/hamburguer.jpg"),
+          _categoryLogo(utils.otherCategory, "assets/theBarKc.jpg")
         ],
       ),
     );
@@ -116,7 +119,7 @@ class _HomePageState extends State<HomePage> {
         elevation: 4,
         child: InkWell(
           onTap: () {
-            _scaffolKey.currentState.showSnackBar(snackBarErrorCreacion);
+            Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) =>CategoriesPage(_category)));
           },
           child: Container(
               height: MediaQuery.of(context).size.height * 0.1,
@@ -131,7 +134,7 @@ class _HomePageState extends State<HomePage> {
                   Expanded(
                     child: Image.asset(_imageNetwork),
                   ),
-                  Text(_category)
+                  Text("${_category[0].toUpperCase()}${_category.substring(1).toLowerCase()}")
                 ],
               ))),
         ),
@@ -185,7 +188,8 @@ class _HomePageState extends State<HomePage> {
                 context: context,
                 builder: (BuildContext context) =>
                     ProductDetailPage(_producto)),
-            leading: CircleAvatar(
+            leading: _producto.image != null
+            ? CircleAvatar(
               backgroundColor: Colors.transparent,
               radius: MediaQuery.of(context).size.width * 0.1,
               child: (_producto.image != null)
@@ -196,7 +200,8 @@ class _HomePageState extends State<HomePage> {
                       fit: BoxFit.cover,
                     )
                   : Image(image: AssetImage('assets/test.jpg')),
-            ),
+            )
+            : SizedBox(width: 1),
             title: Text(_producto.name),
             subtitle: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
