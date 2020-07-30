@@ -17,6 +17,7 @@ import 'package:meal/utils/utils.dart';
 import 'package:square_in_app_payments/in_app_payments.dart';
 import 'package:square_in_app_payments/models.dart' as cardModel;
 import 'package:http/http.dart' as http;
+import 'package:meal/utils/utils.dart' as utils;
 
 class OrderPage extends StatefulWidget {
   static const routeName = 'order';
@@ -809,7 +810,7 @@ orderDone(
       direction: address,
       productsInCartList: list,
       comments: comments,
-      status: 'pending',
+      status: utils.pending,
       paymentType: paymentType,
       channelName: prefs.channelName,
       tokenClient: prefs.tokenFCM);

@@ -7,8 +7,17 @@ import 'package:meal/routes/routes.dart';
 import 'package:meal/utils/utils.dart';
 import 'package:meal/widgets/widgets.dart';
 
-class PhonePage extends StatelessWidget {
+class PhonePage extends StatefulWidget {
   static const routeName = 'PhonePage';
+
+  @override
+  _PhonePageState createState() => _PhonePageState();
+}
+
+class _PhonePageState extends State<PhonePage> {
+
+  bool _loadingWidget = false;
+
   @override
   Widget build(BuildContext context) {
     final ShoppingCartProvider _shoppingCartProvider = ShoppingCartProvider();
@@ -34,7 +43,12 @@ class PhonePage extends StatelessWidget {
           scale: media.width * 0.006,
         ),
         SizedBox(height: media.width * 0.45),
-        CupertinoButton(
+        _loadingWidget == true
+        ? Padding(
+          padding: const EdgeInsets.all(5.0),
+          child: Center(child: CircularProgressIndicator()),
+        )
+        : CupertinoButton(
           child: Container(
             width: media.width * 0.8,
             child: Text(
@@ -52,7 +66,17 @@ class PhonePage extends StatelessWidget {
             ),
           ),
           onPressed: () async {
-            await _shoppingCartProvider.deleteAll();
+
+            setState(()=>_loadingWidget=true);
+
+            await _shoppingCartProvider.deleteAll().then(
+              (res)=>setState(()=>_loadingWidget=true)
+            ).catchError(
+              (err){
+                showDialog(context: context, builder: (BuildContext context)=>AlertDialog(title: Text("Please, verify your internet connection.")));
+                return ;
+              }
+            );
 
             ///Verify if there is a phone registered for the user
             if (prefs.phone != '') {
@@ -68,6 +92,7 @@ class PhonePage extends StatelessWidget {
               else{
                 await userProvider.insertUser();
               }
+              setState(()=>_loadingWidget=false);
               Navigator.pushNamed(context, Routes.selection);
             }
           },

@@ -41,7 +41,7 @@ class InitialPage extends StatelessWidget {
               ),
               width: media.width * 0.9,
               child: Text(
-                'Thank you for using MEAL! This is a pilot version of the app, which we are working to improve. Please let us know what you think!\nShare your suggestions for ways we can improve! you can participate in a short survey at the end of your order. Enjoy your MEAL!',
+                'Thank you for using MEAL! This is a pilot version of the app, which we are working to improve. Please let us know what you think!\nShare your suggestions for ways we can improve! You can participate in a short survey at the end of your order. Enjoy your MEAL!',
                 style: TextStyle(
                   color: Colors.white,
                   fontWeight: FontWeight.normal,

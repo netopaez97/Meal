@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:meal/models/order_model.dart';
 import 'package:meal/models/product_model.dart';
@@ -7,7 +8,7 @@ import 'package:meal/preferences/userpreferences.dart';
 
 import 'package:meal/providers/order_provider.dart';
 import 'package:meal/providers/products_provider.dart';
-import 'package:meal/utils/utils.dart';
+import 'package:meal/utils/utils.dart' as utils;
 import 'package:meal/widgets/drawer.dart';
 
 import '../../routes/routes.dart';
@@ -110,11 +111,6 @@ class _OrdersPageState extends State<OrdersPage> {
         Material(
           borderRadius: BorderRadius.all(Radius.circular(4)),
           elevation: 2,
-          color: (_order.status == 'pending')
-              ? orangeColors.withOpacity(0.6)
-              : (_order.status == 'canceled')
-                  ? Colors.red.withOpacity(0.6)
-                  : Colors.green.withOpacity(0.6),
           child: ListTile(
             // onTap: () => _scaffolKey.currentState.showSnackBar(snackBarErrorCreacion),
             onTap: () {
@@ -123,12 +119,15 @@ class _OrdersPageState extends State<OrdersPage> {
                   builder: (BuildContext context) =>
                       OrderDetailPage(list, _order.productsInCartList));
             },
-            // leading: CircleAvatar(
-            //     backgroundColor: Colors.transparent,
-            //     radius: MediaQuery.of(context).size.width * 0.1,
-            //     child: Image.network(
-            //       _order.productsInCartList[0].idProduct,
-            //     )),
+            leading: CircleAvatar(
+              backgroundColor: (_order.status == utils.pending)
+              ? utils.orangeColors
+              : (_order.status == utils.canceled)
+                ? Colors.red
+                : (_order.status == utils.delivered)
+                  ? Colors.amber
+                  : Colors.green
+            ),
             title: Text('Your order at ${_order.date}'),
             subtitle: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -140,27 +139,42 @@ class _OrdersPageState extends State<OrdersPage> {
                 SizedBox(height: 10),
                 Text("Total price: ${total.toStringAsFixed(2)}"),
                 SizedBox(height: 10),
+                _buttonToMeasureTheService(),
+                SizedBox(height: 10),
+
               ],
             ),
             trailing: (_order.channelName == '' || _order.channelName == null)
-                ? null
-                : IconButton(
-                    icon: Icon(
-                      Icons.video_call,
-                      size: MediaQuery.of(context).size.width * 0.1,
-                    ),
-                    onPressed: () {
-                      final prefs = new UserPreferences();
-                      prefs.channelName = _order.channelName;
-                      Navigator.pushNamed(context, Routes.indexConference);
-                    },
-                  ),
+              ? SizedBox()
+              : IconButton(
+                icon: Icon(
+                  Icons.video_call,
+                ),
+                onPressed: () {
+                  final prefs = new UserPreferences();
+                  prefs.channelName = _order.channelName;
+                  Navigator.pushNamed(context, Routes.indexConference);
+                },
+              ),
+            
+            
+                  
           ),
         ),
         Divider(
           color: Colors.transparent,
         ),
       ],
+    );
+  }
+
+  Widget _buttonToMeasureTheService(){
+    return CupertinoButton(
+      padding: EdgeInsets.zero,
+      onPressed: (){
+        
+      },
+      child: Text("Tell us your thoughts!")
     );
   }
 }

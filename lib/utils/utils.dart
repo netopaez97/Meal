@@ -50,3 +50,9 @@ String noguests = 'noguests';
 String foodCategory = 'food';
 String drinkCategory = 'drink';
 String otherCategory = 'other';
+
+//Order status
+String pending = 'pending';
+String delivered = 'delivered';
+String finished = 'finished';
+String canceled = 'canceled';

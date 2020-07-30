@@ -19,6 +19,9 @@ class OrderProvider /* with ChangeNotifier*/ {
   }
 
   Stream getOrders() {
-    return _db.where('idUser', isEqualTo: prefs.uid).snapshots();
+    // print("DATE: ${DateTime.now().subtract(Duration(days: 15))}");
+    // final startAtTimestamp = Timestamp.fromMillisecondsSinceEpoch(DateTime.now().subtract(Duration(days: 15)).millisecondsSinceEpoch);
+    // .where('data', isGreaterThanOrEqualTo: DateTime.now().subtract(new Duration(days: 5)))
+    return _db.where('idUser', isEqualTo: prefs.uid).where("date", isLessThan: new DateTime.now()).snapshots();
   }
 }
