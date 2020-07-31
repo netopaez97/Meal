@@ -10,6 +10,7 @@ import 'package:meal/providers/order_provider.dart';
 import 'package:meal/providers/products_provider.dart';
 import 'package:meal/utils/utils.dart' as utils;
 import 'package:meal/widgets/drawer.dart';
+import 'package:meal/widgets/survey.dart';
 
 import '../../routes/routes.dart';
 
@@ -139,7 +140,7 @@ class _OrdersPageState extends State<OrdersPage> {
                 SizedBox(height: 10),
                 Text("Total price: ${total.toStringAsFixed(2)}"),
                 SizedBox(height: 10),
-                _buttonToMeasureTheService(),
+                _buttonToMeasureTheService(_order.status),
                 SizedBox(height: 10),
 
               ],
@@ -156,9 +157,6 @@ class _OrdersPageState extends State<OrdersPage> {
                   Navigator.pushNamed(context, Routes.indexConference);
                 },
               ),
-            
-            
-                  
           ),
         ),
         Divider(
@@ -168,13 +166,20 @@ class _OrdersPageState extends State<OrdersPage> {
     );
   }
 
-  Widget _buttonToMeasureTheService(){
-    return CupertinoButton(
-      padding: EdgeInsets.zero,
-      onPressed: (){
-        
-      },
-      child: Text("Tell us your thoughts!")
-    );
+  Widget _buttonToMeasureTheService(String _status){
+    if(_status == utils.finished)
+      return CupertinoButton(
+        padding: EdgeInsets.zero,
+        onPressed: () async {
+          await showDialog(
+            context: context,
+            builder: (BuildContext context)=>SurveyDialog()
+          );
+        },
+        child: Text("Tell us your thoughts!")
+      );
+    else{
+      return SizedBox();
+    }
   }
 }
