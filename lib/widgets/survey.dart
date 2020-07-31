@@ -1,9 +1,15 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:meal/models/order_model.dart';
 import 'package:meal/models/survey_model.dart';
+import 'package:meal/providers/order_provider.dart';
 import 'package:meal/providers/survey_provider.dart';
 
 class SurveyDialog extends StatefulWidget {
+
+  final OrderModel _order;
+  SurveyDialog(this._order, {Key key}) : super(key:key);
+
   @override
   _SurveyDialogState createState() => _SurveyDialogState();
 }
@@ -11,6 +17,7 @@ class SurveyDialog extends StatefulWidget {
 class _SurveyDialogState extends State<SurveyDialog> {
 
   SurveyProvider _surveyProvider = SurveyProvider();
+  OrderProvider _orderProvider = OrderProvider();
   bool _loadingWidget = false;
   bool view = false;
   List<SurveyModel> _survey = [];
@@ -65,11 +72,11 @@ class _SurveyDialogState extends State<SurveyDialog> {
                     title: Text(_survey[question].question),
                     subtitle: Column(
                       children:<Widget>[
-                        _tileForAnswers(question, "Very disagree", 1),
-                        _tileForAnswers(question, "Diasgree",2),
-                        _tileForAnswers(question, "Impartial",3),
+                        _tileForAnswers(question, "Very Agree",5),
                         _tileForAnswers(question, "Agree",4),
-                        _tileForAnswers(question, "Agree",5),
+                        _tileForAnswers(question, "Impartial",3),
+                        _tileForAnswers(question, "Diasgree",2),
+                        _tileForAnswers(question, "Very disagree", 1),
                       ]
                     ),
                   ),
@@ -122,7 +129,12 @@ class _SurveyDialogState extends State<SurveyDialog> {
             if(_isValidToSend == false)
               return showDialog(context:context,builder: (BuildContext context)=>AlertDialog(title:Text("Please, answer the ${_answers.length} questions.")));
 
+            
             setState(()=>_loadingWidget = true);
+
+            //Don't allow user to vote twice or more.
+            await _orderProvider.setOrderWithSurveyDone(widget._order);
+            //Update the votes
             await _surveyProvider.updateQuestions(_survey, _answers);
             setState(() {
               view=true;

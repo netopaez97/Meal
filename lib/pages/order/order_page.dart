@@ -813,7 +813,9 @@ orderDone(
       status: utils.pending,
       paymentType: paymentType,
       channelName: prefs.channelName,
-      tokenClient: prefs.tokenFCM);
+      tokenClient: prefs.tokenFCM,
+      tookSurvey: false,
+    );
 
   final resOrder = await _orderProvider.insertOrder(order);
   if (resOrder) {

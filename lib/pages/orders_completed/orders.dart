@@ -140,7 +140,7 @@ class _OrdersPageState extends State<OrdersPage> {
                 SizedBox(height: 10),
                 Text("Total price: ${total.toStringAsFixed(2)}"),
                 SizedBox(height: 10),
-                _buttonToMeasureTheService(_order.status),
+                _buttonToMeasureTheService(_order.status, _order),
                 SizedBox(height: 10),
 
               ],
@@ -166,14 +166,15 @@ class _OrdersPageState extends State<OrdersPage> {
     );
   }
 
-  Widget _buttonToMeasureTheService(String _status){
-    if(_status == utils.finished)
+  Widget _buttonToMeasureTheService(String _status, OrderModel _order){
+
+    if(_status == utils.finished && _order.tookSurvey == false)
       return CupertinoButton(
         padding: EdgeInsets.zero,
         onPressed: () async {
           await showDialog(
             context: context,
-            builder: (BuildContext context)=>SurveyDialog()
+            builder: (BuildContext context)=>SurveyDialog(_order)
           );
         },
         child: Text("Tell us your thoughts!")

@@ -23,6 +23,7 @@ class OrderModel {
     this.nameClient,
     this.tokenClient,
     this.channelName,
+    this.tookSurvey,
   });
 
   String idOrder;
@@ -39,6 +40,7 @@ class OrderModel {
   String nameClient;
   String tokenClient;
   String channelName;
+  bool tookSurvey;
 
   factory OrderModel.fromJson(Map<String, dynamic> json) => OrderModel(
         idOrder: json["idOrder"],
@@ -57,6 +59,7 @@ class OrderModel {
         nameClient: json["nameClient"],
         tokenClient: json["tokenClient"],
         channelName: json["channelName"],
+        tookSurvey: json["tookSurvey"],
       );
 
   Map<String, dynamic> toJson() => {
@@ -75,6 +78,7 @@ class OrderModel {
         "nameClient": nameClient,
         "tokenClient": tokenClient,
         "channelName": channelName,
+        "tookSurvey": tookSurvey,
       };
 }
 

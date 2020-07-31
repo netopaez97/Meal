@@ -24,4 +24,10 @@ class OrderProvider /* with ChangeNotifier*/ {
     // .where('data', isGreaterThanOrEqualTo: DateTime.now().subtract(new Duration(days: 5)))
     return _db.where('idUser', isEqualTo: prefs.uid).snapshots();
   }
+
+  Future setOrderWithSurveyDone(OrderModel _order){
+    _order.tookSurvey = true;
+    return _db.document(_order.idOrder).setData(_order.toJson());
+  }
+
 }
