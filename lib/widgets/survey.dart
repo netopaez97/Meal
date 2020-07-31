@@ -140,6 +140,7 @@ class _SurveyDialogState extends State<SurveyDialog> {
               view=true;
               _loadingWidget = false;
             });
+            Navigator.pop(context);
           },
         )
       ];
