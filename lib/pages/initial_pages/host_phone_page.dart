@@ -69,15 +69,6 @@ class _PhonePageState extends State<PhonePage> {
 
             setState(()=>_loadingWidget=true);
 
-            await _shoppingCartProvider.deleteAll().then(
-              (res)=>setState(()=>_loadingWidget=true)
-            ).catchError(
-              (err){
-                showDialog(context: context, builder: (BuildContext context)=>AlertDialog(title: Text("Please, verify your internet connection.")));
-                return ;
-              }
-            );
-
             ///Verify if there is a phone registered for the user
             if (prefs.phone != '') {
               prefs.host = 'Host - ${prefs.phone}';
@@ -92,8 +83,21 @@ class _PhonePageState extends State<PhonePage> {
               else{
                 await userProvider.insertUser();
               }
+
+              await _shoppingCartProvider.deleteAll().then(
+                (res)=>setState(()=>_loadingWidget=true)
+              ).catchError(
+                (err){
+                  showDialog(context: context, builder: (BuildContext context)=>AlertDialog(title: Text("Please, verify your internet connection.")));
+                  return ;
+                }
+              );
               setState(()=>_loadingWidget=false);
               Navigator.pushNamed(context, Routes.selection);
+            }
+            else{
+              await showDialog(context: context, builder:(BuildContext context)=>AlertDialog(title:Text("Please, enter your phone number")));
+              setState(()=>_loadingWidget=false);
             }
           },
         ),

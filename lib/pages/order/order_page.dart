@@ -668,7 +668,7 @@ class _OrderState extends State<OrderPage> {
   }
 
   _pay() async {
-    await InAppPayments.setSquareApplicationId('sq0idp-SResfj2EdFH2M8Olsga37Q');
+    await InAppPayments.setSquareApplicationId('sq0idp-V74yv-6JtVddG0X38u6Zvw');
     await InAppPayments.startCardEntryFlow(
       onCardEntryCancel: _cardEntryCancel,
       onCardNonceRequestSuccess: _cardNonceRequestSuccess,

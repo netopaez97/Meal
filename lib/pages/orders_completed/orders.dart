@@ -129,7 +129,7 @@ class _OrdersPageState extends State<OrdersPage> {
                   ? Colors.amber
                   : Colors.green
             ),
-            title: Text('Your order at ${_order.date}'),
+            title: Text('Your order for ${_order.date.split(" ")[0]} at ${_order.date.split(" ")[1]}'),
             subtitle: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
