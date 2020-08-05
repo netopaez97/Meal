@@ -102,7 +102,12 @@ class _OrdersPageState extends State<OrdersPage> {
     _order.productsInCartList.forEach((element) async {
       total = (element.price * element.quantityProducts) + total;
       final res = await _productProvider.getProduct(element.idProduct);
-      final product = ProductModel.fromJson(res.data);
+      print("RESPUESTA: ${res.data}");
+      var product;
+      if(res.data != null)
+          product = ProductModel.fromJson(res.data);
+      else
+        product = ProductModel();
       product.numberRatings = element.quantityProducts;
       product.rating = (element.price * element.quantityProducts);
       list.add(product);

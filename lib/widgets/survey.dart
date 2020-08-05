@@ -72,11 +72,11 @@ class _SurveyDialogState extends State<SurveyDialog> {
                     title: Text(_survey[question].question),
                     subtitle: Column(
                       children:<Widget>[
-                        _tileForAnswers(question, "Very Agree",5),
+                        _tileForAnswers(question, "Strongly Agree",5),
                         _tileForAnswers(question, "Agree",4),
-                        _tileForAnswers(question, "Impartial",3),
+                        _tileForAnswers(question, "Neutral",3),
                         _tileForAnswers(question, "Diasgree",2),
-                        _tileForAnswers(question, "Very disagree", 1),
+                        _tileForAnswers(question, "Strongly disagree", 1),
                       ]
                     ),
                   ),

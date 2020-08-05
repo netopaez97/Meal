@@ -45,7 +45,7 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 Text(
-                  'You have ordered ${widget._productsInShopinCart[index].quantityProducts} ${product.name}',
+                  'You have ordered ${widget._productsInShopinCart[index].quantityProducts} ${product.name != null ? product.name : "products which are not available in the restaurant now"}',
                   style: TextStyle(color: Colors.white),
                 ),
                 Divider(
