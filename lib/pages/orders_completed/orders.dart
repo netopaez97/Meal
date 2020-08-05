@@ -53,11 +53,7 @@ class _OrdersPageState extends State<OrdersPage> {
       );
 
   Widget _pageBody() {
-    return ListView(
-      children: <Widget>[
-        _suggestedOptions(),
-      ],
-    );
+    return _suggestedOptions();
   }
 
   Widget _suggestedOptions() {
