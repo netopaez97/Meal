@@ -18,8 +18,8 @@ class InitialPage extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Container(
-              height: media.width * 0.16,
-              width: media.width * 0.9,
+              height: media.width * 0.2,
+              width: media.width * 0.85,
               child: FittedBox(
                 fit: BoxFit.fill,
                 child: Text(
@@ -46,7 +46,7 @@ class InitialPage extends StatelessWidget {
                   color: Colors.white,
                   fontWeight: FontWeight.normal,
                 ),
-                textAlign: TextAlign.justify,
+                textAlign: TextAlign.center,
                 textScaleFactor: media.width * 0.0045,
               ),
             ),

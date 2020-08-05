@@ -42,7 +42,7 @@ class _PhonePageState extends State<PhonePage> {
           text: "Your phone number?",
           scale: media.width * 0.006,
         ),
-        SizedBox(height: media.width * 0.45),
+        SizedBox(height: media.width * 0.3),
         _loadingWidget == true
         ? Padding(
           padding: const EdgeInsets.all(5.0),
