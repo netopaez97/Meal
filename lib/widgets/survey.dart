@@ -56,7 +56,9 @@ class _SurveyDialogState extends State<SurveyDialog> {
             _lockAnswers = true;
             snapshot.data.documents.forEach((question){
               _answers.add(0);
-              _survey.add(SurveyModel.fromJson(question.data));
+              SurveyModel _temp = SurveyModel.fromJson(question.data);
+              _temp.idQuestion = question.documentID;
+              _survey.add(_temp);
             });
           }
           print(_survey[0].toJson());
