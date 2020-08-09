@@ -38,6 +38,10 @@ class _OrderState extends State<OrderPage> {
   String deliveryType = 'Carry out';
   String paymentType = 'Pay now';
   String address;
+  String addressHost;
+  String addressGuest1;
+  String addressGuest2;
+  String addressGuest3;
   String comments;
   bool valida = true;
   bool order = false;
@@ -106,7 +110,8 @@ class _OrderState extends State<OrderPage> {
           });
         }
       });
-    } 
+    }
+
     ///No entendí este caso, en el anterior el rol también es host
     else if (prefs.rol == host) {
       print("Entra a host");
@@ -139,8 +144,8 @@ class _OrderState extends State<OrderPage> {
           });
         }
       });
-    
-    ///This case is when the user is a guest and want to pay for his own.
+
+      ///This case is when the user is a guest and want to pay for his own.
     } else if (prefs.rol == guest) {
       await _shoppingCartProvider
           .getShoppingCartMealFor(prefs.guest)
@@ -171,9 +176,11 @@ class _OrderState extends State<OrderPage> {
           });
         }
       });
-    }
-    else{
-      return showDialog(context: context, builder: (BuildContext context) =>AlertDialog(title:Text("No hemos pensado en esto")));
+    } else {
+      return showDialog(
+          context: context,
+          builder: (BuildContext context) =>
+              AlertDialog(title: Text("No hemos pensado en esto")));
     }
   }
 
@@ -256,7 +263,8 @@ class _OrderState extends State<OrderPage> {
                         SizedBox(width: 20),
                         Container(
                           child: DropdownButton<String>(
-                            underline: DropdownButtonHideUnderline(child: Container()),
+                            underline:
+                                DropdownButtonHideUnderline(child: Container()),
                             value: deliveryType,
                             icon: Icon(Icons.arrow_downward),
                             iconSize: 24,
@@ -281,33 +289,163 @@ class _OrderState extends State<OrderPage> {
                       ],
                     ),
                     (deliveryType == 'Delivery')
-                        ? TextField(
-                            textAlign: TextAlign.left,
-                            keyboardType: TextInputType.text,
-                            decoration: InputDecoration(
-                              border: OutlineInputBorder(),
-                              hintText: 'Address',
-                              errorText:
-                                  (valida) ? '' : 'Please complete this field',
-                              errorStyle: TextStyle(
-                                fontSize: media.width * 0.05,
-                              ),
-                              errorBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(
-                                color: blackColors,
-                              )),
-                              hintStyle: TextStyle(
-                                fontSize: media.width * 0.05,
-                              ),
-                            ),
-                            cursorColor: blackColors,
-                            cursorWidth: 1.0,
-                            style: TextStyle(
-                              color: blackColors,
-                              fontSize: media.width * 0.05,
-                            ),
-                            onChanged: (value) => {address = value},
-                          )
+                        ? ((prefs.rol == host &&
+                                prefs.menu == host &&
+                                prefs.pickup == host &&
+                                prefs.payment == host))
+                            ? Column(
+                                children: <Widget>[
+                                  TextField(
+                                    textAlign: TextAlign.left,
+                                    keyboardType: TextInputType.text,
+                                    decoration: InputDecoration(
+                                      border: OutlineInputBorder(),
+                                      hintText: 'Address host',
+                                      errorText: (valida)
+                                          ? ''
+                                          : 'Please complete this field',
+                                      errorStyle: TextStyle(
+                                        fontSize: media.width * 0.05,
+                                      ),
+                                      errorBorder: OutlineInputBorder(
+                                          borderSide: BorderSide(
+                                        color: blackColors,
+                                      )),
+                                      hintStyle: TextStyle(
+                                        fontSize: media.width * 0.05,
+                                      ),
+                                    ),
+                                    cursorColor: blackColors,
+                                    cursorWidth: 1.0,
+                                    style: TextStyle(
+                                      color: blackColors,
+                                      fontSize: media.width * 0.05,
+                                    ),
+                                    onChanged: (value) => {addressHost = value},
+                                  ),
+                                  (prefs.guest1 != null && prefs.guest1 != '')
+                                      ? TextField(
+                                          textAlign: TextAlign.left,
+                                          keyboardType: TextInputType.text,
+                                          decoration: InputDecoration(
+                                            border: OutlineInputBorder(),
+                                            hintText: 'Address first guest',
+                                            errorText: (valida)
+                                                ? ''
+                                                : 'Please complete this field',
+                                            errorStyle: TextStyle(
+                                              fontSize: media.width * 0.05,
+                                            ),
+                                            errorBorder: OutlineInputBorder(
+                                                borderSide: BorderSide(
+                                              color: blackColors,
+                                            )),
+                                            hintStyle: TextStyle(
+                                              fontSize: media.width * 0.05,
+                                            ),
+                                          ),
+                                          cursorColor: blackColors,
+                                          cursorWidth: 1.0,
+                                          style: TextStyle(
+                                            color: blackColors,
+                                            fontSize: media.width * 0.05,
+                                          ),
+                                          onChanged: (value) =>
+                                              {addressGuest1 = value},
+                                        )
+                                      : SizedBox(height: 0),
+                                  (prefs.guest2 != null && prefs.guest2 != '')
+                                      ? TextField(
+                                          textAlign: TextAlign.left,
+                                          keyboardType: TextInputType.text,
+                                          decoration: InputDecoration(
+                                            border: OutlineInputBorder(),
+                                            hintText: 'Address second guest',
+                                            errorText: (valida)
+                                                ? ''
+                                                : 'Please complete this field',
+                                            errorStyle: TextStyle(
+                                              fontSize: media.width * 0.05,
+                                            ),
+                                            errorBorder: OutlineInputBorder(
+                                                borderSide: BorderSide(
+                                              color: blackColors,
+                                            )),
+                                            hintStyle: TextStyle(
+                                              fontSize: media.width * 0.05,
+                                            ),
+                                          ),
+                                          cursorColor: blackColors,
+                                          cursorWidth: 1.0,
+                                          style: TextStyle(
+                                            color: blackColors,
+                                            fontSize: media.width * 0.05,
+                                          ),
+                                          onChanged: (value) =>
+                                              {addressGuest2 = value},
+                                        )
+                                      : SizedBox(height: 0),
+                                  (prefs.guest3 != null && prefs.guest3 != '')
+                                      ? TextField(
+                                          textAlign: TextAlign.left,
+                                          keyboardType: TextInputType.text,
+                                          decoration: InputDecoration(
+                                            border: OutlineInputBorder(),
+                                            hintText: 'Address third guest',
+                                            errorText: (valida)
+                                                ? ''
+                                                : 'Please complete this field',
+                                            errorStyle: TextStyle(
+                                              fontSize: media.width * 0.05,
+                                            ),
+                                            errorBorder: OutlineInputBorder(
+                                                borderSide: BorderSide(
+                                              color: blackColors,
+                                            )),
+                                            hintStyle: TextStyle(
+                                              fontSize: media.width * 0.05,
+                                            ),
+                                          ),
+                                          cursorColor: blackColors,
+                                          cursorWidth: 1.0,
+                                          style: TextStyle(
+                                            color: blackColors,
+                                            fontSize: media.width * 0.05,
+                                          ),
+                                          onChanged: (value) =>
+                                              {addressGuest3 = value},
+                                        )
+                                      : SizedBox(height: 0),
+                                ],
+                              )
+                            : TextField(
+                                textAlign: TextAlign.left,
+                                keyboardType: TextInputType.text,
+                                decoration: InputDecoration(
+                                  border: OutlineInputBorder(),
+                                  hintText: 'Address',
+                                  errorText: (valida)
+                                      ? ''
+                                      : 'Please complete this field',
+                                  errorStyle: TextStyle(
+                                    fontSize: media.width * 0.05,
+                                  ),
+                                  errorBorder: OutlineInputBorder(
+                                      borderSide: BorderSide(
+                                    color: blackColors,
+                                  )),
+                                  hintStyle: TextStyle(
+                                    fontSize: media.width * 0.05,
+                                  ),
+                                ),
+                                cursorColor: blackColors,
+                                cursorWidth: 1.0,
+                                style: TextStyle(
+                                  color: blackColors,
+                                  fontSize: media.width * 0.05,
+                                ),
+                                onChanged: (value) => {address = value},
+                              )
                         : SizedBox(height: 0),
                     SizedBox(height: 10),
                     (prefs.rol == host ||
@@ -325,7 +463,8 @@ class _OrderState extends State<OrderPage> {
                               SizedBox(width: 20),
                               Container(
                                 child: DropdownButton<String>(
-                                  underline: DropdownButtonHideUnderline(child: Container()),
+                                  underline: DropdownButtonHideUnderline(
+                                      child: Container()),
                                   value: paymentType,
                                   icon: Icon(Icons.arrow_downward),
                                   iconSize: 24,
@@ -616,9 +755,45 @@ class _OrderState extends State<OrderPage> {
         prefs.rol == noguests) {
       valida = true;
       if (deliveryType == 'Delivery') {
-        if (address == null || address == '') {
-          valida = false;
-          setState(() {});
+        if ((prefs.rol == host &&
+            prefs.menu == host &&
+            prefs.pickup == host &&
+            prefs.payment == host)) {
+          if (addressHost == null || addressHost == '') {
+            valida = false;
+            setState(() {});
+          } else {
+            address = '$addressHost';
+          }
+          if (prefs.guest1 != null && prefs.guest1 != '') {
+            if (addressGuest1 == null || addressGuest1 == '') {
+              valida = false;
+              setState(() {});
+            } else {
+              address = '$address && $addressGuest1';
+            }
+          }
+          if (prefs.guest2 != null && prefs.guest2 != '') {
+            if (addressGuest2 == null || addressGuest2 == '') {
+              valida = false;
+              setState(() {});
+            } else {
+              address = '$address && $addressGuest2';
+            }
+          }
+          if (prefs.guest3 != null && prefs.guest3 != '') {
+            if (addressGuest3 == null || addressGuest3 == '') {
+              valida = false;
+              setState(() {});
+            } else {
+              address = '$address && $addressGuest3';
+            }
+          }
+        } else {
+          if (address == null || address == '') {
+            valida = false;
+            setState(() {});
+          }
         }
       } else {
         address = '';
@@ -768,19 +943,20 @@ Future<void> chargeCard(
   } else {
     print(responseBody["errorMessage"]);
     await showDialog(
-      context: context,
-      builder: (BuildContext context){
-        return AlertDialog(
-          title: Text("The payment could not be processed."),
-          actions: <Widget>[
-            FlatButton(onPressed: (){
-              Navigator.pop(context);
-              Navigator.pop(context);
-            }, child: Text("Ok"))
-          ],
-        );
-      }
-    );
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text("The payment could not be processed."),
+            actions: <Widget>[
+              FlatButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                    Navigator.pop(context);
+                  },
+                  child: Text("Ok"))
+            ],
+          );
+        });
     throw ChargeException(responseBody["errorMessage"]);
   }
 }
@@ -800,22 +976,22 @@ orderDone(
     DynamicLinkService _dynamicLinkService,
     List<String> phones) async {
   final order = OrderModel(
-      nameClient: prefs.name,
-      idUser: prefs.uid,
-      price: total,
-      contactNumber: int.parse(prefs.phone),
-      //date: DateTime.now().toString(),
-      date: prefs.date,
-      typeDelivery: deliveryType,
-      direction: address,
-      productsInCartList: list,
-      comments: comments,
-      status: utils.pending,
-      paymentType: paymentType,
-      channelName: prefs.channelName,
-      tokenClient: prefs.tokenFCM,
-      tookSurvey: false,
-    );
+    nameClient: prefs.name,
+    idUser: prefs.uid,
+    price: total,
+    contactNumber: int.parse(prefs.phone),
+    //date: DateTime.now().toString(),
+    date: prefs.date,
+    typeDelivery: deliveryType,
+    direction: address,
+    productsInCartList: list,
+    comments: comments,
+    status: utils.pending,
+    paymentType: paymentType,
+    channelName: prefs.channelName,
+    tokenClient: prefs.tokenFCM,
+    tookSurvey: false,
+  );
 
   final resOrder = await _orderProvider.insertOrder(order);
   if (resOrder) {
