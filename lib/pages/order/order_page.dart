@@ -37,14 +37,14 @@ class _OrderState extends State<OrderPage> {
 
   String deliveryType = 'Carry out';
   String paymentType = 'Pay now';
-  String address;
-  String addressHost;
-  String addressGuest1;
-  String addressGuest2;
-  String addressGuest3;
+  String address = '';
+  String addressHost = '';
+  String addressGuest1 = '';
+  String addressGuest2 = '';
+  String addressGuest3 = '';
   String comments;
   bool valida = true;
-  bool order = false;
+  bool orderButtonBool = false; //Sirve para desactivar el botón de ordenar cuando se realiza la orden
   List<ShoppingCartModel> list = [];
 
   List<ShoppingCartModel> _listaProductosCarrito;
@@ -693,7 +693,7 @@ class _OrderState extends State<OrderPage> {
           _loading == true
               ? Center(child: CircularProgressIndicator())
               : InkWell(
-                  onTap: (order) ? null : orderNow,
+                  onTap: (orderButtonBool) ? null : orderNow,
                   child: Card(
                     elevation: 5,
                     color: orangeColors,
@@ -731,7 +731,7 @@ class _OrderState extends State<OrderPage> {
   orderNow() async {
     setState(() {
       _loading = true;
-      order = true;
+      orderButtonBool = true;
     });
     final prefs = new UserPreferences();
     final ShoppingCartProvider _shoppingCartProvider = ShoppingCartProvider();
@@ -743,6 +743,11 @@ class _OrderState extends State<OrderPage> {
     ///Puede ser true o false.
     ///Si decide pagar cuando reciba el pedido a domicilio, va a ser true siempre.
 
+    ///Se valida si:
+    ///1. Primer if: prefs.rol == host: El que está en la app es el host y va a ordenar por todos sus invitados.
+    ///2. Segundo if: todo el pedido lo van a hacer los invitados. El host ordena por el mismo.
+    ///3. Tercer if: valida que quien está usando la app es un invitado a cenar. Él va a pagar y a hacer el pedido por sí mismo.
+    ///4. Cuarto if: prefs.rol == noguests: Valida que el host no tenga invitados.
     if (prefs.rol == host ||
         (prefs.rol == host &&
             prefs.menu == guest &&
@@ -754,11 +759,17 @@ class _OrderState extends State<OrderPage> {
             prefs.payment == guest) ||
         prefs.rol == noguests) {
       valida = true;
+
+      ///Valida que el tipo de delivery sea a domicilio
       if (deliveryType == 'Delivery') {
-        if ((prefs.rol == host &&
-            prefs.menu == host &&
-            prefs.pickup == host &&
-            prefs.payment == host)) {
+
+        ///Con esta validación busco que el que vaya a pagar sea el host y el domicilio le va a llegar a cada guest.
+        ///prefs.rol == host: el host es quien está en la app.
+        ///prefs.menu == host: siginifica que el host está ordenando por todos.
+        ///prefs.pickup == host: el host recogerá el pedido de todos en el restaurante.
+        ///prefs.payment == host: el host paga por todos.
+        if ((prefs.rol == host && prefs.menu == host && prefs.pickup == host && prefs.payment == host)){
+
           if (addressHost == null || addressHost == '') {
             valida = false;
             setState(() {});
@@ -801,7 +812,7 @@ class _OrderState extends State<OrderPage> {
       if (comments == null || comments == '') {
         comments = '';
       }
-      if (valida) {
+      if (valida==true) {
         // Primero se realiza el pago, _pay() debe devolver true
         if (paymentType == 'Pay now') {
           await _pay();
@@ -822,28 +833,33 @@ class _OrderState extends State<OrderPage> {
             phones,
           );
         }
+      }else{
+        setState(()=>_loading=false);
       }
 
       ///Este caso sucede cuando un invitado va a pagar su pedido pero el host recoge el pedido o lo recibe en su casa.
-    } else if (prefs.rol == guest && prefs.payment == guest) {
-      if (paymentType == 'Pay now') {
-        await _pay();
+    } 
+    else {
+      if (prefs.rol == guest && prefs.payment == guest) {
+        if (paymentType == 'Pay now') {
+          await _pay();
+        } else {
+          final userProvider = UserProvider();
+          await userProvider.readyUser(prefs.uid, true);
+          Navigator.pushNamedAndRemoveUntil(
+              context, Routes.home, (Route routes) => false);
+        }
       } else {
-        final userProvider = UserProvider();
-        await userProvider.readyUser(prefs.uid, true);
-        Navigator.pushNamedAndRemoveUntil(
-            context, Routes.home, (Route routes) => false);
+        _scaffolKey.currentState.showSnackBar(snackBarErrorCreacion);
       }
-    } else {
-      _scaffolKey.currentState.showSnackBar(snackBarErrorCreacion);
     }
     setState(() {
-      order = false;
+      orderButtonBool = false;
     });
   }
 
   _pay() async {
-    await InAppPayments.setSquareApplicationId('sq0idp-V74yv-6JtVddG0X38u6Zvw');
+    await InAppPayments.setSquareApplicationId(utils.squareUpApplicationID);
     await InAppPayments.startCardEntryFlow(
       onCardEntryCancel: _cardEntryCancel,
       onCardNonceRequestSuccess: _cardNonceRequestSuccess,
@@ -925,10 +941,10 @@ class ChargeException implements Exception {
 
 Future<void> chargeCard(
     cardModel.CardDetails result, BuildContext context, double total) async {
-  String chargeServerHost = "https://mealkc.herokuapp.com";
+  String chargeServerHost = "https://mealkansascity.herokuapp.com";
   String chargeUrl = "$chargeServerHost/payment";
 
-  var body = jsonEncode({"nonce": result.nonce, "price": total});
+  var body = jsonEncode({"nonce": result.nonce, "price": utils.roundDouble(total)});
   http.Response response;
 
   response = await http.post(chargeUrl, body: body, headers: {
@@ -937,6 +953,7 @@ Future<void> chargeCard(
   });
 
   var responseBody = json.decode(response.body);
+  print("RESPUESTA: $responseBody");
   if (response.statusCode == 200) {
     ///HERE WE CAN SHOW OR DO SOMETHING FOR THE FUTURE
 

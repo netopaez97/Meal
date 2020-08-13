@@ -56,3 +56,6 @@ String pending = 'pending';
 String delivered = 'delivered';
 String finished = 'finished';
 String canceled = 'canceled';
+
+
+String squareUpApplicationID = 'sq0idp-V74yv-6JtVddG0X38u6Zvw';
