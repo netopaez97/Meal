@@ -101,6 +101,9 @@ class _CategoriesPageState extends State<CategoriesPage> {
     if(urlImage!=null && urlImage != "")
       return Image.network(urlImage);
     else
-      return Image.asset("assets/theBarKc.jpg", fit: BoxFit.cover);
+      return Padding(
+        padding: const EdgeInsets.all(20.0),
+        child: CircleAvatar(child: Image.asset("assets/default.png")),
+      );
   }
 }

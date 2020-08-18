@@ -42,14 +42,14 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
               width: double.infinity,
               child: (widget.product.image != null)
                   ? FadeInImage(
-                      placeholder: AssetImage('assets/test.jpg'),
+                      placeholder: AssetImage('assets/default.png'),
                       image: NetworkImage(
                         widget.product.image,
                       ),
                       height: 300.0,
                       fit: BoxFit.cover,
                     )
-                  : Image(image: AssetImage('assets/test.jpg')),
+                  : Image(image: AssetImage('assets/default.png')),
             ),
             SizedBox(height: 10),
             Text(

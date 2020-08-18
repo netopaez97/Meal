@@ -194,14 +194,14 @@ class _HomePageState extends State<HomePage> {
               radius: MediaQuery.of(context).size.width * 0.1,
               child: (_producto.image != null)
                   ? FadeInImage(
-                      placeholder: AssetImage('assets/test.jpg'),
+                      placeholder: AssetImage('assets/default.png'),
                       image: NetworkImage(_producto.image),
                       height: 300.0,
                       fit: BoxFit.cover,
                     )
-                  : Image(image: AssetImage('assets/test.jpg')),
+                  : Image(image: AssetImage('assets/default.png')),
             )
-            : SizedBox(width: 1),
+            : CircleAvatar(child:Image.asset('assets/default.png')),
             title: Text(_producto.name),
             subtitle: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
